@@ -21,12 +21,14 @@ micronaut {
 
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut:micronaut-inject-java:3.1.4")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
 
+    implementation("dev.morphia.morphia:morphia-core:2.2.1")
+    implementation("io.micronaut.mongodb:micronaut-mongo-sync")
 }
 
 

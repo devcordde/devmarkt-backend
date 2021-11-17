@@ -1,3 +1,8 @@
 micronaut:
   application:
     name: backend
+  server:
+    port: ${devmarkt.server.port:8080}
+
+mongodb:
+  uri: mongodb://${devmarkt.mongodb.user}:${devmarkt.mongodb.password}@${devmarkt.mongodb.host:localhost}:${devmarkt.mongodb.port:27017}/${devmarkt.mongodb.database}
