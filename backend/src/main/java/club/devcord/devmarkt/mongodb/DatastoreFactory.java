@@ -16,28 +16,33 @@
 
 package club.devcord.devmarkt.mongodb;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoClient;
-import dev.morphia.Datastore;
-import dev.morphia.Morphia;
-import io.micronaut.context.annotation.Context;
+import com.mongodb.client.MongoCollection;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Prototype;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
-import io.micronaut.core.annotation.Introspected;
-import jakarta.inject.Singleton;
+import io.micronaut.inject.InjectionPoint;
+import org.bson.UuidRepresentation;
+import org.mongojack.JacksonMongoCollection;
 
 @Factory
-@Introspected
+@Requires(property = "devmarkt.mongodb.database")
 public class DatastoreFactory {
 
-  @Value("${devmarkt.mongodb.database}")
-  private String database;
+  @Prototype
+  <T> MongoCollection<T> mongoCollection(MongoClient client,
+      @Value("${devmarkt.mongodb.database}") String database, ObjectMapper mapper, InjectionPoint<?> injectionPoint) {
 
-  @Singleton
-  @Context
-  Datastore morphia(MongoClient client) {
-    var datastore = Morphia.createDatastore(client, database);
-    datastore.getMapper().mapPackage("club.devcord.devmarkt.mongodb.dto");
-    datastore.ensureIndexes();
-    return datastore;
+    Class<T> clazz = injectionPoint
+        .getAnnotationMetadata()
+        .classValue(Collection.class)
+        .map(aClass -> (Class<T>) aClass)
+        .orElseThrow(NoCollectionTypeProvided::new);
+
+    return JacksonMongoCollection.builder()
+        .withObjectMapper(mapper)
+        .build(client, database, clazz, UuidRepresentation.STANDARD);
   }
 }

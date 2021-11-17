@@ -27,7 +27,7 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
 
-    implementation("dev.morphia.morphia:morphia-core:2.2.1")
+    implementation("org.mongojack:mongojack:4.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
 }
 
