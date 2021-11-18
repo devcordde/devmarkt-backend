@@ -42,5 +42,6 @@ public class MongoCollectionBeanTest {
   public static record TestDTO(
       @ObjectId ObjectId id,
       String data
-  ){}
+  ) {
+  }
 }

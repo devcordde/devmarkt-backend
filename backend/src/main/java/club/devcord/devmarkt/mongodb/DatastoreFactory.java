@@ -28,12 +28,14 @@ import org.bson.UuidRepresentation;
 import org.mongojack.JacksonMongoCollection;
 
 @Factory
-@Requires(property = "devmarkt.mongodb.database")
+@Requires(property = "devmarkt.mongodb.database", classes = {MongoClient.class, ObjectMapper.class})
+@SuppressWarnings("unchecked")
 public class DatastoreFactory {
 
   @Prototype
   <T> MongoCollection<T> mongoCollection(MongoClient client,
-      @Value("${devmarkt.mongodb.database}") String database, ObjectMapper mapper, InjectionPoint<?> injectionPoint) {
+      @Value("${devmarkt.mongodb.database}") String database, ObjectMapper mapper,
+      InjectionPoint<?> injectionPoint) {
 
     Class<T> clazz = injectionPoint
         .getAnnotationMetadata()
