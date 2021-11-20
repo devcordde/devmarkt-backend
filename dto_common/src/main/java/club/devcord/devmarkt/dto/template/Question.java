@@ -16,6 +16,9 @@
 
 package club.devcord.devmarkt.dto.template;
 
+import club.devcord.devmarkt.dto.Introspected;
+
+@Introspected
 public record Question(
     String question
 ) {

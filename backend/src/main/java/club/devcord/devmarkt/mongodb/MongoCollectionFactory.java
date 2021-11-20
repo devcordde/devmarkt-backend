@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.mongodb;
 
+import club.devcord.devmarkt.dto.Introspected;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -29,6 +30,7 @@ import org.mongojack.JacksonMongoCollection;
 
 @Factory
 @Requires(property = "devmarkt.mongodb.database", classes = {MongoClient.class, ObjectMapper.class})
+@Introspected
 @SuppressWarnings("unchecked")
 public class MongoCollectionFactory {
 

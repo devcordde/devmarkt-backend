@@ -21,8 +21,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Collection {
-
-  String ID = "_id";
-
   Class<?> value();
 }

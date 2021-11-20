@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto.template;
+package club.devcord.devmarkt.dto;
 
-import club.devcord.devmarkt.dto.Introspected;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Introspected
-public enum UpdateAction {
-  CREATED,
-  UPDATED
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+public @interface Introspected {
 }
