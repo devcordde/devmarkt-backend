@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.dto.template;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.List;
+import org.mongojack.Id;
+import org.mongojack.MongoCollection;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-
-  String ID = "_id";
-
-  Class<?> value();
+@MongoCollection(name = "templates")
+public record Template(
+    @Id String name,
+    List<Question> questions
+) {
 }

@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.dto;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-
-  String ID = "_id";
-
-  Class<?> value();
+public record IdentifiedRequest<T>(
+    long requestID,
+    T value
+) {
 }

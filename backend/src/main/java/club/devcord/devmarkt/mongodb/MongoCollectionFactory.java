@@ -30,10 +30,10 @@ import org.mongojack.JacksonMongoCollection;
 @Factory
 @Requires(property = "devmarkt.mongodb.database", classes = {MongoClient.class, ObjectMapper.class})
 @SuppressWarnings("unchecked")
-public class DatastoreFactory {
+public class MongoCollectionFactory {
 
   @Prototype
-  <T> MongoCollection<T> mongoCollection(MongoClient client,
+  public <T> MongoCollection<T> mongoCollection(MongoClient client,
       @Value("${devmarkt.mongodb.database}") String database, ObjectMapper mapper,
       InjectionPoint<?> injectionPoint) {
 

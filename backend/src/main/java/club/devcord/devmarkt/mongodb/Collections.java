@@ -16,13 +16,19 @@
 
 package club.devcord.devmarkt.mongodb;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import org.bson.conversions.Bson;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
+public class Collections {
 
-  String ID = "_id";
+  public static final String ID = "_id";
+  public static final ReplaceOptions UPSERT = new ReplaceOptions().upsert(true);
 
-  Class<?> value();
+  private Collections() {
+  }
+
+  public static <T> Bson eqID(T id) {
+    return Filters.eq(ID, id);
+  }
 }

@@ -29,6 +29,8 @@ dependencies {
 
     implementation("org.mongojack:mongojack:4.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
+
+    implementation(project(":dto_common"))
 }
 
 

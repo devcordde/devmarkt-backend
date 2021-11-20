@@ -43,5 +43,6 @@ public class MongoCollectionBeanTest {
       @ObjectId ObjectId id,
       String data
   ) {
+
   }
 }
