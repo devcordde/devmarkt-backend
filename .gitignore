@@ -33,3 +33,5 @@ build
 !/.idea/codeStyles
 **/build
 **/.gradle
+
+!gradle-wrapper.jar
