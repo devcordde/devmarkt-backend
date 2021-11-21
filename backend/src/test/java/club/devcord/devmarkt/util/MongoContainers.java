@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.util;
 
-public record IdentifiedRequest<T>(
-    String requestID,
-    T value
-) {
+import org.testcontainers.containers.MongoDBContainer;
+
+
+public class MongoContainers extends MongoDBContainer {
+
+  private MongoContainers(String image, int port) {
+    super(image);
+    super.addFixedExposedPort(port, 27017);
+  }
+
+  public static MongoDBContainer newLatest(int port) {
+    return new MongoContainers("mongo:5.0.4", port);
+  }
+
 }

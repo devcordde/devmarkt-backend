@@ -37,7 +37,6 @@ import java.util.Objects;
 public class TemplateController {
   private final MongoCollection<Template> collection;
 
-
   public TemplateController(@Collection(Template.class) MongoCollection<Template> collection) {
     this.collection = collection;
   }
@@ -71,7 +70,8 @@ public class TemplateController {
         : HttpResponse.ok(result);
   }
 
-  @Get("/list")
+  @SuppressWarnings("NullableProblems") // fix later this shit
+  @Get
   public HttpResponse<List<String>> getListOfNames() {
     var names = collection.find()
         .map(Template::name)
@@ -81,7 +81,7 @@ public class TemplateController {
   }
 
   @Delete(value = "/{name}", consumes = "text/plain")
-  public HttpResponse<Void> delete(@PathVariable String name, @Body long requesterID) {
+  public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
     var result = collection.deleteOne(Collections.eqID(name));
 
     if(!result.wasAcknowledged()) {

@@ -31,6 +31,8 @@ dependencies {
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
 
     implementation(project(":dto_common"))
+
+    testImplementation("org.testcontainers:mongodb:1.16.2")
 }
 
 
