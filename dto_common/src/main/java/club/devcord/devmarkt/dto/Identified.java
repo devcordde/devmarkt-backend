@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto.template;
+package club.devcord.devmarkt.dto;
 
-import club.devcord.devmarkt.dto.Introspected;
-
-@Introspected
-public enum UpdateAction {
-  CREATED,
-  UPDATED
+public record Identified<T>(
+    String requesterID,
+    T value
+) {
 }

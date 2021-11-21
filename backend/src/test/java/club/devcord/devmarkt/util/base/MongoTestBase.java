@@ -31,7 +31,7 @@ public class MongoTestBase {
 
   @BeforeEach
   public void startContainer() {
-    container = MongoContainers.newLatest(port);
+    container = MongoContainers.new5_0_4(port);
     container.start();
   }
 

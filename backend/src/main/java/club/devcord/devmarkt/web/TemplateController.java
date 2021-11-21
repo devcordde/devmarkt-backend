@@ -16,19 +16,23 @@
 
 package club.devcord.devmarkt.web;
 
-import club.devcord.devmarkt.dto.IdentifiedRequest;
+import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.dto.template.UpdateAction;
 import club.devcord.devmarkt.mongodb.Collection;
 import club.devcord.devmarkt.mongodb.Collections;
+import club.devcord.devmarkt.util.BaseUriBuilder;
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,22 +46,37 @@ public class TemplateController {
   }
 
   @Post
-  public HttpResponse<UpdateAction> updateOrCreateTemplate(
-      @Body IdentifiedRequest<Template> request) {
-    var template = request.value();
+  public HttpResponse<URI> createTemplate(@Body Identified<Template> body) {
+    var template = body.value();
 
-    var result = collection.replaceOne(Collections.eqID(template.name()),
-        template, Collections.UPSERT);
+    try {
+      var result = collection.insertOne(template);
+      return !result.wasAcknowledged()
+          ? HttpResponse.serverError()
+          : HttpResponse.created(BaseUriBuilder.of("template", template.name()));
+    } catch (MongoWriteException e) {
+      if(e.getCode() == 11000) { // 11000 = duplicated primary key: template exists
+        return HttpResponse.status(HttpStatus.CONFLICT);
+      }
+      throw e;
+    }
+  }
 
-    if (!result.wasAcknowledged()) {
+  @Put
+  public HttpResponse<URI> replaceTemplate(@Body Identified<Template> body) {
+    var template = body.value();
+
+    var result = collection.replaceOne(Collections.eqID(template.name()), template);
+    if(!result.wasAcknowledged()) {
       return HttpResponse.serverError();
     }
-
-    var action = Objects.isNull(result.getUpsertedId())
-        ? UpdateAction.UPDATED
-        : UpdateAction.CREATED;
-
-    return HttpResponse.ok(action);
+    if(result.getMatchedCount() == 0) {
+      return HttpResponse.notFound();
+    }
+    if(result.getModifiedCount() == 0) {
+      return HttpResponse.notModified();
+    }
+    return HttpResponse.ok(BaseUriBuilder.of("template", template.name()));
   }
 
   @Get("/{name}")
@@ -69,6 +88,7 @@ public class TemplateController {
         ? HttpResponse.notFound()
         : HttpResponse.ok(result);
   }
+
 
   @SuppressWarnings("NullableProblems") // fix later this shit
   @Get

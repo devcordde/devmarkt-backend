@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.dto.IdentifiedRequest;
+import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Question;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.util.base.RestAPITestBase;
@@ -28,7 +28,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-@MicronautTest(rebuildContext = true)
+@MicronautTest(rebuildContext = true, application = Application.class)
 public class TemplateTest extends RestAPITestBase {
   private static final Template TEST_TEMPLATE = new Template(
       "test",
@@ -40,25 +40,33 @@ public class TemplateTest extends RestAPITestBase {
     return "/template";
   }
 
-  private <T> T cTem(Class<T> type) {
-    return client.retrieve(HttpRequest.POST(
+  @Test
+  public void createTemplate() {
+    var result = client.exchange(HttpRequest.POST(
         "",
-        new IdentifiedRequest<>(
+        new Identified<>(
             "1234",
             TEST_TEMPLATE
         )
-    ), type);
-  }
-
-  @Test
-  public void createTemplate() {
-    Assertions.assertEquals("\"CREATED\"", cTem(String.class));
+    )).getStatus();
+    Assertions.assertEquals(HttpStatus.CREATED, result);
   }
 
   @Test
   public void updateTemplate() {
     createTemplate();
-    Assertions.assertEquals("\"UPDATED\"", cTem(String.class));
+    var result = client.exchange(HttpRequest.PUT(
+        "",
+        new Identified<>(
+            "1234",
+            new Template(
+                "newName",
+                TEST_TEMPLATE.questions()
+            )
+        )
+    )).getStatus();
+
+    Assertions.assertEquals(HttpStatus.OK, result);
   }
 
   @Test
@@ -86,7 +94,7 @@ public class TemplateTest extends RestAPITestBase {
     createTemplate();
     var result = client.exchange(HttpRequest.DELETE(
         "/test",
-        "12345" //random number
+        "34"
     ).contentType(MediaType.TEXT_PLAIN), Void.class);
 
     Assertions.assertEquals(HttpStatus.OK, result.getStatus());

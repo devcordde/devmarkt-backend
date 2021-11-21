@@ -17,6 +17,7 @@
 package club.devcord.devmarkt.dto.template;
 
 import club.devcord.devmarkt.dto.Introspected;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.mongojack.Id;
 import org.mongojack.MongoCollection;
@@ -24,7 +25,7 @@ import org.mongojack.MongoCollection;
 @Introspected
 @MongoCollection(name = "templates")
 public record Template(
-    @Id String name,
+    @Id @JsonProperty("_id") String name,
     List<Question> questions
 ) {
 }

@@ -16,18 +16,30 @@
 
 package club.devcord.devmarkt.util;
 
-import org.testcontainers.containers.MongoDBContainer;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.server.util.HttpHostResolver;
+import io.micronaut.http.uri.UriBuilder;
+import jakarta.inject.Singleton;
+import java.net.URI;
 
+@Singleton
+public class BaseUriBuilder {
 
-public class MongoContainers extends MongoDBContainer {
+  private static String base;
 
-  private MongoContainers(String image, int port) {
-    super(image);
-    super.addFixedExposedPort(port, 27017);
+  public BaseUriBuilder(HttpHostResolver resolver) {
+    BaseUriBuilder.base = resolver.resolve(HttpRequest.GET(""));
   }
 
-  public static MongoDBContainer new5_0_4(int port) {
-    return new MongoContainers("mongo:5.0.4", port);
+  public static UriBuilder create() {
+    return UriBuilder.of(base);
   }
 
+  public static URI of(String... paths) {
+    var builder = create();
+    for(var path : paths) {
+      builder.path(path);
+    }
+    return builder.build();
+  }
 }
