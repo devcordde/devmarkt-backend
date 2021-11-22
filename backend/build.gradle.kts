@@ -20,11 +20,13 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.0")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut:micronaut-inject-java:3.1.4")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
+    implementation("io.swagger.core.v3:swagger-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
 
     implementation("org.mongojack:mongojack:4.3.0")
