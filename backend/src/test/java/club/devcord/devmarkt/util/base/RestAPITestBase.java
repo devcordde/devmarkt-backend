@@ -19,12 +19,15 @@ package club.devcord.devmarkt.util.base;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.netty.DefaultHttpClient;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class RestAPITestBase extends MongoTestBase {
+  public static final HttpClient CLIENT = new DefaultHttpClient();
+  public static final BlockingHttpClient BLOCKING_CLIENT = CLIENT.toBlocking();
   protected BlockingHttpClient client;
 
   @Inject

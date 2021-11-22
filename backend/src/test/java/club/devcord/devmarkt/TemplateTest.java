@@ -24,6 +24,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,14 @@ public class TemplateTest extends RestAPITestBase {
     return "/template";
   }
 
+  public void verifyTemplate(String url, Template template) {
+    var fetchedTemplate = RestAPITestBase.BLOCKING_CLIENT.exchange(HttpRequest.GET(
+        url
+    ), Template.class).body();
+
+    Assertions.assertEquals(template, fetchedTemplate);
+  }
+
   @Test
   public void createTemplate() {
     var result = client.exchange(HttpRequest.POST(
@@ -48,25 +57,28 @@ public class TemplateTest extends RestAPITestBase {
             "1234",
             TEST_TEMPLATE
         )
-    )).getStatus();
-    Assertions.assertEquals(HttpStatus.CREATED, result);
+    ), String.class);
+    Assertions.assertEquals(HttpStatus.CREATED, result.getStatus());
+    verifyTemplate(result.header("location"), TEST_TEMPLATE);
   }
 
   @Test
   public void updateTemplate() {
     createTemplate();
+    var testTemplate = new Template(
+        "test",
+        List.of(new Question("Whats your name?"))
+    );
     var result = client.exchange(HttpRequest.PUT(
         "",
         new Identified<>(
             "1234",
-            new Template(
-                "newName",
-                TEST_TEMPLATE.questions()
-            )
+            testTemplate
         )
-    )).getStatus();
+    ), URI.class);
 
-    Assertions.assertEquals(HttpStatus.OK, result);
+    Assertions.assertEquals(HttpStatus.OK, result.getStatus());
+    verifyTemplate(String.valueOf(result.body()), testTemplate);
   }
 
   @Test

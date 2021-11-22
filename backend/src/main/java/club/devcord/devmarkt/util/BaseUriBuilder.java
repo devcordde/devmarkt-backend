@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.util;
 
+import io.micronaut.context.annotation.Context;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.uri.UriBuilder;
@@ -23,6 +24,7 @@ import jakarta.inject.Singleton;
 import java.net.URI;
 
 @Singleton
+@Context
 public class BaseUriBuilder {
 
   private static String base;
