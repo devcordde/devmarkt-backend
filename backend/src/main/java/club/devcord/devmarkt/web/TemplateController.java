@@ -18,11 +18,8 @@ package club.devcord.devmarkt.web;
 
 import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.mongodb.Collection;
-import club.devcord.devmarkt.mongodb.Collections;
+import club.devcord.devmarkt.mongodb.service.template.TemplateService;
 import club.devcord.devmarkt.util.BaseUriBuilder;
-import com.mongodb.MongoWriteException;
-import com.mongodb.client.MongoCollection;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
@@ -33,83 +30,58 @@ import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Controller("/template")
 public class TemplateController {
-  private final MongoCollection<Template> collection;
+  private final TemplateService templateService;
 
-  public TemplateController(@Collection(Template.class) MongoCollection<Template> collection) {
-    this.collection = collection;
+  public TemplateController(TemplateService templateService) {
+    this.templateService = templateService;
   }
 
   @Post
   public HttpResponse<URI> createTemplate(@Body Identified<Template> body) {
     var template = body.value();
-
-    try {
-      var result = collection.insertOne(template);
-      return !result.wasAcknowledged()
-          ? HttpResponse.serverError()
-          : HttpResponse.created(BaseUriBuilder.of("template", template.name()));
-    } catch (MongoWriteException e) {
-      if(e.getCode() == 11000) { // 11000 = duplicated primary key: template exists
-        return HttpResponse.status(HttpStatus.CONFLICT);
-      }
-      throw e;
-    }
+    return switch (templateService.insert(template)) {
+      case REJECTED -> HttpResponse.serverError();
+      case DUPLICATED -> HttpResponse.status(HttpStatus.CONFLICT);
+      case INSERTED -> HttpResponse.created(BaseUriBuilder.of("template", template.name()));
+    };
   }
 
   @Put
-  public HttpResponse<URI> replaceTemplate(@Body Identified<Template> body) {
+  public HttpResponse<Object> replaceTemplate(@Body Identified<Template> body) {
     var template = body.value();
-
-    var result = collection.replaceOne(Collections.eqID(template.name()), template);
-    if(!result.wasAcknowledged()) {
-      return HttpResponse.serverError();
-    }
-    if(result.getMatchedCount() == 0) {
-      return HttpResponse.notFound();
-    }
-    if(result.getModifiedCount() == 0) {
-      return HttpResponse.notModified();
-    }
-    return HttpResponse.ok(BaseUriBuilder.of("template", template.name()));
+    return switch (templateService.replace(template)) {
+      case REJECTED -> HttpResponse.serverError();
+      case NOT_MODIFIED -> HttpResponse.notModified();
+      case NOT_FOUND -> HttpResponse.notFound();
+      case REPLACED -> HttpResponse.noContent()
+          .header("location", BaseUriBuilder.of("template", template.name()).toString());
+    };
   }
 
   @Get("/{name}")
   public HttpResponse<Template> getTemplate(@PathVariable String name) {
-    var result = collection.find(Collections.eqID(name))
-        .first();
-
-    return Objects.isNull(result)
+    var result = templateService.find(name);
+    return result.isEmpty()
         ? HttpResponse.notFound()
-        : HttpResponse.ok(result);
+        : HttpResponse.ok(result.get());
   }
 
 
-  @SuppressWarnings("NullableProblems") // fix later this shit
   @Get
   public HttpResponse<List<String>> getListOfNames() {
-    var names = collection.find()
-        .map(Template::name)
-        .into(new ArrayList<>());
-
-    return HttpResponse.ok(names);
+    return HttpResponse.ok(templateService.allNames());
   }
 
-  @Delete(value = "/{name}", consumes = "text/plain")
+  @Delete(value = "/{name}")
   public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
-    var result = collection.deleteOne(Collections.eqID(name));
-
-    if(!result.wasAcknowledged()) {
-      return HttpResponse.serverError();
-    }
-
-    return result.getDeletedCount() == 1
-        ? HttpResponse.ok()
-        : HttpResponse.notFound();
+    return switch (templateService.delete(name)) {
+      case REJECTED -> HttpResponse.serverError();
+      case NOT_FOUND -> HttpResponse.notFound();
+      case DELETED -> HttpResponse.ok();
+    };
   }
 }

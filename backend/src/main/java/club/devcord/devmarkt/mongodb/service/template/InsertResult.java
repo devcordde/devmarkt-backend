@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.mongodb.service.template;
 
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
-
-public class Collections {
-
-  public static final String ID = "_id";
-
-  private Collections() {
-  }
-
-  public static <T> Bson eqID(T id) {
-    return Filters.eq(ID, id);
-  }
+public enum InsertResult {
+  INSERTED,
+  REJECTED,
+  DUPLICATED
 }

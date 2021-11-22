@@ -22,9 +22,7 @@ import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.util.base.RestAPITestBase;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -57,7 +55,7 @@ public class TemplateTest extends RestAPITestBase {
             "1234",
             TEST_TEMPLATE
         )
-    ), String.class);
+    ));
     Assertions.assertEquals(HttpStatus.CREATED, result.getStatus());
     verifyTemplate(result.header("location"), TEST_TEMPLATE);
   }
@@ -75,10 +73,10 @@ public class TemplateTest extends RestAPITestBase {
             "1234",
             testTemplate
         )
-    ), URI.class);
+    ));
 
-    Assertions.assertEquals(HttpStatus.OK, result.getStatus());
-    verifyTemplate(String.valueOf(result.body()), testTemplate);
+    Assertions.assertEquals(HttpStatus.NO_CONTENT, result.getStatus());
+    verifyTemplate(String.valueOf(result.header("location")), testTemplate);
   }
 
   @Test
@@ -106,8 +104,11 @@ public class TemplateTest extends RestAPITestBase {
     createTemplate();
     var result = client.exchange(HttpRequest.DELETE(
         "/test",
-        "34"
-    ).contentType(MediaType.TEXT_PLAIN), Void.class);
+        new Identified<Void>(
+            "1234",
+            null
+        )
+    ), Void.class);
 
     Assertions.assertEquals(HttpStatus.OK, result.getStatus());
   }
