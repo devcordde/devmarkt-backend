@@ -13,7 +13,5 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - name: Build with Gradle
-        run: ./gradlew --build-cache build
-      - name: Test with Gradle
-        run: ./gradlew test --info
+      - name: Build & Test with Gradle
+        run: ./gradlew --build-cache build test
