@@ -16,3 +16,4 @@ jobs:
           java-version: 17
       - name: Build & Test with Gradle
         run: ./gradlew --build-cache build test
+        timeout-minutes: 30
