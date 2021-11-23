@@ -46,5 +46,11 @@ java {
     targetCompatibility = JavaVersion.toVersion("17")
 }
 
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+    this.testLogging {
+        this.showStandardStreams = true
+    }
+}
 
 
