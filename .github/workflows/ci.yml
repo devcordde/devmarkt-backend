@@ -14,6 +14,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - name: Build & Test with Gradle
-        run: ./gradlew --build-cache build test
+      - name: Test with Gradle
+        run: ./gradlew --build-cache test
+        timeout-minutes: 30
+      - name: Build with Gradle
+        run: ./gradlew --build-cache build
         timeout-minutes: 30
