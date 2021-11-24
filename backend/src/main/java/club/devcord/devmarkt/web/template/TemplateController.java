@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.web;
+package club.devcord.devmarkt.web.template;
 
 import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.mongodb.service.template.TemplateService;
 import club.devcord.devmarkt.util.BaseUriBuilder;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
@@ -29,7 +30,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
-import java.net.URI;
+import io.micronaut.http.annotation.Status;
 import java.util.List;
 
 @Controller("/template")
@@ -40,8 +41,11 @@ public class TemplateController {
     this.templateService = templateService;
   }
 
+
   @Post
-  public HttpResponse<URI> createTemplate(@Body Identified<Template> body) {
+  @CreateSwagger
+  @Status(HttpStatus.CREATED)
+  public HttpResponse<Void> createTemplate(@Body Identified<Template> body) {
     var template = body.value();
     return switch (templateService.insert(template)) {
       case REJECTED -> HttpResponse.serverError();
@@ -51,17 +55,21 @@ public class TemplateController {
   }
 
   @Put
-  public HttpResponse<Object> replaceTemplate(@Body Identified<Template> body) {
+  @ReplaceSwagger
+  @Status(HttpStatus.NO_CONTENT)
+  public HttpResponse<Void> replaceTemplate(@Body Identified<Template> body) {
     var template = body.value();
     return switch (templateService.replace(template)) {
       case REJECTED -> HttpResponse.serverError();
       case NOT_MODIFIED -> HttpResponse.notModified();
       case NOT_FOUND -> HttpResponse.notFound();
       case REPLACED -> HttpResponse.noContent()
-          .header("location", BaseUriBuilder.of("template", template.name()).toString());
+          .header(HttpHeaders.LOCATION, BaseUriBuilder.of("template", template.name()).toString())
+          .body(null);
     };
   }
 
+  @GetSwagger
   @Get("/{name}")
   public HttpResponse<Template> getTemplate(@PathVariable String name) {
     var result = templateService.find(name);
@@ -72,16 +80,19 @@ public class TemplateController {
 
 
   @Get
+  @ListSwagger
   public HttpResponse<List<String>> getListOfNames() {
     return HttpResponse.ok(templateService.allNames());
   }
 
   @Delete(value = "/{name}")
+  @DeleteSwagger
+  @Status(HttpStatus.NO_CONTENT)
   public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
     return switch (templateService.delete(name)) {
       case REJECTED -> HttpResponse.serverError();
       case NOT_FOUND -> HttpResponse.notFound();
-      case DELETED -> HttpResponse.ok();
+      case DELETED -> HttpResponse.noContent();
     };
   }
 }

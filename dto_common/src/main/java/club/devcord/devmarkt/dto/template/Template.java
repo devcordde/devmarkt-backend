@@ -18,14 +18,19 @@ package club.devcord.devmarkt.dto.template;
 
 import club.devcord.devmarkt.dto.Introspected;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.mongojack.Id;
 import org.mongojack.MongoCollection;
 
 @Introspected
 @MongoCollection(name = "templates")
+@Schema(name = "Template", description = "A template")
 public record Template(
+    @Schema(name = "Name", description = "The template's name")
     @Id @JsonProperty("_id") String name,
+
+    @Schema(name = "Questions", description = "The questions that this template should contain")
     List<Question> questions
 ) {
 }

@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto.template;
+package club.devcord.devmarkt.web.template;
 
-import club.devcord.devmarkt.dto.Introspected;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@Introspected
-@Schema(name = "Question", description = "A question, usually used in a template")
-public record Question(
-    String question
-) {
+
+@Operation(
+    summary = "Gets a template by the name"
+)
+@ApiResponse(
+    responseCode = "200",
+    description = "The template was found and returned"
+)
+@ApiResponse(
+    responseCode = "404",
+    description = "No template was found with this name"
+)
+@Retention(RetentionPolicy.RUNTIME)
+@interface GetSwagger {
 }

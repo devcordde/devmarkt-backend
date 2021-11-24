@@ -16,7 +16,12 @@
 
 package club.devcord.devmarkt.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Introspected
+@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
 public record Identified<T>(
+    @Schema(name = "RequesterID", description = "An ID which identifies the sender of this request")
     String requesterID,
     T value
 ) {

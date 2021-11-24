@@ -61,7 +61,7 @@ public class TemplateTest extends RestAPITestBase {
   }
 
   @Test
-  public void updateTemplate() {
+  public void replaceTemplate() {
     createTemplate();
     var testTemplate = new Template(
         "test",
@@ -110,6 +110,6 @@ public class TemplateTest extends RestAPITestBase {
         )
     ), Void.class);
 
-    Assertions.assertEquals(HttpStatus.OK, result.getStatus());
+    Assertions.assertEquals(HttpStatus.NO_CONTENT, result.getStatus());
   }
 }

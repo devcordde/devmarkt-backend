@@ -26,11 +26,12 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
-    implementation("io.swagger.core.v3:swagger-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
 
     implementation("org.mongojack:mongojack:4.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
+
+    implementation("io.swagger.core.v3:swagger-annotations")
 
     implementation(project(":dto_common"))
 
