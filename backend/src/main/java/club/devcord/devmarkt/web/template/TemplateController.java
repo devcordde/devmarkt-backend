@@ -69,8 +69,8 @@ public class TemplateController {
     };
   }
 
-  @GetSwagger
   @Get("/{name}")
+  @GetSwagger
   public HttpResponse<Template> getTemplate(@PathVariable String name) {
     var result = templateService.find(name);
     return result.isEmpty()

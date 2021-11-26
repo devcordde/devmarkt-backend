@@ -42,9 +42,11 @@ dependencies {
 application {
     mainClass.set("club.devcord.devmarkt.Application")
 }
+
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 tasks.getByName<Test>("test") {

@@ -39,7 +39,7 @@ import java.lang.annotation.RetentionPolicy;
 )
 @ApiResponse(
     responseCode = "409",
-    description = "A template with exactly the same name exists"
+    description = "A template with the same name exists"
 )
 @Retention(RetentionPolicy.RUNTIME)
 @interface CreateSwagger {
