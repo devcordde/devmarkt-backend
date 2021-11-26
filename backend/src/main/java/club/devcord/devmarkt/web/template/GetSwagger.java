@@ -14,12 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.web.template;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+
+@Operation(
+    summary = "Gets a template by the name"
+)
+@ApiResponse(
+    responseCode = "200",
+    description = "The template was found and returned"
+)
+@ApiResponse(
+    responseCode = "404",
+    description = "No template was found with this name"
+)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+@interface GetSwagger {
 }

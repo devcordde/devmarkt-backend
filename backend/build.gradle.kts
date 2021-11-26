@@ -20,6 +20,7 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.0")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut:micronaut-inject-java:3.1.4")
     implementation("io.micronaut:micronaut-http-client")
@@ -29,16 +30,30 @@ dependencies {
 
     implementation("org.mongojack:mongojack:4.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
+
+    implementation("io.swagger.core.v3:swagger-annotations")
+
+    implementation(project(":dto_common"))
+
+    testImplementation("org.testcontainers:mongodb:1.16.2")
 }
 
 
 application {
     mainClass.set("club.devcord.devmarkt.Application")
 }
+
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+    this.testLogging {
+        this.showStandardStreams = true
+    }
+}
 
 

@@ -1,3 +1,13 @@
 micronaut:
   server:
     port: ${random.port}
+
+mongodb:
+  uri: mongodb://localhost:${test.mongo-port}
+
+test:
+  mongo-port: ${random.port}
+
+devmarkt:
+  mongodb:
+    database: test

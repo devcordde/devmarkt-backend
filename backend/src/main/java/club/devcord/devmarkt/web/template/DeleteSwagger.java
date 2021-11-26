@@ -14,12 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.web.template;
 
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+@Operation(
+    summary = "Deletes a template by the name"
+)
+@ApiResponse(
+    responseCode = "204",
+    description = "The template was successfully deleted"
+)
+@ApiResponse(
+    responseCode = "404",
+    description = "No template was found with this name. Use POST instead to create a new one"
+)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+@interface DeleteSwagger {
 }

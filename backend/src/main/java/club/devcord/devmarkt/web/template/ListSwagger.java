@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.web.template;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+@Operation(
+  summary = "Gets a list of all template names"
+)
+@ApiResponse(
+    responseCode = "200",
+    description = "A list of all template names, empty if no template was found"
+)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+@interface ListSwagger {
 }

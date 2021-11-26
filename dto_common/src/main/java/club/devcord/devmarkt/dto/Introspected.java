@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.dto;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+public @interface Introspected {
 }
