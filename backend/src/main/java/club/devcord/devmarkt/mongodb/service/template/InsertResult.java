@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.mongodb.service.template;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+public enum InsertResult {
+  INSERTED,
+  REJECTED,
+  DUPLICATED
 }

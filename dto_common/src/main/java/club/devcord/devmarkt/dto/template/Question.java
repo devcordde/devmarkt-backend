@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.dto.template;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import club.devcord.devmarkt.dto.Introspected;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Collection {
-  Class<?> value();
+@Introspected
+@Schema(name = "Question", description = "A question, usually used in a template")
+public record Question(
+    String question
+) {
 }
