@@ -55,7 +55,7 @@ The issue will also use to track the current status of your implementation,
 in addition you should open a draft PR, when you're starting to work on it.
 
 ### Styleguide
-We use the Google [Java Style Guide](https://google.github.io/styleguide/javaguide.html), if you use IntelliJ IDEA the style Guide should
+We use the Google [Java Google Style Guide](https://google.github.io/styleguide/javaguide.html), if you use IntelliJ IDEA the style Guide should
 be applied automatically.
 
 ## License
