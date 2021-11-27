@@ -26,7 +26,6 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
-    runtimeOnly("ch.qos.logback:logback-classic")
 
     implementation("org.mongojack:mongojack:4.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
