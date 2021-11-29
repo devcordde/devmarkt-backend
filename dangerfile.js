@@ -132,4 +132,8 @@ function lintFile(file) {
   if (!file.content.endsWith("\n")) {
     fail(`\`${file.filename}\` is missing a new line at the end`);
   }
+
+  if(/import [^*]+\.\*;/.test(file.content)) {
+    fail(`\`${file.filename}\` is using a wildcard import`);
+  }
 }
