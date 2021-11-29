@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import {danger, warn} from 'danger';
+import {danger, warn, message} from 'danger';
 
 // for debugging
 console.info(danger.github.pr);
 
-function isCollaborator(relation) {
+function isCollaborator() {
+  const relation = danger.github.pr.author_association;
   return relation === "COLLABORATOR"
       || relation === "MEMBER"
       || relation === "OWNER";
@@ -58,6 +59,9 @@ if (!danger.github.pr.milestone) {
 
 const modifiedFiles = danger.git.created_files.concat(danger.git.deleted_files).concat(danger.git.modified_files);
 
-if(modifiedFiles.some(file => TOOLING_FILES.some(toolingFile => file.includes(toolingFile)))) {
-  warn("This PR modifies the tooling of the project");
+if(
+    modifiedFiles.some(file => TOOLING_FILES.some(toolingFile => file.includes(toolingFile)))
+    && !isCollaborator()
+) {
+  message("This PR modifies the tooling of the project");
 }
