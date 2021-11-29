@@ -20,7 +20,7 @@ import { danger , warn } from 'danger';
 console.info(danger.github.pr);
 
 if(
-    !danger.github.pr.assignees
+    !danger.github.pr.assignees.length
     && !danger.github.pr.assignee
 ) {
   warn("No assignee has been set");
