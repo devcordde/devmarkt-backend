@@ -29,3 +29,7 @@ if(
 if(!danger.github.pr.labels.length) {
   warn("No lables have been set");
 }
+
+if(!danger.github.pr.milestone) {
+  warn("No milestone has been set");
+}
