@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {danger, warn, message} from 'danger';
+import {danger, message, warn} from 'danger';
 
 // for debugging
 console.info(danger.github.pr);
@@ -27,16 +27,20 @@ function isCollaborator() {
 }
 
 const TOOLING_FILES = [
-    ".github",
-    "build.gradle.kts",
-    "settings.gradle.kts",
-    "gradlew",
-    "gradle/wrapper",
-    "dangerfile.js",
-    "package.json",
-    "package-lock.json"
+  ".github",
+  "build.gradle.kts",
+  "settings.gradle.kts",
+  "gradlew",
+  "gradle/wrapper",
+  "dangerfile.js",
+  "package.json",
+  "package-lock.json"
 ];
 
+const modifiedFiles = danger.git.created_files.concat(
+    danger.git.deleted_files).concat(danger.git.modified_files);
+
+// PR checks (assignee, labels, milestone)
 if (
     !danger.github.pr.assignees.length
     && !danger.github.pr.assignee
@@ -48,8 +52,7 @@ if (!danger.github.pr.labels.length) {
   warn("No lables have been set");
 }
 
-if (danger.github.pr.labels.some(
-    label => label.name === 'better description')) {
+if (danger.github.pr.labels.some(label => label.name === 'better description')) {
   warn("This PR has the `better description` label, consider editing the description before merging");
 }
 
@@ -57,11 +60,16 @@ if (!danger.github.pr.milestone) {
   warn("No milestone has been set");
 }
 
-const modifiedFiles = danger.git.created_files.concat(danger.git.deleted_files).concat(danger.git.modified_files);
-
-if(
-    modifiedFiles.some(file => TOOLING_FILES.some(toolingFile => file.includes(toolingFile)))
+// File checks
+if (
+    modifiedFiles.some(
+        file => TOOLING_FILES.some(toolingFile => file.includes(toolingFile)))
     && !isCollaborator()
 ) {
   message("This PR modifies the tooling of the project");
+}
+
+if(modifiedFiles.some(file => file.includes(".idea"))) {
+  const fn = isCollaborator() ? message : warn;
+  fn("This PR modifies the IntelliJ IDEA setting files");
 }
