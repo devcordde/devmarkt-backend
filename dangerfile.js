@@ -116,7 +116,6 @@ function readDirectoryRecursive(
 
 const LINTER_EXCLUDED = [
   ".git",
-  ".gradle",
   "gradle",
   ".idea",
   "node_modules",
@@ -135,5 +134,9 @@ function lintFile(file) {
 
   if(/import [^*]+\.\*;/.test(file.content)) {
     fail(`\`${file.filename}\` is using a wildcard import`);
+  }
+
+  if(!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
+    fail(`\`${file.filename}\` does not follow the \`/^[a-z0-9-_/]+\.[a-z0-9]+$/i\` regex`);
   }
 }
