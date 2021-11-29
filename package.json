@@ -1,0 +1,7 @@
+{
+  "name": "devmarkt-backend",
+  "version": "1.0.0",
+  "devDependencies": {
+    "danger": "^10.7.1"
+  }
+}
