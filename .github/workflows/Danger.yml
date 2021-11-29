@@ -1,0 +1,13 @@
+name: Danger Review
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Danger Review
+        uses: danger/danger-js@main
+        timeout-minutes: 15
