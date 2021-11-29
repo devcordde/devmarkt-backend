@@ -16,6 +16,9 @@
 
 import { danger , warn } from 'danger';
 
+// for debugging
+console.info(danger.github.pr);
+
 if(
     !danger.github.pr.assignees
     && !danger.github.pr.assignee
