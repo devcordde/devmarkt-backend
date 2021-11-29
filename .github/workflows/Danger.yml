@@ -3,7 +3,7 @@ name: Danger Review
 on: [pull_request]
 
 jobs:
-  build:
+  danger:
     runs-on: ubuntu-latest
 
     steps:
@@ -11,3 +11,5 @@ jobs:
       - name: Run Danger Review
         uses: danger/danger-js@main
         timeout-minutes: 15
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
