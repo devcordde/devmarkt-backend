@@ -25,3 +25,7 @@ if(
 ) {
   warn("No assignee has been set");
 }
+
+if(!danger.github.pr.labels.length) {
+  warn("No lables have been set");
+}
