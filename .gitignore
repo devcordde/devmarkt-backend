@@ -35,3 +35,6 @@ build
 **/.gradle
 
 !gradle-wrapper.jar
+
+# Ignore node_modules
+node_modules/

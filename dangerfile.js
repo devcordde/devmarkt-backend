@@ -16,10 +16,13 @@
 
 import {danger, message, warn} from 'danger';
 
-// for debugging
-console.info(danger.github.pr);
+const fs = require('fs');
+const path = require('path');
 
 function isCollaborator() {
+  if (!danger.github) {
+    return false;
+  }
   const relation = danger.github.pr.author_association;
   return relation === "COLLABORATOR"
       || relation === "MEMBER"
@@ -37,27 +40,30 @@ const TOOLING_FILES = [
   "package-lock.json"
 ];
 
-const modifiedFiles = danger.git.created_files.concat(
-    danger.git.deleted_files).concat(danger.git.modified_files);
+const modifiedFiles = danger.git.created_files
+.concat(danger.git.deleted_files)
+.concat(danger.git.modified_files);
 
 // PR checks (assignee, labels, milestone)
-if (
-    !danger.github.pr.assignees.length
-    && !danger.github.pr.assignee
-) {
-  warn("No assignee has been set");
-}
+if (danger.github) {
+  if (
+      !danger.github.pr?.assignees.length
+      && !danger.github.pr?.assignee
+  ) {
+    warn("No assignee has been set");
+  }
 
-if (!danger.github.pr.labels.length) {
-  warn("No lables have been set");
-}
+  if (!danger.github.pr?.labels.length) {
+    warn("No lables have been set");
+  }
 
-if (danger.github.pr.labels.some(label => label.name === 'better description')) {
-  warn("This PR has the `better description` label, consider editing the description before merging");
-}
+  if (danger.github.pr?.labels.some(label => label.name === 'better description')) {
+    warn("This PR has the `better description` label, consider editing the description before merging");
+  }
 
-if (!danger.github.pr.milestone) {
-  warn("No milestone has been set");
+  if (!danger.github.pr?.milestone) {
+    warn("No milestone has been set");
+  }
 }
 
 // File checks
@@ -69,7 +75,61 @@ if (
   message("This PR modifies the tooling of the project");
 }
 
-if(modifiedFiles.some(file => file.includes(".idea"))) {
+if (modifiedFiles.some(file => file.includes(".idea"))) {
   const fn = isCollaborator() ? message : warn;
   fn("This PR modifies the IntelliJ IDEA setting files");
+}
+
+// Linter
+
+function readFileContent(fileName) {
+  return fs.readFileSync(fileName).toString("utf-8");
+}
+
+function readDirectoryRecursive(
+    directory, 
+    excluded = [], 
+    currentPath = __dirname
+) {
+  
+  const isExcluded = (file) => excluded.some(exclude => file.includes(exclude));
+
+  const dirents = fs.readdirSync(directory, {withFileTypes: true});
+
+  const files = dirents.filter(dirent => dirent.isFile())
+      .filter(dirent => !isExcluded(dirent.name))
+      .map(dirent => `${dirent.name}`);
+  
+  const directories = dirents.filter(dirent => dirent.isDirectory())
+      .filter(dirent => !isExcluded(`${dirent.name}`));
+  
+  directories.forEach(dir => {
+    const recursedFiles = readDirectoryRecursive(
+        path.join(currentPath, dir.name),
+        excluded,
+        `${currentPath}/${dir.name}`)
+        .map(filename => `${dir.name}/${filename}`);
+    files.push(...recursedFiles);
+  });
+  return files;
+}
+
+const LINTER_EXCLUDED = [
+  ".git",
+  ".gradle",
+  "gradle",
+  ".idea",
+  "node_modules",
+  "build",
+  "LICENSE"
+];
+
+readDirectoryRecursive(".", LINTER_EXCLUDED)
+    .map(file => ({filename: file, content: readFileContent(file)}))
+    .forEach(lintFile)
+
+function lintFile(file) {
+  if (!file.content.endsWith("\n")) {
+    fail(`\`${file.filename}\` is missing a new line at the end`);
+  }
 }
