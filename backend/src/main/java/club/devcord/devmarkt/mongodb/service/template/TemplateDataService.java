@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Singleton
-public class TemplateService {
+public class TemplateDataService {
 
   private final MongoCollection<Template> collection;
 
-  public TemplateService(@Collection(Template.class) MongoCollection<Template> collection) {
+  public TemplateDataService(@Collection(Template.class) MongoCollection<Template> collection) {
     this.collection = collection;
   }
 

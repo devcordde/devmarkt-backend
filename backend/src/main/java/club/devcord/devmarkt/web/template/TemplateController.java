@@ -18,7 +18,7 @@ package club.devcord.devmarkt.web.template;
 
 import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.mongodb.service.template.TemplateService;
+import club.devcord.devmarkt.mongodb.service.template.TemplateDataService;
 import club.devcord.devmarkt.util.BaseUriBuilder;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
@@ -35,12 +35,11 @@ import java.util.List;
 
 @Controller("/template")
 public class TemplateController {
-  private final TemplateService templateService;
+  private final TemplateDataService templateService;
 
-  public TemplateController(TemplateService templateService) {
+  public TemplateController(TemplateDataService templateService) {
     this.templateService = templateService;
   }
-
 
   @Post
   @CreateSwagger
