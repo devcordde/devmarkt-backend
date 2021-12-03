@@ -14,8 +14,6 @@ name: "CodeQL"
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '32 9 * * 2'
 
 jobs:
   codeql_analyze:
