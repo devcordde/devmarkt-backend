@@ -25,8 +25,7 @@ public class EventBuilder<T> {
   private String name;
   private T data;
 
-  public EventBuilder(
-      EventService<T> service) {
+  public EventBuilder(EventService<T> service) {
     this.service = service;
   }
 
