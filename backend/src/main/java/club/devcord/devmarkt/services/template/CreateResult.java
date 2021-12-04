@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.services;
+package club.devcord.devmarkt.services.template;
 
-public class TemplateService {
-
-
-
+public enum CreateResult {
+  CREATED,
+  DUPLICATED,
+  ERROR
 }

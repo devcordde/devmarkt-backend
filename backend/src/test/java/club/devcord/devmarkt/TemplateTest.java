@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 @MicronautTest(rebuildContext = true, application = Application.class)
 public class TemplateTest extends RestAPITestBase {
-  private static final Template TEST_TEMPLATE = new Template(
+  public static final Template TEST_TEMPLATE = new Template(
       "test",
       List.of(new Question("How are you?"), new Question("How old are you?"))
   );
