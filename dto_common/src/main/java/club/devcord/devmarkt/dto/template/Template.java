@@ -27,10 +27,10 @@ import org.mongojack.MongoCollection;
 @MongoCollection(name = "templates")
 @Schema(name = "Template", description = "A template")
 public record Template(
-    @Schema(name = "Name", description = "The template's name")
+    @Schema(description = "The template's name")
     @Id @JsonProperty("_id") String name,
 
-    @Schema(name = "Questions", description = "The questions that this template should contain")
+    @Schema(description = "The questions that this template should contain")
     List<Question> questions
 ) {
 }
