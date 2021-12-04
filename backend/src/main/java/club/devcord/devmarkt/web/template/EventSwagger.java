@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Operation(
-    summary = "Creates a new event stream for template events"
+    summary = "Subcribes you to all template events (SSE)"
 )
 @ApiResponse(
     responseCode = "200",
