@@ -65,7 +65,7 @@ public class TemplateService {
     return switch (dataService.replace(template)) {
       case REJECTED -> ReplaceResult.ERROR;
       case NOT_FOUND -> ReplaceResult.NOT_FOUND;
-      case NOT_MODIFIED -> ReplaceResult.NOT_FOUND;
+      case NOT_MODIFIED -> ReplaceResult.NOT_MODIFIED;
       case REPLACED -> {
         event()
             .name("TemplateReplaced")
