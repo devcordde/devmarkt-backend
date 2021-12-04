@@ -34,8 +34,7 @@ public class TemplateService {
   private final EventService<TemplateEvent> eventService = new EventService<>();
   private final TemplateDAO dataService;
 
-  public TemplateService(
-      TemplateDAO dataService) {
+  public TemplateService(TemplateDAO dataService) {
     this.dataService = dataService;
   }
 
