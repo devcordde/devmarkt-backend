@@ -19,13 +19,18 @@ package club.devcord.devmarkt;
 import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Question;
 import club.devcord.devmarkt.dto.template.Template;
+import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.util.base.RestAPITestBase;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.sse.SseClient;
+import io.micronaut.http.sse.Event;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
 
 @MicronautTest(rebuildContext = true, application = Application.class)
 public class TemplateTest extends RestAPITestBase {
@@ -111,5 +116,17 @@ public class TemplateTest extends RestAPITestBase {
     ), Void.class);
 
     Assertions.assertEquals(HttpStatus.NO_CONTENT, result.getStatus());
+  }
+
+  @Test
+  public void createEvent(@Client("/template") SseClient sseClient) {
+    var publisher = sseClient.eventStream("/events", TemplateEvent.class);
+    createTemplate();
+    var result = Flux.from(publisher)
+        .map(Event::getData)
+        .map(TemplateEvent::templateData)
+        .blockFirst();
+
+    Assertions.assertEquals(TEST_TEMPLATE, result);
   }
 }

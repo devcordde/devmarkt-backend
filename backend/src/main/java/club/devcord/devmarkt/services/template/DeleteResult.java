@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto.template;
+package club.devcord.devmarkt.services.template;
 
-public record TemplateEvent(String name,
-                            String requesterID,
-                            EventType type,
-                            Template templateData){
-
-  public enum EventType {
-    CREATED,
-    REPLACED,
-    DELETED
-  }
-
+public enum DeleteResult {
+  DELETED,
+  NOT_FOUND,
+  ERROR
 }

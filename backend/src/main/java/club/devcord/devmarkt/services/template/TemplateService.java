@@ -24,6 +24,8 @@ import club.devcord.devmarkt.event.EventService;
 import club.devcord.devmarkt.mongodb.service.template.TemplateDataService;
 import io.micronaut.http.sse.Event;
 import jakarta.inject.Singleton;
+import java.util.List;
+import java.util.Optional;
 import reactor.core.publisher.Flux;
 
 @Singleton
@@ -57,6 +59,44 @@ public class TemplateService {
         yield CreateResult.CREATED;
       }
     };
+  }
+
+  public ReplaceResult replace(Template template, String requesterID) {
+    return switch (dataService.replace(template)) {
+      case REJECTED -> ReplaceResult.ERROR;
+      case NOT_FOUND -> ReplaceResult.NOT_FOUND;
+      case NOT_MODIFIED -> ReplaceResult.NOT_FOUND;
+      case REPLACED -> {
+        event()
+            .name("TemplateReplaced")
+            .data(new TemplateEvent(template.name(), requesterID, EventType.REPLACED, template))
+            .fire();
+        yield ReplaceResult.REPLACED;
+      }
+    };
+  }
+
+  public DeleteResult delete(String name, String requesterID) {
+    return switch (dataService.delete(name)) {
+      case REJECTED -> DeleteResult.ERROR;
+      case NOT_FOUND -> DeleteResult.NOT_FOUND;
+      case DELETED -> {
+        event()
+            .name("TemplateDeleted")
+            .data(new TemplateEvent(name, requesterID, EventType.DELETED, null))
+            .fire();
+
+        yield DeleteResult.DELETED;
+      }
+    };
+  }
+
+  public Optional<Template> get(String name) {
+    return dataService.find(name);
+  }
+
+  public List<String> names() {
+    return dataService.allNames();
   }
 
 }

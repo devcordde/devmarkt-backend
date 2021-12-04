@@ -18,27 +18,38 @@ package club.devcord.devmarkt.web.template;
 
 import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.mongodb.service.template.TemplateDataService;
+import club.devcord.devmarkt.dto.template.TemplateEvent;
+import club.devcord.devmarkt.services.template.TemplateService;
 import club.devcord.devmarkt.util.BaseUriBuilder;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.Status;
+import io.micronaut.http.sse.Event;
 import java.util.List;
+import org.reactivestreams.Publisher;
 
 @Controller("/template")
 public class TemplateController {
-  private final TemplateDataService templateService;
+  private final TemplateService service;
 
-  public TemplateController(TemplateDataService templateService) {
-    this.templateService = templateService;
+  public TemplateController(TemplateService templateService) {
+    this.service = templateService;
+  }
+
+  @Get("/events")
+  @Produces(MediaType.TEXT_EVENT_STREAM)
+  public Publisher<Event<TemplateEvent>> events() {
+    return service.subscribeEvents();
   }
 
   @Post
@@ -46,10 +57,11 @@ public class TemplateController {
   @Status(HttpStatus.CREATED)
   public HttpResponse<Void> createTemplate(@Body Identified<Template> body) {
     var template = body.value();
-    return switch (templateService.insert(template)) {
-      case REJECTED -> HttpResponse.serverError();
+    var requesterID = body.requesterID();
+    return switch (service.create(template, requesterID)) {
+      case ERROR -> HttpResponse.serverError();
       case DUPLICATED -> HttpResponse.status(HttpStatus.CONFLICT);
-      case INSERTED -> HttpResponse.created(BaseUriBuilder.of("template", template.name()));
+      case CREATED -> HttpResponse.created(BaseUriBuilder.of("template", template.name()));
     };
   }
 
@@ -58,8 +70,9 @@ public class TemplateController {
   @Status(HttpStatus.NO_CONTENT)
   public HttpResponse<Void> replaceTemplate(@Body Identified<Template> body) {
     var template = body.value();
-    return switch (templateService.replace(template)) {
-      case REJECTED -> HttpResponse.serverError();
+    var requesterID = body.requesterID();
+    return switch (service.replace(template, requesterID)) {
+      case ERROR -> HttpResponse.serverError();
       case NOT_MODIFIED -> HttpResponse.notModified();
       case NOT_FOUND -> HttpResponse.notFound();
       case REPLACED -> HttpResponse.noContent()
@@ -71,7 +84,7 @@ public class TemplateController {
   @Get("/{name}")
   @GetSwagger
   public HttpResponse<Template> getTemplate(@PathVariable String name) {
-    var result = templateService.find(name);
+    var result = service.get(name);
     return result.isEmpty()
         ? HttpResponse.notFound()
         : HttpResponse.ok(result.get());
@@ -81,15 +94,15 @@ public class TemplateController {
   @Get
   @ListSwagger
   public HttpResponse<List<String>> getListOfNames() {
-    return HttpResponse.ok(templateService.allNames());
+    return HttpResponse.ok(service.names());
   }
 
   @Delete(value = "/{name}")
   @DeleteSwagger
   @Status(HttpStatus.NO_CONTENT)
   public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
-    return switch (templateService.delete(name)) {
-      case REJECTED -> HttpResponse.serverError();
+    return switch (service.delete(name, requesterID)) {
+      case ERROR -> HttpResponse.serverError();
       case NOT_FOUND -> HttpResponse.notFound();
       case DELETED -> HttpResponse.noContent();
     };
