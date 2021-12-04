@@ -47,6 +47,7 @@ public class TemplateController {
   }
 
   @Get("/events")
+  @EventSwagger
   @Produces(MediaType.TEXT_EVENT_STREAM)
   public Publisher<Event<TemplateEvent>> events() {
     return service.subscribeEvents();
