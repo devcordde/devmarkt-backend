@@ -22,7 +22,7 @@ import reactor.core.publisher.Sinks;
 
 public class EventService<T> {
 
-  Sinks.Many<Event<T>> sink = Sinks.many().replay().all();
+  private final Sinks.Many<Event<T>> sink = Sinks.many().replay().all();
 
   public void publish(Event<T> event) {
     sink.tryEmitNext(event);
