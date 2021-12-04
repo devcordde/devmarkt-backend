@@ -21,7 +21,7 @@ import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.dto.template.TemplateEvent.EventType;
 import club.devcord.devmarkt.event.EventBuilder;
 import club.devcord.devmarkt.event.EventService;
-import club.devcord.devmarkt.mongodb.service.template.TemplateDataService;
+import club.devcord.devmarkt.mongodb.service.template.TemplateDAO;
 import io.micronaut.http.sse.Event;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -32,10 +32,10 @@ import reactor.core.publisher.Flux;
 public class TemplateService {
 
   private final EventService<TemplateEvent> eventService = new EventService<>();
-  private final TemplateDataService dataService;
+  private final TemplateDAO dataService;
 
   public TemplateService(
-      TemplateDataService dataService) {
+      TemplateDAO dataService) {
     this.dataService = dataService;
   }
 
