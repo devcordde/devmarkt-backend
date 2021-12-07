@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.web.template;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@Introspected
-@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
-public record Identified<T>(
-    @Schema(description = "An ID which identifies the sender of this request")
-    String requesterID,
-    T value
-) {
+@Operation(
+    summary = "Subcribes you to all template events (SSE)"
+)
+@ApiResponse(
+    responseCode = "200",
+    description = "A new event stream that is used for SSE"
+)
+@Retention(RetentionPolicy.RUNTIME)
+@interface EventSwagger {
+
 }

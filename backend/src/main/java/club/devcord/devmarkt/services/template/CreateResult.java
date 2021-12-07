@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.services.template;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@Introspected
-@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
-public record Identified<T>(
-    @Schema(description = "An ID which identifies the sender of this request")
-    String requesterID,
-    T value
-) {
+public enum CreateResult {
+  CREATED,
+  DUPLICATED,
+  ERROR
 }

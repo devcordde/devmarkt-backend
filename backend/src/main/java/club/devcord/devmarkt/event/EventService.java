@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.event;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.micronaut.http.sse.Event;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
-@Introspected
-@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
-public record Identified<T>(
-    @Schema(description = "An ID which identifies the sender of this request")
-    String requesterID,
-    T value
-) {
+public class EventService<T> {
+
+  private final Sinks.Many<Event<T>> sink = Sinks.many().replay().all();
+
+  public void publish(Event<T> event) {
+    sink.tryEmitNext(event);
+  }
+
+  public Flux<Event<T>> subscribe() {
+    return sink.asFlux();
+  }
+
 }

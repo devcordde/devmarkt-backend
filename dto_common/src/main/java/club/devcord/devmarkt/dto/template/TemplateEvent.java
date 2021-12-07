@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.dto.template;
 
+import club.devcord.devmarkt.dto.Introspected;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Introspected
-@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
-public record Identified<T>(
-    @Schema(description = "An ID which identifies the sender of this request")
+@Schema(name = "TemplateEvent", description = "A universal template event")
+public record TemplateEvent(
+    @Schema(description = "The templates name")
+    String name,
+    @Schema(description = "The requesters ID")
     String requesterID,
-    T value
-) {
+    @Schema(description = "The type of this Event")
+    EventType type,
+    @Schema(description = "The actual template data of this event. Null if the type is DELETED")
+    Template templateData){
+
+  @Schema(name = "EventType", description = "The type of this template event")
+  public enum EventType {
+    CREATED,
+    REPLACED,
+    DELETED
+  }
+
 }

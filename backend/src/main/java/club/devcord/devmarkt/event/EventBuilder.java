@@ -14,15 +14,38 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.dto;
+package club.devcord.devmarkt.event;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.micronaut.http.sse.Event;
 
-@Introspected
-@Schema(description = "A wrapper DTO that is used to identify the sender of a request")
-public record Identified<T>(
-    @Schema(description = "An ID which identifies the sender of this request")
-    String requesterID,
-    T value
-) {
+public class EventBuilder<T> {
+
+  private final EventService<T> service;
+
+  private String name;
+  private T data;
+
+  public EventBuilder(EventService<T> service) {
+    this.service = service;
+  }
+
+  public EventBuilder<T> name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  public EventBuilder<T> data(T data) {
+    this.data = data;
+    return this;
+  }
+
+  public Event<T> build() {
+    return Event.of(data)
+        .name(name);
+  }
+
+  public void fire() {
+    service.publish(build());
+  }
+
 }
