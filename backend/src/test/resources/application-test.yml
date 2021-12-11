@@ -4,6 +4,7 @@ micronaut:
 
 mongodb:
   uri: mongodb://localhost:${test.mongo-port}
+  database: test
 
 test:
   mongo-port: ${random.port}

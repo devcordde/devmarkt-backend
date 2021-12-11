@@ -17,7 +17,7 @@
 package club.devcord.devmarkt.mongodb.service.template;
 
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.mongodb.Collection;
+import club.devcord.devmarkt.micronaut_mongojack.Collection;
 import club.devcord.devmarkt.mongodb.Collections;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;

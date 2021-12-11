@@ -6,3 +6,4 @@ micronaut:
     host: ${devmarkt.server.host:`localhost`}
 mongodb:
   uri: mongodb://${devmarkt.mongodb.user:mongodb}:${devmarkt.mongodb.password:passy}@${devmarkt.mongodb.host:localhost}:${devmarkt.mongodb.port:27017}
+  database: ${devmarkt.mongodb.database}

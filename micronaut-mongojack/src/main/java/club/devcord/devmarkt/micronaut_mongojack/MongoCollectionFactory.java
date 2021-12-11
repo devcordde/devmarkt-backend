@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package club.devcord.devmarkt.micronaut_mongojack;
 
-package club.devcord.devmarkt.mongodb;
-
-import club.devcord.devmarkt.dto.Introspected;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -29,14 +27,13 @@ import org.bson.UuidRepresentation;
 import org.mongojack.JacksonMongoCollection;
 
 @Factory
-@Requires(property = "devmarkt.mongodb.database", classes = {MongoClient.class, ObjectMapper.class})
-@Introspected
+@Requires(property = "mongodb.database", beans = {MongoClient.class, ObjectMapper.class})
 @SuppressWarnings("unchecked")
 public class MongoCollectionFactory {
 
   @Prototype
   public <T> MongoCollection<T> mongoCollection(MongoClient client,
-      @Value("${devmarkt.mongodb.database}") String database, ObjectMapper mapper,
+      @Value("${mongodb.database}") String database, ObjectMapper mapper,
       InjectionPoint<?> injectionPoint) {
 
     Class<T> clazz = injectionPoint
