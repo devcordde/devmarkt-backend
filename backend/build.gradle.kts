@@ -28,12 +28,10 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api")
     compileOnly("io.micronaut.reactor:micronaut-reactor")
 
-    implementation("org.mongojack:mongojack:4.3.0")
-    implementation("io.micronaut.mongodb:micronaut-mongo-sync")
-
     implementation("io.swagger.core.v3:swagger-annotations")
 
     implementation(project(":dto_common"))
+    implementation(project(":micronaut-mongojack"))
 
     testImplementation("org.testcontainers:mongodb:1.16.2")
     testCompileOnly("io.micronaut.reactor:micronaut-reactor")

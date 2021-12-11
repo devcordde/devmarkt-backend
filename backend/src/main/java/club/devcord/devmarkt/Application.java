@@ -2,15 +2,11 @@ package club.devcord.devmarkt;
 
 import com.mongodb.client.MongoClient;
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.runtime.Micronaut;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
-@Introspected(packages = {
-    "club.devcord.devmarkt.dto.template"
-}, includedAnnotations = club.devcord.devmarkt.dto.Introspected.class)
 @OpenAPIDefinition(
     info = @Info(
         title = "Devmarkt-Backend",

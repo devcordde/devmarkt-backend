@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb;
+package club.devcord.devmarkt.micronaut_mongojack;
 
-public class NoCollectionTypeProvided extends RuntimeException {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-  public NoCollectionTypeProvided() {
-    super("No collection type provided");
-  }
-
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Collection {
+  Class<?> value();
 }
