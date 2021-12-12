@@ -136,7 +136,7 @@ function lintFile(file) {
     fail(`\`${file.filename}\` is using a wildcard import`);
   }
   
-  if(/System\.out/.test(file.content) || /System\.err/.test(file.content)) {
+  if((/System\.out/.test(file.content) || /System\.err/.test(file.content)) && file.filename !== 'dangerfile.js') {
     fail(`\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
   }
 
