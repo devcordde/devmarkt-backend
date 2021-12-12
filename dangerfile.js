@@ -135,6 +135,10 @@ function lintFile(file) {
   if(/import [^*]+\.\*;/.test(file.content)) {
     fail(`\`${file.filename}\` is using a wildcard import`);
   }
+  
+  if(/System\.out/.test(file.content) || /System\.err/.test(file.content)) {
+    fail(`\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
+  }
 
   if(!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
     fail(`\`${file.filename}\` does not follow the \`/^[a-z0-9-_/]+\.[a-z0-9]+$/i\` regex`);
