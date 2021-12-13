@@ -17,7 +17,6 @@
 package club.devcord.devmarkt.mongodb.service.template;
 
 import club.devcord.devmarkt.dto.template.Template;
-import club.devcord.devmarkt.micronaut_mongojack.Collection;
 import club.devcord.devmarkt.mongodb.Collections;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
@@ -31,7 +30,7 @@ public class TemplateDAO {
 
   private final MongoCollection<Template> collection;
 
-  public TemplateDAO(@Collection(Template.class) MongoCollection<Template> collection) {
+  public TemplateDAO(MongoCollection<Template> collection) {
     this.collection = collection;
   }
 
