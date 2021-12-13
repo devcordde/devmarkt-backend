@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
+import io.micronaut.core.type.ArgumentCoercible;
 import io.micronaut.inject.InjectionPoint;
 import org.bson.UuidRepresentation;
 import org.mongojack.JacksonMongoCollection;
@@ -36,14 +37,17 @@ public class MongoCollectionFactory {
       @Value("${mongodb.database}") String database, ObjectMapper mapper,
       InjectionPoint<?> injectionPoint) {
 
-    Class<T> clazz = injectionPoint
-        .getAnnotationMetadata()
-        .classValue(Collection.class)
-        .map(aClass -> (Class<T>) aClass)
-        .orElseThrow(NoCollectionTypeProvided::new);
-
-    return JacksonMongoCollection.builder()
-        .withObjectMapper(mapper)
-        .build(client, database, clazz, UuidRepresentation.STANDARD);
+    if(injectionPoint instanceof ArgumentCoercible) {
+      var argument = ((ArgumentCoercible<T>) injectionPoint)
+          .asArgument();
+      var collectionType = (Class<T>) argument
+          .getFirstTypeVariable()
+          .orElseThrow(NoCollectionTypeProvided::new)
+          .getType();
+      return JacksonMongoCollection.builder()
+          .withObjectMapper(mapper)
+          .build(client, database, collectionType, UuidRepresentation.STANDARD);
+    }
+    throw new NoCollectionTypeProvided();
   }
 }
