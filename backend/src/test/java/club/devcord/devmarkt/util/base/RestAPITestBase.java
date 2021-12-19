@@ -25,7 +25,7 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 
-public abstract class RestAPITestBase extends MongoTestBase {
+public abstract class RestAPITestBase {
   public static final HttpClient CLIENT = new DefaultHttpClient();
   public static final BlockingHttpClient BLOCKING_CLIENT = CLIENT.toBlocking();
   protected BlockingHttpClient client;

@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb.service.template;
+package club.devcord.devmarkt.database;
 
-public enum InsertResult {
-  INSERTED,
-  REJECTED,
-  DUPLICATED
+import club.devcord.devmarkt.dto.template.Template;
+import java.util.List;
+import java.util.Optional;
+
+public interface TemplateDAO {
+
+  InsertResult insert(Template template);
+
+  ReplaceResult replace(Template template);
+
+  DeleteResult delete(String name);
+
+  Optional<Template> find(String name);
+
+  List<String> allNames();
+
 }

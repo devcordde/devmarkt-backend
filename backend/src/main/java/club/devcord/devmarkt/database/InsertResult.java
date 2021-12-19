@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb.service.template;
+package club.devcord.devmarkt.database;
 
-public enum DeleteResult {
-  DELETED,
+public enum InsertResult {
+  INSERTED,
   REJECTED,
-  NOT_FOUND
+  DUPLICATED
 }

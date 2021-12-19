@@ -21,18 +21,15 @@ import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.services.template.CreateResult;
 import club.devcord.devmarkt.services.template.TemplateService;
-import club.devcord.devmarkt.util.base.MongoTestBase;
 import io.micronaut.http.sse.Event;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import reactor.core.Disposable;
 
 @MicronautTest
-public class TemplateServiceTest extends MongoTestBase {
+public class TemplateServiceTest {
 
   @Inject
   private TemplateService service;

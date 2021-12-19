@@ -16,12 +16,13 @@
 
 package club.devcord.devmarkt.services.template;
 
+import club.devcord.devmarkt.database.EmptTemplateImpl;
+import club.devcord.devmarkt.database.TemplateDAO;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.dto.template.TemplateEvent.EventType;
 import club.devcord.devmarkt.event.EventBuilder;
 import club.devcord.devmarkt.event.EventService;
-import club.devcord.devmarkt.mongodb.service.template.TemplateDAO;
 import io.micronaut.http.sse.Event;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -32,11 +33,7 @@ import reactor.core.publisher.Flux;
 public class TemplateService {
 
   private final EventService<TemplateEvent> eventService = new EventService<>();
-  private final TemplateDAO dataService;
-
-  public TemplateService(TemplateDAO dataService) {
-    this.dataService = dataService;
-  }
+  private final TemplateDAO dataService = new EmptTemplateImpl();
 
   private EventBuilder<TemplateEvent> event() {
     return new EventBuilder<>(eventService);

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.micronaut_mongojack;
+package club.devcord.devmarkt.database;
 
-public class NoCollectionTypeProvided extends RuntimeException {
-
-  public NoCollectionTypeProvided() {
-    super("No collection type provided");
-  }
-
+public enum ReplaceResult {
+  REPLACED,
+  REJECTED,
+  NOT_FOUND,
+  NOT_MODIFIED
 }

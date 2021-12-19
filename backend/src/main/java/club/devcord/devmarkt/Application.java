@@ -1,7 +1,5 @@
 package club.devcord.devmarkt;
 
-import com.mongodb.client.MongoClient;
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -19,10 +17,5 @@ public class Application {
 
   public static void main(String[] args) {
     var context = Micronaut.run(Application.class, args);
-    setup(context);
-  }
-
-  public static void setup(ApplicationContext context) {
-    context.createBean(MongoClient.class); // start mongo client at startup
   }
 }
