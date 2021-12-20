@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.database;
+CREATE TABLE template(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR UNIQUE
+);
 
-public enum DeleteResult {
-  DELETED,
-  REJECTED,
-  NOT_FOUND
-}
+CREATE TABLE question(
+    template INT,
+    digit INT,
+    question VARCHAR,
+    UNIQUE (template, digit),
+    FOREIGN KEY (template) REFERENCES template(id)
+)

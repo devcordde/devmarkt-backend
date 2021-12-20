@@ -20,20 +20,22 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut:micronaut-inject-java")
-    implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
-    compileOnly("io.micronaut.reactor:micronaut-reactor")
-
-    implementation("io.swagger.core.v3:swagger-annotations")
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
+    compileOnly("io.swagger.core.v3:swagger-annotations")
 
     implementation(project(":dto_common"))
 
-    testImplementation("org.testcontainers:mongodb:1.16.2")
-    testCompileOnly("io.micronaut.reactor:micronaut-reactor")
+    testImplementation("io.micronaut:micronaut-http-client")
 }
 
 

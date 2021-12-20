@@ -16,8 +16,7 @@
 
 package club.devcord.devmarkt.services.template;
 
-import club.devcord.devmarkt.database.EmptTemplateImpl;
-import club.devcord.devmarkt.database.TemplateDAO;
+import club.devcord.devmarkt.database.template.TemplateDAO;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.dto.template.TemplateEvent.EventType;

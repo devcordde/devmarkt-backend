@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.database;
+package club.devcord.devmarkt.database.template;
 
-public enum ReplaceResult {
-  REPLACED,
+public enum DeleteResult {
+  DELETED,
   REJECTED,
-  NOT_FOUND,
-  NOT_MODIFIED
+  NOT_FOUND
 }

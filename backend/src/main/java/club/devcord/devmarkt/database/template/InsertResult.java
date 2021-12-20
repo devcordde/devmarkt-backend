@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.database;
+package club.devcord.devmarkt.database.template;
 
 public enum InsertResult {
   INSERTED,
