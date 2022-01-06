@@ -1,6 +1,16 @@
 name: Danger Review
 
-on: [pull_request]
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - assigned
+      - unassigned
+      - labeled
+      - unlabeled
+      - edited
+      - synchronize
 
 jobs:
   danger:
@@ -13,8 +23,18 @@ jobs:
           node-version: '14'
       - name: Install dependencies
         run: npm ci
+      - name: Clone source for linting
+        run: |
+          git clone ${{ github.event.pull_request.head.repo.clone_url }} source-content
+          cd source-content
+          git checkout ${{ github.event.pull_request.head.sha }}
+          rm dangerfile.js
+          cd ..
+          cp dangerfile.js source-content/dangerfile.js
+          cp -r node_modules/ source-content/node_modules/
       - name: Run Danger Review
         run: npx danger ci
         timeout-minutes: 15
+        working-directory: source-content
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
