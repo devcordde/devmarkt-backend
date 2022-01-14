@@ -13,12 +13,13 @@ name: "CodeQL"
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
   codeql_analyze:
     name: CodeQL Analyze
-    if: ${{ (github.repository == 'devcordde/devmarkt-backend') != (github.event_name == 'pull_request') }}
     runs-on: ubuntu-latest
     permissions:
       actions: read
