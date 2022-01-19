@@ -33,7 +33,7 @@ dependencies {
     implementation(project(":dto_common"))
     implementation(project(":micronaut-mongojack"))
 
-    testImplementation("org.testcontainers:mongodb:1.16.2")
+    testImplementation("org.testcontainers:mongodb:1.16.3")
     testCompileOnly("io.micronaut.reactor:micronaut-reactor")
 }
 
