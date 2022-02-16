@@ -1,5 +1,5 @@
 plugins {
-    id("io.micronaut.library") version "3.2.1"
+    id("io.micronaut.library") version "3.2.2"
 }
 
 version = "0.1"
