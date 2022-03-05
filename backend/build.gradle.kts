@@ -37,6 +37,8 @@ dependencies {
     implementation(project(":dto_common"))
 
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.testcontainers:testcontainers:1.16.3")
+    testImplementation("org.testcontainers:postgresql:1.16.3")
 }
 
 

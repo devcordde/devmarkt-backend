@@ -16,12 +16,12 @@
 
 package club.devcord.devmarkt.dto.template;
 
-import club.devcord.devmarkt.dto.Introspected;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Introspected
 @Schema(name = "Question", description = "A question, usually used in a template")
 public record Question(
+    int digit,
     String question
 ) {
+
 }

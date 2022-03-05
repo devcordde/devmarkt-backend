@@ -10,6 +10,11 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    compileOnly("io.swagger.core.v3:swagger-annotations")
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))

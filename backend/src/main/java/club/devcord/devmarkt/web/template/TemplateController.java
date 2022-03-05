@@ -20,7 +20,7 @@ import club.devcord.devmarkt.dto.Identified;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.services.template.TemplateService;
-import club.devcord.devmarkt.util.BaseUriBuilder;
+import club.devcord.devmarkt.util.Uris;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -35,11 +35,12 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.sse.Event;
-import java.util.List;
+import java.util.Set;
 import org.reactivestreams.Publisher;
 
 @Controller("/template")
 public class TemplateController {
+
   private final TemplateService service;
 
   public TemplateController(TemplateService templateService) {
@@ -60,9 +61,8 @@ public class TemplateController {
     var template = body.value();
     var requesterID = body.requesterID();
     return switch (service.create(template, requesterID)) {
-      case ERROR -> HttpResponse.serverError();
       case DUPLICATED -> HttpResponse.status(HttpStatus.CONFLICT);
-      case CREATED -> HttpResponse.created(BaseUriBuilder.of("template", template.name()));
+      case CREATED -> HttpResponse.created(Uris.of("template", template.name()));
     };
   }
 
@@ -73,11 +73,9 @@ public class TemplateController {
     var template = body.value();
     var requesterID = body.requesterID();
     return switch (service.replace(template, requesterID)) {
-      case ERROR -> HttpResponse.serverError();
-      case NOT_MODIFIED -> HttpResponse.notModified();
       case NOT_FOUND -> HttpResponse.notFound();
       case REPLACED -> HttpResponse.noContent()
-          .header(HttpHeaders.LOCATION, BaseUriBuilder.of("template", template.name()).toString())
+          .header(HttpHeaders.LOCATION, Uris.of("template", template.name()).toString())
           .body(null);
     };
   }
@@ -94,7 +92,7 @@ public class TemplateController {
 
   @Get
   @ListSwagger
-  public HttpResponse<List<String>> getListOfNames() {
+  public HttpResponse<Set<String>> getListOfNames() {
     return HttpResponse.ok(service.names());
   }
 
@@ -103,7 +101,6 @@ public class TemplateController {
   @Status(HttpStatus.NO_CONTENT)
   public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
     return switch (service.delete(name, requesterID)) {
-      case ERROR -> HttpResponse.serverError();
       case NOT_FOUND -> HttpResponse.notFound();
       case DELETED -> HttpResponse.noContent();
     };

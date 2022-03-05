@@ -25,12 +25,12 @@ import java.net.URI;
 
 @Singleton
 @Context
-public class BaseUriBuilder {
+public class Uris {
 
   private static String base;
 
-  public BaseUriBuilder(HttpHostResolver resolver) {
-    BaseUriBuilder.base = resolver.resolve(HttpRequest.GET(""));
+  public Uris(HttpHostResolver resolver) {
+    Uris.base = resolver.resolve(HttpRequest.GET(""));
   }
 
   public static UriBuilder create() {
@@ -39,7 +39,7 @@ public class BaseUriBuilder {
 
   public static URI of(String... paths) {
     var builder = create();
-    for(var path : paths) {
+    for (var path : paths) {
       builder.path(path);
     }
     return builder.build();

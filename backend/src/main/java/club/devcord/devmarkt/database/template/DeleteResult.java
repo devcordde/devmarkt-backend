@@ -18,6 +18,5 @@ package club.devcord.devmarkt.database.template;
 
 public enum DeleteResult {
   DELETED,
-  REJECTED,
   NOT_FOUND
 }

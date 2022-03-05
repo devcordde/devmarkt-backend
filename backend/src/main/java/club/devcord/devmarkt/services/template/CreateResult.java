@@ -18,6 +18,5 @@ package club.devcord.devmarkt.services.template;
 
 public enum CreateResult {
   CREATED,
-  DUPLICATED,
-  ERROR
+  DUPLICATED
 }

@@ -16,11 +16,9 @@
 
 package club.devcord.devmarkt.dto.template;
 
-import club.devcord.devmarkt.dto.Introspected;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
-@Introspected
 @Schema(name = "Template", description = "A template")
 public record Template(
     @Schema(description = "The template's name")
@@ -29,4 +27,5 @@ public record Template(
     @Schema(description = "The questions that this template should contain")
     List<Question> questions
 ) {
+
 }

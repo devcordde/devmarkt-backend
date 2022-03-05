@@ -24,15 +24,19 @@ import club.devcord.devmarkt.event.EventBuilder;
 import club.devcord.devmarkt.event.EventService;
 import io.micronaut.http.sse.Event;
 import jakarta.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import reactor.core.publisher.Flux;
 
 @Singleton
 public class TemplateService {
 
   private final EventService<TemplateEvent> eventService = new EventService<>();
-  private final TemplateDAO dataService = new EmptTemplateImpl();
+  private final TemplateDAO dataService;
+
+  public TemplateService(TemplateDAO dataService) {
+    this.dataService = dataService;
+  }
 
   private EventBuilder<TemplateEvent> event() {
     return new EventBuilder<>(eventService);
@@ -44,7 +48,6 @@ public class TemplateService {
 
   public CreateResult create(Template template, String requesterID) {
     return switch (dataService.insert(template)) {
-      case REJECTED -> CreateResult.ERROR;
       case DUPLICATED -> CreateResult.DUPLICATED;
       case INSERTED -> {
         event()
@@ -58,9 +61,7 @@ public class TemplateService {
 
   public ReplaceResult replace(Template template, String requesterID) {
     return switch (dataService.replace(template)) {
-      case REJECTED -> ReplaceResult.ERROR;
       case NOT_FOUND -> ReplaceResult.NOT_FOUND;
-      case NOT_MODIFIED -> ReplaceResult.NOT_MODIFIED;
       case REPLACED -> {
         event()
             .name("TemplateReplaced")
@@ -73,7 +74,6 @@ public class TemplateService {
 
   public DeleteResult delete(String name, String requesterID) {
     return switch (dataService.delete(name)) {
-      case REJECTED -> DeleteResult.ERROR;
       case NOT_FOUND -> DeleteResult.NOT_FOUND;
       case DELETED -> {
         event()
@@ -90,7 +90,7 @@ public class TemplateService {
     return dataService.find(name);
   }
 
-  public List<String> names() {
+  public Set<String> names() {
     return dataService.allNames();
   }
 

@@ -18,6 +18,5 @@ package club.devcord.devmarkt.services.template;
 
 public enum DeleteResult {
   DELETED,
-  NOT_FOUND,
-  ERROR
+  NOT_FOUND
 }

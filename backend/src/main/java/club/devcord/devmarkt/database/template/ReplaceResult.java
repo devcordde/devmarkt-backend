@@ -18,7 +18,5 @@ package club.devcord.devmarkt.database.template;
 
 public enum ReplaceResult {
   REPLACED,
-  REJECTED,
-  NOT_FOUND,
-  NOT_MODIFIED
+  NOT_FOUND
 }

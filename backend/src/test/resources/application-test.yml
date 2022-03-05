@@ -1,14 +1,7 @@
 micronaut:
+  http:
+    client:
+      exception-on-error-status: false
   server:
     port: ${random.port}
-
-mongodb:
-  uri: mongodb://localhost:${test.mongo-port}
-  database: test
-
-test:
-  mongo-port: ${random.port}
-
-devmarkt:
-  mongodb:
-    database: test
+    host: "localhost"

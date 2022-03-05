@@ -17,8 +17,8 @@
 package club.devcord.devmarkt.database.template;
 
 import club.devcord.devmarkt.dto.template.Template;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TemplateDAO {
 
@@ -30,6 +30,6 @@ public interface TemplateDAO {
 
   Optional<Template> find(String name);
 
-  List<String> allNames();
+  Set<String> allNames();
 
 }

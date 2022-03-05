@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Devmarkt-Backend project
+ * Copyright 2022 Contributors to the Devmarkt-Backend project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-CREATE TABLE template(
-    id SERIAL PRIMARY KEY,
+CREATE TABLE templates
+(
+    id   SERIAL PRIMARY KEY,
     name VARCHAR UNIQUE
 );
 
-CREATE TABLE question(
-    template INT,
-    digit INT,
-    question VARCHAR,
-    UNIQUE (template, digit),
-    FOREIGN KEY (template) REFERENCES template(id)
+CREATE TABLE questions
+(
+    id          SERIAL PRIMARY KEY,
+    template_id INT,
+    digit       INT,
+    question    VARCHAR,
+    UNIQUE (template_id, digit),
+    FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
 )
