@@ -28,4 +28,4 @@ CREATE TABLE questions
     question    VARCHAR,
     UNIQUE (template_id, digit),
     FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
-)
+);
