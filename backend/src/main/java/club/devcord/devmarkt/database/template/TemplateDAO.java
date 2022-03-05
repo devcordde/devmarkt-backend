@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Devmarkt-Backend project
+ * Copyright 2022 Contributors to the Devmarkt-Backend project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
