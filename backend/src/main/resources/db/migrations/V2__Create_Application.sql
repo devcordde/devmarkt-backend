@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-CREATE TABLE applications (
+CREATE TABLE applications
+(
     id SERIAL PRIMARY KEY,
     user_id VARCHAR NOT NULL,
     template_id INT NOT NULL,
     FOREIGN KEY (template_id) REFERENCES templates (id)
 );
 
-CREATE TABLE answers (
+CREATE TABLE answers
+(
     id SERIAL PRIMARY KEY,
     application_id INT NOT NULL,
     question_id INT NOT NULL,
     answer VARCHAR NOT NULL,
     FOREIGN KEY (application_id) REFERENCES applications (id),
     FOREIGN KEY (question_id) REFERENCES questions (id)
+);
+
+CREATE TYPE application_status AS ENUM('UNFINISHED', 'PENDING_REVIEWS', 'REWORK');
+
+CREATE TABLE current_application_status
+(
+    application_id INT NOT NULL,
+    status application_status NOT NULL,
+    FOREIGN KEY (application_id) REFERENCES applications (id)
 );
