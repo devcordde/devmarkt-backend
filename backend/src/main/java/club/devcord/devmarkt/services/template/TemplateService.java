@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Devmarkt-Backend project
+ * Copyright 2022 Contributors to the Devmarkt-Backend project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package club.devcord.devmarkt.services.template;
 
+import club.devcord.devmarkt.database.template.TemplateDAO;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.dto.template.TemplateEvent.EventType;
 import club.devcord.devmarkt.event.EventBuilder;
 import club.devcord.devmarkt.event.EventService;
-import club.devcord.devmarkt.mongodb.service.template.TemplateDAO;
 import io.micronaut.http.sse.Event;
 import jakarta.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import reactor.core.publisher.Flux;
 
 @Singleton
@@ -48,7 +48,6 @@ public class TemplateService {
 
   public CreateResult create(Template template, String requesterID) {
     return switch (dataService.insert(template)) {
-      case REJECTED -> CreateResult.ERROR;
       case DUPLICATED -> CreateResult.DUPLICATED;
       case INSERTED -> {
         event()
@@ -62,9 +61,7 @@ public class TemplateService {
 
   public ReplaceResult replace(Template template, String requesterID) {
     return switch (dataService.replace(template)) {
-      case REJECTED -> ReplaceResult.ERROR;
       case NOT_FOUND -> ReplaceResult.NOT_FOUND;
-      case NOT_MODIFIED -> ReplaceResult.NOT_MODIFIED;
       case REPLACED -> {
         event()
             .name("TemplateReplaced")
@@ -77,7 +74,6 @@ public class TemplateService {
 
   public DeleteResult delete(String name, String requesterID) {
     return switch (dataService.delete(name)) {
-      case REJECTED -> DeleteResult.ERROR;
       case NOT_FOUND -> DeleteResult.NOT_FOUND;
       case DELETED -> {
         event()
@@ -94,7 +90,7 @@ public class TemplateService {
     return dataService.find(name);
   }
 
-  public List<String> names() {
+  public Set<String> names() {
     return dataService.allNames();
   }
 

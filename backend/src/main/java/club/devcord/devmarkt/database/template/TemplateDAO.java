@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Devmarkt-Backend project
+ * Copyright 2022 Contributors to the Devmarkt-Backend project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.mongodb.service.template;
+package club.devcord.devmarkt.database.template;
 
-public enum DeleteResult {
-  DELETED,
-  REJECTED,
-  NOT_FOUND
+import club.devcord.devmarkt.dto.template.Template;
+import java.util.Optional;
+import java.util.Set;
+
+public interface TemplateDAO {
+
+  InsertResult insert(Template template);
+
+  ReplaceResult replace(Template template);
+
+  DeleteResult delete(String name);
+
+  Optional<Template> find(String name);
+
+  Set<String> allNames();
+
 }

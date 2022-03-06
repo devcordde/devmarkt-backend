@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Operation(
-  summary = "Gets a list of all template names"
+    summary = "Gets a list of all template names"
 )
 @ApiResponse(
     responseCode = "200",
@@ -30,4 +30,5 @@ import java.lang.annotation.RetentionPolicy;
 )
 @Retention(RetentionPolicy.RUNTIME)
 @interface ListSwagger {
+
 }

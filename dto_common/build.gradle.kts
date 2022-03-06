@@ -10,17 +10,13 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    compileOnly("io.swagger.core.v3:swagger-annotations")
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
-}
-
-dependencies {
-    annotationProcessor("io.micronaut:micronaut-inject-java")
-
-    compileOnly("org.mongojack:mongojack:4.3.0")
-    compileOnly("io.swagger.core.v3:swagger-annotations:2.1.13")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
