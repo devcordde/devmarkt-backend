@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.database.template.dto;
+package club.devcord.devmarkt.database.template.entities;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Cascade;
-import java.util.List;
+import io.micronaut.data.annotation.Relation.Kind;
 
-@MappedEntity("templates")
-public record DBTemplate(
+@MappedEntity("questions")
+public record DBQuestion(
     @Id @GeneratedValue
-    int id,
-    String name,
-    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
-    List<DBQuestion> questions
+    Integer id,
+    @Nullable @Relation(Kind.MANY_TO_ONE)
+    DBTemplate template,
+    int digit,
+    String question
 ) {
 
 }

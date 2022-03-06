@@ -16,57 +16,53 @@
 
 package club.devcord.devmarkt.database.template;
 
+import club.devcord.devmarkt.database.Transformer;
 import club.devcord.devmarkt.dto.template.Template;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.Set;
 
 @Singleton
-public class TemplateImpl implements TemplateDAO {
+public class TemplateDao {
 
   private final TemplateRepo repo;
 
-  public TemplateImpl(TemplateRepo repo) {
+  public TemplateDao(TemplateRepo repo) {
     this.repo = repo;
   }
 
-  @Override
-  public InsertResult insert(Template template) {
+  public boolean insert(Template template) {
     if (repo.existsByName(template.name())) {
-      return InsertResult.DUPLICATED;
+      return false;
     }
     repo.save(Transformer.transform(template));
-    return InsertResult.INSERTED;
+    return true;
   }
 
-  @Override
-  public ReplaceResult replace(Template template) {
+  public boolean replace(Template template) {
     var opt = repo.findByName(template.name());
     if (opt.isEmpty()) {
-      return ReplaceResult.NOT_FOUND;
+      return false;
     }
     var found = opt.get();
     repo.delete(found);
     repo.save(Transformer.transform(template, found.id()));
-    return ReplaceResult.REPLACED;
+    return true;
   }
 
-  @Override
-  public DeleteResult delete(String name) {
+  public boolean delete(String name) {
     if (!repo.existsByName(name)) {
-      return DeleteResult.NOT_FOUND;
+      return false;
     }
     repo.deleteByName(name);
-    return DeleteResult.DELETED;
+    return true;
   }
 
-  @Override
   public Optional<Template> find(String name) {
     return repo.findByName(name)
         .map(Transformer::transform);
   }
 
-  @Override
   public Set<String> allNames() {
     return repo.findName();
   }

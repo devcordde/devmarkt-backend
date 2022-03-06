@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.database.template;
 
-import club.devcord.devmarkt.database.template.dto.DBTemplate;
+import club.devcord.devmarkt.database.template.entities.DBTemplate;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;

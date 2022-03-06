@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.services.template;
 
-import club.devcord.devmarkt.database.template.TemplateDAO;
+import club.devcord.devmarkt.database.template.TemplateDao;
 import club.devcord.devmarkt.dto.template.Template;
 import club.devcord.devmarkt.dto.template.TemplateEvent;
 import club.devcord.devmarkt.dto.template.TemplateEvent.EventType;
@@ -32,10 +32,10 @@ import reactor.core.publisher.Flux;
 public class TemplateService {
 
   private final EventService<TemplateEvent> eventService = new EventService<>();
-  private final TemplateDAO dataService;
+  private final TemplateDao dao;
 
-  public TemplateService(TemplateDAO dataService) {
-    this.dataService = dataService;
+  public TemplateService(TemplateDao dataService) {
+    this.dao = dataService;
   }
 
   private EventBuilder<TemplateEvent> event() {
@@ -46,52 +46,45 @@ public class TemplateService {
     return eventService.subscribe();
   }
 
-  public CreateResult create(Template template, String requesterID) {
-    return switch (dataService.insert(template)) {
-      case DUPLICATED -> CreateResult.DUPLICATED;
-      case INSERTED -> {
-        event()
-            .name("TemplateEvent")
-            .data(new TemplateEvent(template.name(), requesterID, EventType.CREATED, template))
-            .fire();
-        yield CreateResult.CREATED;
-      }
-    };
+  public boolean create(Template template, String requesterID) {
+    var inserted = dao.insert(template);
+    if (inserted) {
+      event()
+          .name("TemplateEvent")
+          .data(new TemplateEvent(template.name(), requesterID, EventType.CREATED, template))
+          .fire();
+    }
+    return inserted;
   }
 
-  public ReplaceResult replace(Template template, String requesterID) {
-    return switch (dataService.replace(template)) {
-      case NOT_FOUND -> ReplaceResult.NOT_FOUND;
-      case REPLACED -> {
-        event()
-            .name("TemplateReplaced")
-            .data(new TemplateEvent(template.name(), requesterID, EventType.REPLACED, template))
-            .fire();
-        yield ReplaceResult.REPLACED;
-      }
-    };
+  public boolean replace(Template template, String requesterID) {
+    var replaced = dao.replace(template);
+    if (replaced) {
+      event()
+          .name("TemplateReplaced")
+          .data(new TemplateEvent(template.name(), requesterID, EventType.REPLACED, template))
+          .fire();
+    }
+    return replaced;
   }
 
-  public DeleteResult delete(String name, String requesterID) {
-    return switch (dataService.delete(name)) {
-      case NOT_FOUND -> DeleteResult.NOT_FOUND;
-      case DELETED -> {
-        event()
-            .name("TemplateDeleted")
-            .data(new TemplateEvent(name, requesterID, EventType.DELETED, null))
-            .fire();
-
-        yield DeleteResult.DELETED;
-      }
-    };
+  public boolean delete(String name, String requesterID) {
+    var deleted = dao.delete(name);
+    if (deleted) {
+      event()
+          .name("TemplateDeleted")
+          .data(new TemplateEvent(name, requesterID, EventType.DELETED, null))
+          .fire();
+    }
+    return deleted;
   }
 
   public Optional<Template> get(String name) {
-    return dataService.find(name);
+    return dao.find(name);
   }
 
   public Set<String> names() {
-    return dataService.allNames();
+    return dao.allNames();
   }
 
 }

@@ -57,27 +57,26 @@ public class TemplateController {
   @Post
   @CreateSwagger
   @Status(HttpStatus.CREATED)
-  public HttpResponse<Void> createTemplate(@Body Identified<Template> body) {
+  public HttpResponse<Template> createTemplate(@Body Identified<Template> body) {
     var template = body.value();
     var requesterID = body.requesterID();
-    return switch (service.create(template, requesterID)) {
-      case DUPLICATED -> HttpResponse.status(HttpStatus.CONFLICT);
-      case CREATED -> HttpResponse.created(Uris.of("template", template.name()));
-    };
+    if (service.create(template, requesterID)) {
+      return HttpResponse.created(Uris.of("template", template.name()));
+    }
+    return HttpResponse.status(HttpStatus.CONFLICT);
   }
 
   @Put
   @ReplaceSwagger
   @Status(HttpStatus.NO_CONTENT)
-  public HttpResponse<Void> replaceTemplate(@Body Identified<Template> body) {
+  public HttpResponse<Template> replaceTemplate(@Body Identified<Template> body) {
     var template = body.value();
     var requesterID = body.requesterID();
-    return switch (service.replace(template, requesterID)) {
-      case NOT_FOUND -> HttpResponse.notFound();
-      case REPLACED -> HttpResponse.noContent()
-          .header(HttpHeaders.LOCATION, Uris.of("template", template.name()).toString())
-          .body(null);
-    };
+    if (service.replace(template, requesterID)) {
+      HttpResponse.ok(template)
+          .header(HttpHeaders.LOCATION, Uris.of("template", template.name()).toString());
+    }
+    return HttpResponse.notFound();
   }
 
   @Get("/{name}")
@@ -100,9 +99,8 @@ public class TemplateController {
   @DeleteSwagger
   @Status(HttpStatus.NO_CONTENT)
   public HttpResponse<Void> delete(@PathVariable String name, @Body String requesterID) {
-    return switch (service.delete(name, requesterID)) {
-      case NOT_FOUND -> HttpResponse.notFound();
-      case DELETED -> HttpResponse.noContent();
-    };
+    return service.delete(name, requesterID)
+        ? HttpResponse.noContent()
+        : HttpResponse.notFound();
   }
 }
