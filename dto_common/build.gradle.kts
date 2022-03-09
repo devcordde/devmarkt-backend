@@ -1,6 +1,6 @@
 plugins {
     java
-    id("io.micronaut.library") version "3.2.2"
+    id("io.micronaut.library") version "3.3.0"
 }
 
 group = "club.devcord.devmarkt"
