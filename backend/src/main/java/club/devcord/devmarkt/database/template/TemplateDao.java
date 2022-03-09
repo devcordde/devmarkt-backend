@@ -16,7 +16,6 @@
 
 package club.devcord.devmarkt.database.template;
 
-import club.devcord.devmarkt.database.Transformer;
 import club.devcord.devmarkt.dto.template.Template;
 import jakarta.inject.Singleton;
 import java.util.Optional;

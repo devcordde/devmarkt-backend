@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.database.template;
 
-import club.devcord.devmarkt.database.template.dto.DBQuestion;
-import club.devcord.devmarkt.database.template.dto.DBTemplate;
+import club.devcord.devmarkt.database.template.entities.DBQuestion;
+import club.devcord.devmarkt.database.template.entities.DBTemplate;
 import club.devcord.devmarkt.dto.template.Question;
 import club.devcord.devmarkt.dto.template.Template;
 import java.util.stream.Collectors;

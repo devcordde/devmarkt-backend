@@ -17,7 +17,7 @@
 package club.devcord.devmarkt.database.template;
 
 
-import club.devcord.devmarkt.database.template.dto.DBTemplate;
+import club.devcord.devmarkt.database.template.entities.DBTemplate;
 import club.devcord.devmarkt.dto.template.Template;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
