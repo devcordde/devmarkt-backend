@@ -18,9 +18,48 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+      - name: Build with Gradle
+        run: ./gradlew --build-cache build -x test
+        timeout-minutes: 30
       - name: Test with Gradle
         run: ./gradlew --build-cache test
         timeout-minutes: 30
-      - name: Build with Gradle
-        run: ./gradlew --build-cache build
+
+  deploy-docker:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    environment: gitlab-docker-registry
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Create Docker layers
+        run: ./gradlew buildLayers dockerfile
+        timeout-minutes: 10
+      - name: Pull latest Image for Cache
+        run: docker pull registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
+        continue-on-error: true
+      - name: Build Docker Image
+        run: docker build . -t registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
         timeout-minutes: 30
+        working-directory: backend/build/docker/main
+      - name: Login to GitLab Registry
+        run: echo ${{ secrets.DOCKER_PUSH_TOKEN }} | docker login -u ${{ secrets.DOCKER_PUSH_TOKEN_NAME }} --password-stdin registry.gitlab.com
+        timeout-minutes: 1
+      - name: Push Docker Image
+        run: docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+        timeout-minutes: 30
+      - name: Tag & Push latest Docker Image
+        if: github.ref_name == 'main' || github.ref_type == 'tag'
+        run: |
+          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
+          docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
+      - name: Tag & Push tag Docker Image
+        if: github.ref_type == 'tag'
+        run: |
+          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+          docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
