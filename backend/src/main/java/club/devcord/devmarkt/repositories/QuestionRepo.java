@@ -17,7 +17,6 @@
 package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.template.RawQuestion;
-import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
 import java.util.List;
@@ -26,14 +25,11 @@ import java.util.Optional;
 @JdbcRepository
 public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
 
-  boolean existsByTemplateIdAndNumber(int templateId, int number);
+  Optional<Number> getMaxNumberByTemplateId(int templateId);
 
-  Optional<Integer> getMaxNumberByTemplateId(int templateId);
+  int updateByTemplateIdAndNumber(int templateId, int number, String question);
 
-  @Query("UPDATE questions SET question = :question WHERE template_id = :templateId AND number = :number")
-  void updateQuestionByTemplateIdAndNumber(int templateId, int number, String question);
-
-  void deleteByTemplateIdAndNumber(int templateId, int number);
+  int deleteByTemplateIdAndNumber(int templateId, int number);
 
   List<RawQuestion> findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(int templateId,
       int number);

@@ -19,7 +19,6 @@ package club.devcord.devmarkt.services.template;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.template.TemplateFailed;
-import club.devcord.devmarkt.responses.template.TemplateFailed.TemplateErrors;
 import club.devcord.devmarkt.responses.template.TemplateResponse;
 import club.devcord.devmarkt.responses.template.TemplateSuccess;
 import jakarta.inject.Singleton;
@@ -34,36 +33,25 @@ public class TemplateService {
   }
 
   public TemplateResponse create(Template template) {
-    if (templateRepo.existsByName(template.name())) {
-      return new TemplateFailed(template.name(), TemplateErrors.DUPLICATED,
-          "A template with the same name exists");
+    var name = template.name();
+    if (templateRepo.existsByName(name)) {
+      return TemplateFailed.duplicated(name);
     }
     var savedTemplate = templateRepo.save(template);
     return new TemplateSuccess(savedTemplate);
   }
 
   public TemplateResponse find(String name) {
-    var optional = templateRepo.findByName(name);
-    if (optional.isPresent()) {
-      return new TemplateSuccess(optional.get());
-    }
-    return new TemplateFailed(name, TemplateErrors.NOT_FOUND,
-        "No template with the given name found.");
+    return templateRepo.findByName(name)
+        .map(tem -> (TemplateResponse) new TemplateSuccess(tem))
+        .orElseGet(() -> TemplateFailed.notFound(name));
   }
 
   public boolean delete(String name) {
-    if (!templateRepo.existsByName(name)) {
-      return false;
-    }
-    templateRepo.deleteByName(name);
-    return true;
+    return templateRepo.deleteByName(name) != 0;
   }
 
   public boolean updateName(String oldName, String newName) {
-    if (!templateRepo.existsByName(oldName)) {
-      return false;
-    }
-    templateRepo.updateNameByName(oldName, newName);
-    return true;
+    return templateRepo.updateByName(oldName, newName) != 0;
   }
 }

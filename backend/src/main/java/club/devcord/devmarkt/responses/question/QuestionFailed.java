@@ -33,7 +33,7 @@ public record QuestionFailed(
 
   public static QuestionFailed questionNotFound(String templateName, int number) {
     return new QuestionFailed("No question with the given template name and number found.",
-        templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
+        templateName, QuestionErrors.QUESTION_NOT_FOUND, number);
   }
 
   public static class QuestionErrors {

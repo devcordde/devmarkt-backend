@@ -25,6 +25,16 @@ public record TemplateFailed(
     String message
 ) implements TemplateResponse {
 
+  public static TemplateFailed notFound(String name) {
+    return new TemplateFailed(name, TemplateErrors.NOT_FOUND,
+        "No template with the given name found.");
+  }
+
+  public static TemplateFailed duplicated(String name) {
+    return new TemplateFailed(name, TemplateErrors.DUPLICATED,
+        "A template with the same name exists.");
+  }
+
   public static class TemplateErrors {
 
     public static final String NOT_FOUND = "NOT_FOUND";

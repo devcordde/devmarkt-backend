@@ -67,7 +67,7 @@ public class QuestionService {
     int templateId = templateIdOpt.get();
     if (number == -1) {
       number = questionRepo.getMaxNumberByTemplateId(templateId)
-          .map(i -> i + 1)
+          .map(i -> i.intValue() + 1)
           .orElse(0);
     } else {
       reorderQuestions(templateId, number, 1);
@@ -79,17 +79,15 @@ public class QuestionService {
   }
 
   public QuestionResponse updateQuestion(String templateName, int number, String question) {
-    var templateId = templateRepo.getIdByName(templateName);
-    if (templateId.isEmpty()) {
+    var templateIdOpt = templateRepo.getIdByName(templateName);
+    if (templateIdOpt.isEmpty()) {
       return QuestionFailed.templateNotFound(templateName, number);
     }
 
-    if (!questionRepo.existsByTemplateIdAndNumber(templateId.get(), number)) {
-      return QuestionFailed.questionNotFound(templateName, number);
-    }
-
-    questionRepo.updateQuestionByTemplateIdAndNumber(templateId.get(), number, question);
-    return new QuestionSuccess(new RawQuestion(null, -1, number, question));
+    var updated = questionRepo.updateByTemplateIdAndNumber(templateIdOpt.get(), number, question);
+    return updated != 0
+        ? new QuestionSuccess(new RawQuestion(null, -1, number, question))
+        : QuestionFailed.questionNotFound(templateName, number);
   }
 
   public boolean deleteQuestion(String templateName, int number) {
@@ -99,13 +97,9 @@ public class QuestionService {
     }
 
     int templateId = templateIdOpt.get();
-    if (!questionRepo.existsByTemplateIdAndNumber(templateId, number)) {
-      return false;
-    }
-
-    questionRepo.deleteByTemplateIdAndNumber(templateId, number);
+    var deleted = questionRepo.deleteByTemplateIdAndNumber(templateId, number);
     reorderQuestions(templateId, number, 0);
-    return true;
+    return deleted != 0;
   }
 
   /*
@@ -120,9 +114,10 @@ public class QuestionService {
     var updatedQuestions = new HashSet<RawQuestion>(questions.size() - from);
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
-      if (question.number() != i + offset) {
+      int rightNum = i + offset;
+      if (question.number() != rightNum) {
         updatedQuestions.add(
-            new RawQuestion(question.id(), templateId, i + offset, question.question()));
+            new RawQuestion(question.id(), templateId, rightNum, question.question()));
       }
     }
 

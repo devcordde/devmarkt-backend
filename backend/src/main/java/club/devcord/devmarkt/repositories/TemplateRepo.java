@@ -18,7 +18,6 @@ package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.template.Template;
 import io.micronaut.data.annotation.Join;
-import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
 import java.util.Optional;
@@ -31,10 +30,9 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   @Join("questions")
   Optional<Template> findByName(String name);
 
-  void deleteByName(String name);
+  int deleteByName(String name);
 
-  @Query("UPDATE templates SET name = :newName WHERE name = :oldName")
-  void updateNameByName(String oldName, String newName);
+  int updateByName(String oldName, String name);
 
   Optional<Integer> getIdByName(String name);
 }
