@@ -1,4 +1,5 @@
 type Query {
+    templates: [TemplateSuccess!]!
     template(name: String!): TemplateResponse!
     question(templateName: String!, number: Int!): QuestionResponse!
 }

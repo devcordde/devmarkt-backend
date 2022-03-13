@@ -16,9 +16,11 @@
 
 package club.devcord.devmarkt.graphql.template;
 
+import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.services.template.TemplateService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class TemplateQueryResolver implements GraphQLQueryResolver {
@@ -31,5 +33,9 @@ public class TemplateQueryResolver implements GraphQLQueryResolver {
 
   public Object template(String name) {
     return service.find(name).graphqlUnion();
+  }
+
+  public List<Template> templates() {
+    return service.all();
   }
 }
