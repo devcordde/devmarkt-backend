@@ -1,0 +1,22 @@
+type Question {
+    question: String!
+    number: Int!
+}
+
+input QuestionInput {
+    question: String!
+    number: Int!
+}
+
+union TemplateResponse = TemplateSuccess | TemplateFailed
+
+type TemplateSuccess {
+    name: String!
+    questions: [Question!]!
+}
+
+type TemplateFailed implements Error {
+    name: String!
+    errorCode: String!
+    message: String!
+}

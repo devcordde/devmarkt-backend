@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.services.template;
+package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.entities.Template;
+import jakarta.inject.Singleton;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public record TemplateSaved(
-    Template template
-) implements TemplateSaveResponse {
-
+@Inherited
+@Singleton
+@Retention(RetentionPolicy.RUNTIME)
+public @interface GraphQLType {
+  String value();
 }

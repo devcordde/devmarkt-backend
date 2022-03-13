@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.services.template;
+package club.devcord.devmarkt.responses.template;
 
-public record TemplateSaveFailed(
-    String templateName,
+import club.devcord.devmarkt.GraphQLType;
+
+@GraphQLType("TemplateFailed")
+public record TemplateFailed(
+    String name,
+    String errorCode,
     String message
-) implements TemplateSaveResponse {
+) implements TemplateResponse {
+
+  public static class Codes {
+    public static final String NOT_FOUND = "NOT_FOUND";
+    public static final String DUPLICATED = "DUPLICATED";
+
+    private Codes() {
+
+    }
+  }
 
 }

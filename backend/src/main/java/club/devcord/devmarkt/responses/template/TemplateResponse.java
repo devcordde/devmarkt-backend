@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.services.template;
+package club.devcord.devmarkt.responses.template;
 
-public sealed interface TemplateSaveResponse permits TemplateSaveFailed, TemplateSaved {
+public sealed interface TemplateResponse permits TemplateFailed, TemplateSuccess {
+
+  default Object unpacked() {
+    if (this instanceof TemplateSuccess success) {
+      return success.template();
+    }
+    return this;
+  }
 }

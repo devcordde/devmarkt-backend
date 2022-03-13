@@ -14,30 +14,12 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities;
+package club.devcord.devmarkt.responses.template;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
-import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
+import club.devcord.devmarkt.entities.Template;
 
-@MappedEntity("questions")
-public record Question(
-
-    @JsonIgnore
-    @Id @GeneratedValue
-    Integer id,
-
-    @JsonIgnore
-    @Nullable
-    @Relation(Kind.MANY_TO_ONE)
-    Template template,
-
-    int number,
-    String question
-) {
+public record TemplateSuccess(
+    Template template
+) implements TemplateResponse {
 
 }

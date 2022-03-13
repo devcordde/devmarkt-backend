@@ -16,6 +16,8 @@
 
 package club.devcord.devmarkt.entities;
 
+import club.devcord.devmarkt.GraphQLType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
@@ -24,10 +26,13 @@ import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
 import java.util.List;
 
+@GraphQLType("TemplateSuccess")
 @MappedEntity("templates")
 public record Template(
+    @JsonIgnore
     @Id @GeneratedValue
     int id,
+
     String name,
     @Relation(value = Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
     List<Question> questions

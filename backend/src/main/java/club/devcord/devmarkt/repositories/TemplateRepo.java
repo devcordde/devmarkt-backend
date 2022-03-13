@@ -17,10 +17,17 @@
 package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.Template;
+import io.micronaut.data.annotation.Join;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
+import java.util.Optional;
 
 @JdbcRepository
 public interface TemplateRepo extends CrudRepository<Template, Integer> {
   boolean existsByName(String name);
+
+  @Join("questions")
+  Optional<Template> findByName(String name);
+
+  void deleteByName(String name);
 }

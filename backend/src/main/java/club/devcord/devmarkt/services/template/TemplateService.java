@@ -18,6 +18,10 @@ package club.devcord.devmarkt.services.template;
 
 import club.devcord.devmarkt.entities.Template;
 import club.devcord.devmarkt.repositories.TemplateRepo;
+import club.devcord.devmarkt.responses.template.TemplateFailed;
+import club.devcord.devmarkt.responses.template.TemplateResponse;
+import club.devcord.devmarkt.responses.template.TemplateSuccess;
+import club.devcord.devmarkt.responses.template.TemplateFailed.Codes;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -29,11 +33,27 @@ public class TemplateService {
     this.repo = repo;
   }
 
-  public TemplateSaveResponse create(Template template) {
+  public TemplateResponse create(Template template) {
     if (repo.existsByName(template.name())) {
-      return new TemplateSaveFailed(template.name(), "A template with a matching name exists");
+      return new TemplateFailed(template.name(), Codes.DUPLICATED,"A template with the same name exists");
     }
     var savedTemplate = repo.save(template);
-    return new TemplateSaved(savedTemplate);
+    return new TemplateSuccess(savedTemplate);
+  }
+
+  public TemplateResponse find(String name) {
+    var optional = repo.findByName(name);
+    if (optional.isPresent()) {
+      return new TemplateSuccess(optional.get());
+    }
+    return new TemplateFailed(name, Codes.NOT_FOUND, "No template with the given name found.");
+  }
+
+  public boolean delete(String name) {
+    if (!repo.existsByName(name)) {
+      return false;
+    }
+    repo.deleteByName(name);
+    return true;
   }
 }

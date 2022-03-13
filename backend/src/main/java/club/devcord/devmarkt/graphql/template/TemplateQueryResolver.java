@@ -14,30 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities;
+package club.devcord.devmarkt.graphql.template;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
-import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
+import club.devcord.devmarkt.services.template.TemplateService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import jakarta.inject.Singleton;
 
-@MappedEntity("questions")
-public record Question(
+@Singleton
+public class TemplateQueryResolver implements GraphQLQueryResolver {
 
-    @JsonIgnore
-    @Id @GeneratedValue
-    Integer id,
+  private final TemplateService service;
 
-    @JsonIgnore
-    @Nullable
-    @Relation(Kind.MANY_TO_ONE)
-    Template template,
+  public TemplateQueryResolver(TemplateService service) {
+    this.service = service;
+  }
 
-    int number,
-    String question
-) {
-
+  public Object template(String name) {
+    return service.find(name).unpacked();
+  }
 }
