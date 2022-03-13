@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.template;
+package club.devcord.devmarkt.responses.question;
 
-import club.devcord.devmarkt.entities.template.Template;
+public sealed interface QuestionResponse permits QuestionSuccess, QuestionFailed {
 
-public record TemplateSuccess(
-    Template template
-) implements TemplateResponse {
-
+  default Object graphqlUnion() {
+    if (this instanceof QuestionSuccess success) {
+      return success.question();
+    }
+    return this;
+  }
+  
 }

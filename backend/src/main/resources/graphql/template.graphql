@@ -20,3 +20,17 @@ type TemplateFailed implements Error {
     errorCode: String!
     message: String!
 }
+
+union QuestionResponse = QuestionSuccess | QuestionFailed
+
+type QuestionSuccess {
+    question: String!
+    number: Int!
+}
+
+type QuestionFailed implements Error {
+    message: String!
+    errorCode: String!
+    templateName: String!
+    number: Int!
+}

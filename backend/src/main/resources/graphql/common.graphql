@@ -5,6 +5,9 @@ type Query {
 type Mutation {
     createTemplate(name: String!, questions: [QuestionInput!]!): TemplateResponse!
     deleteTemplate(name: String!): Boolean!
+    updateTemplateName(oldName: String!, newName: String!): Boolean
+    addQuestion(templateName: String!, number: Int!, question: String!): QuestionResponse!
+
 }
 
 # common

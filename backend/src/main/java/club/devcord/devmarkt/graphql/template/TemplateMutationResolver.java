@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.template;
 
-import club.devcord.devmarkt.entities.Question;
-import club.devcord.devmarkt.entities.Template;
+import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.services.template.TemplateService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
@@ -34,10 +34,18 @@ public class TemplateMutationResolver implements GraphQLMutationResolver {
 
   public Object createTemplate(String name, List<Question> questions) {
     var template = new Template(-1, name, questions);
-    return service.create(template).unpacked();
+    return service.create(template).graphqlUnion();
   }
 
   public boolean deleteTemplate(String name) {
     return service.delete(name);
+  }
+
+  public boolean updateTemplateName(String oldName, String newName) {
+    return service.updateName(oldName, newName);
+  }
+
+  public Object addQuestion(String templateName, int number, String question) {
+    return service.addQuestion(templateName, number, question).graphqlUnion();
   }
 }

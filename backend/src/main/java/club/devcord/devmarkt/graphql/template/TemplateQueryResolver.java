@@ -30,6 +30,6 @@ public class TemplateQueryResolver implements GraphQLQueryResolver {
   }
 
   public Object template(String name) {
-    return service.find(name).unpacked();
+    return service.find(name).graphqlUnion();
   }
 }

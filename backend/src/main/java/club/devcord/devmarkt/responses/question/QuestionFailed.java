@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.template;
+package club.devcord.devmarkt.responses.question;
 
-import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.GraphQLType;
 
-public record TemplateSuccess(
-    Template template
-) implements TemplateResponse {
+@GraphQLType("QuestionFailed")
+public record QuestionFailed(
+  String message,
+  String templateName,
+  String errorCode,
+  int number
+) implements QuestionResponse{
+
+  public class Codes {
+    public static final String TEMPLATE_NOT_FOUND = "TEMPLATE_NOT_FOUND";
+    public static final String NUMBER_DUPLICATED = "NUMBER_DUPLICATED";
+  }
 
 }

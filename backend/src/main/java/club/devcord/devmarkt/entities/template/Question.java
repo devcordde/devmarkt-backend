@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities;
+package club.devcord.devmarkt.entities.template;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.core.annotation.Nullable;

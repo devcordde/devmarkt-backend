@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities;
+package club.devcord.devmarkt.entities.template;
 
 import club.devcord.devmarkt.GraphQLType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Cascade;
-import io.micronaut.data.annotation.Relation.Kind;
-import java.util.List;
+import io.micronaut.data.annotation.MappedProperty;
 
-@GraphQLType("TemplateSuccess")
-@MappedEntity("templates")
-public record Template(
+@GraphQLType("QuestionSuccess")
+@MappedEntity("questions")
+public record RawQuestion(
+
     @JsonIgnore
     @Id @GeneratedValue
-    int id,
+    Integer id,
 
-    String name,
-    @Relation(value = Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
-    List<Question> questions
+    @MappedProperty("template_id")
+    @JsonIgnore
+    int templateId,
+
+    int number,
+    String question
 ) {
 
 }

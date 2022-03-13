@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.template;
+package club.devcord.devmarkt.responses.question;
 
-import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.entities.template.RawQuestion;
 
-public record TemplateSuccess(
-    Template template
-) implements TemplateResponse {
-
+public record QuestionSuccess(
+    RawQuestion question
+) implements QuestionResponse {
 }

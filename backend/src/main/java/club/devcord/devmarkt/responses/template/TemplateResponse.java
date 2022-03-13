@@ -18,7 +18,7 @@ package club.devcord.devmarkt.responses.template;
 
 public sealed interface TemplateResponse permits TemplateFailed, TemplateSuccess {
 
-  default Object unpacked() {
+  default Object graphqlUnion() {
     if (this instanceof TemplateSuccess success) {
       return success.template();
     }
