@@ -21,11 +21,11 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class QuestionTemplateMutationResolver implements GraphQLMutationResolver {
+public class QuestionMutationResolver implements GraphQLMutationResolver {
 
   private final QuestionService service;
 
-  public QuestionTemplateMutationResolver(
+  public QuestionMutationResolver(
       QuestionService service) {
     this.service = service;
   }

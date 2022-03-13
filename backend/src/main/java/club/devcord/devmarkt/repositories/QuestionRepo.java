@@ -37,4 +37,6 @@ public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
 
   List<RawQuestion> findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(int templateId,
       int number);
+
+  Optional<RawQuestion> findByTemplateIdAndNumber(int templateId, int number);
 }

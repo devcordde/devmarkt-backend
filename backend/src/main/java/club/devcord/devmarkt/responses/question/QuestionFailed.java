@@ -26,6 +26,16 @@ public record QuestionFailed(
     int number
 ) implements QuestionResponse {
 
+  public static QuestionFailed templateNotFound(String templateName, int number) {
+    return new QuestionFailed("No template with the given name found.",
+        templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
+  }
+
+  public static QuestionFailed questionNotFound(String templateName, int number) {
+    return new QuestionFailed("No question with the given template name and number found.",
+        templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
+  }
+
   public static class QuestionErrors {
 
     public static final String TEMPLATE_NOT_FOUND = "TEMPLATE_NOT_FOUND";

@@ -20,7 +20,6 @@ import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.repositories.QuestionRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.question.QuestionFailed;
-import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
 import club.devcord.devmarkt.responses.question.QuestionResponse;
 import club.devcord.devmarkt.responses.question.QuestionSuccess;
 import jakarta.inject.Singleton;
@@ -39,6 +38,17 @@ public class QuestionService {
   }
 
 
+  public QuestionResponse question(String templateName, int number) {
+    var templateIdOpt = templateRepo.getIdByName(templateName);
+    if (templateIdOpt.isEmpty()) {
+      return QuestionFailed.templateNotFound(templateName, number);
+    }
+
+    return questionRepo.findByTemplateIdAndNumber(templateIdOpt.get(), number)
+        .map(rawQuestion -> (QuestionResponse) new QuestionSuccess(rawQuestion))
+        .orElseGet(() -> QuestionFailed.questionNotFound(templateName, number));
+  }
+
   /*
   If a number is provided (higher than -1), than the question will be inserted.
   In detail all numbers of the questions from the given number on
@@ -51,9 +61,9 @@ public class QuestionService {
   public QuestionResponse addQuestion(String templateName, String question, int number) {
     var templateIdOpt = templateRepo.getIdByName(templateName);
     if (templateIdOpt.isEmpty()) {
-      return new QuestionFailed("No template with the given name found",
-          templateName, QuestionErrors.TEMPLATE_NOT_FOUND, -1);
+      return QuestionFailed.templateNotFound(templateName, number);
     }
+
     int templateId = templateIdOpt.get();
     if (number == -1) {
       number = questionRepo.getMaxNumberByTemplateId(templateId)
@@ -62,6 +72,7 @@ public class QuestionService {
     } else {
       reorderQuestions(templateId, number, 1);
     }
+
     var questionObj = new RawQuestion(null, templateId, number, question);
     var questionSaved = questionRepo.save(questionObj);
     return new QuestionSuccess(questionSaved);
@@ -70,13 +81,13 @@ public class QuestionService {
   public QuestionResponse updateQuestion(String templateName, int number, String question) {
     var templateId = templateRepo.getIdByName(templateName);
     if (templateId.isEmpty()) {
-      return new QuestionFailed("No template with the given name found",
-          templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
+      return QuestionFailed.templateNotFound(templateName, number);
     }
+
     if (!questionRepo.existsByTemplateIdAndNumber(templateId.get(), number)) {
-      return new QuestionFailed("A question with the given templateName and number don't exist.",
-          templateName, QuestionErrors.QUESTION_NOT_FOUND, number);
+      return QuestionFailed.questionNotFound(templateName, number);
     }
+
     questionRepo.updateQuestionByTemplateIdAndNumber(templateId.get(), number, question);
     return new QuestionSuccess(new RawQuestion(null, -1, number, question));
   }
@@ -91,6 +102,7 @@ public class QuestionService {
     if (!questionRepo.existsByTemplateIdAndNumber(templateId, number)) {
       return false;
     }
+
     questionRepo.deleteByTemplateIdAndNumber(templateId, number);
     reorderQuestions(templateId, number, 0);
     return true;
@@ -99,7 +111,7 @@ public class QuestionService {
   /*
   Reorders (changes the number) of all questions with the given templateId, which
   numbers are out of the line to it's right order, optionally with an offset.
-  Eg. 1, 2, 4 -> 1, 2, 4 (offset 0)
+  Eg. 1, 2, 4 -> 1, 2, 3 (offset 0)
       1, 2, 4 -> 1, 2, 5 (offset 2)
    */
   private void reorderQuestions(int templateId, int from, int offset) {

@@ -1,5 +1,6 @@
 type Query {
     template(name: String!): TemplateResponse!
+    question(templateName: String!, number: Int!): QuestionResponse!
 }
 
 type Mutation {
