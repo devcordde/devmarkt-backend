@@ -8,6 +8,7 @@ type Mutation {
     updateTemplateName(oldName: String!, newName: String!): Boolean
     addQuestion(templateName: String!, question: String!): QuestionResponse!
     updateQuestion(templateName: String!, number: Int!, question: String!): QuestionResponse!
+    deleteQuestion(templateName: String!, number: Int!): Boolean!
 }
 
 # common

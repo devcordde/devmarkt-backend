@@ -38,30 +38,43 @@ public class QuestionService {
   }
 
   public QuestionResponse addQuestion(String templateName, String question) {
-    var id = templateRepo.getIdByName(templateName);
-    if(id.isEmpty()) {
+    var templateId = templateRepo.getIdByName(templateName);
+    if(templateId.isEmpty()) {
       return new QuestionFailed("No template with the given name found",
           templateName, QuestionErrors.TEMPLATE_NOT_FOUND, -1);
     }
 
-    var number = questionRepo.getMaxNumberByTemplateId(id.get()) + 1;
-    var questionObj = new RawQuestion(null, id.get(), number, question);
+    var number = questionRepo.getMaxNumberByTemplateId(templateId.get()) + 1;
+    var questionObj = new RawQuestion(null, templateId.get(), number, question);
     var questionSaved = questionRepo.save(questionObj);
     return new QuestionSuccess(questionSaved);
   }
 
   public QuestionResponse updateQuestion(String templateName, int number, String question) {
-    var id = templateRepo.getIdByName(templateName);
-    if(id.isEmpty()) {
+    var templateId = templateRepo.getIdByName(templateName);
+    if(templateId.isEmpty()) {
       return new QuestionFailed("No template with the given name found",
           templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
     }
-    if (!questionRepo.existsByTemplateIdAndNumber(id.get(), number)) {
+    if (!questionRepo.existsByTemplateIdAndNumber(templateId.get(), number)) {
       return new QuestionFailed("A question with the given templateName and number don't exist.",
           templateName, QuestionErrors.QUESTION_NOT_FOUND, number);
     }
-    questionRepo.updateQuestionByTemplateIdAndNumber(id.get(), number, question);
+    questionRepo.updateQuestionByTemplateIdAndNumber(templateId.get(), number, question);
     return new QuestionSuccess(new RawQuestion(null, -1, number, question));
+  }
+
+  public boolean deleteQuestion(String templateName, int number) {
+    var templateId = templateRepo.getIdByName(templateName);
+    if(templateId.isEmpty()) {
+      return false;
+    }
+
+    if (!questionRepo.existsByTemplateIdAndNumber(templateId.get(), number)) {
+      return false;
+    }
+    questionRepo.deleteByTemplateIdAndNumber(templateId.get(), number);
+    return true;
   }
 
 }

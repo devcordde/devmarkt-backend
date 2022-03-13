@@ -29,4 +29,6 @@ public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
 
   @Query("UPDATE questions SET question = :question WHERE template_id = :templateId AND number = :number")
   void updateQuestionByTemplateIdAndNumber(int templateId, int number, String question);
+
+  void deleteByTemplateIdAndNumber(int templateId, int number);
 }

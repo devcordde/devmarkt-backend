@@ -37,4 +37,8 @@ public class QuestionTemplateMutationResolver implements GraphQLMutationResolver
   public Object updateQuestion(String templateName, int number, String question) {
     return service.updateQuestion(templateName, number, question).graphqlUnion();
   }
+
+  public boolean deleteQuestion(String templateName, int number) {
+    return service.deleteQuestion(templateName, number);
+  }
 }
