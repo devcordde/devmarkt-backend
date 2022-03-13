@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-CREATE TABLE templates
-(
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR UNIQUE
-);
+package club.devcord.devmarkt.services.template;
 
-CREATE TABLE questions
-(
-    id          SERIAL PRIMARY KEY,
-    template_id INT,
-    number       INT,
-    question    VARCHAR,
-    UNIQUE (template_id, number),
-    FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
-);
+import club.devcord.devmarkt.entities.Template;
+
+public record TemplateSaved(
+    Template template
+) implements TemplateSaveResponse {
+
+}

@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.repositories;
+package club.devcord.devmarkt.services.template;
 
 import club.devcord.devmarkt.entities.Template;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.repository.CrudRepository;
+import club.devcord.devmarkt.repositories.TemplateRepo;
+import jakarta.inject.Singleton;
 
-@JdbcRepository
-public interface TemplateRepo extends CrudRepository<Template, Integer> {
-  boolean existsByName(String name);
+@Singleton
+public class TemplateService {
+
+  private final TemplateRepo repo;
+
+  public TemplateService(TemplateRepo repo) {
+    this.repo = repo;
+  }
+
+  public TemplateSaveResponse create(Template template) {
+    if (repo.existsByName(template.name())) {
+      return new TemplateSaveFailed(template.name(), "A template with a matching name exists");
+    }
+    var savedTemplate = repo.save(template);
+    return new TemplateSaved(savedTemplate);
+  }
 }

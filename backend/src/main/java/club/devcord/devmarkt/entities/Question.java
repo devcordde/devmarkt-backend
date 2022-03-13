@@ -28,6 +28,7 @@ public record Question(
     int id,
     @Relation(Kind.MANY_TO_ONE)
     Template template,
+    int number,
     String question
 ) {
 
