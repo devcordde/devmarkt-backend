@@ -44,8 +44,4 @@ public class TemplateMutationResolver implements GraphQLMutationResolver {
   public boolean updateTemplateName(String oldName, String newName) {
     return service.updateName(oldName, newName);
   }
-
-  public Object addQuestion(String templateName, int number, String question) {
-    return service.addQuestion(templateName, number, question).graphqlUnion();
-  }
 }

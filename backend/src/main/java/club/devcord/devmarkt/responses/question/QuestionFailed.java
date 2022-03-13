@@ -26,9 +26,13 @@ public record QuestionFailed(
   int number
 ) implements QuestionResponse{
 
-  public class Codes {
+  public static class QuestionErrors {
     public static final String TEMPLATE_NOT_FOUND = "TEMPLATE_NOT_FOUND";
-    public static final String NUMBER_DUPLICATED = "NUMBER_DUPLICATED";
+    public static final String QUESTION_NOT_FOUND = "QUESTION_NOT_FOUND";
+
+    private QuestionErrors() {
+
+    }
   }
 
 }
