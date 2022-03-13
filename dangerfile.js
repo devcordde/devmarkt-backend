@@ -57,8 +57,10 @@ if (danger.github) {
     warn("No lables have been set");
   }
 
-  if (danger.github.pr?.labels.some(label => label.name === 'better description')) {
-    warn("This PR has the `better description` label, consider editing the description before merging");
+  if (danger.github.pr?.labels.some(
+      label => label.name === 'better description')) {
+    warn(
+        "This PR has the `better description` label, consider editing the description before merging");
   }
 
   if (!danger.github.pr?.milestone) {
@@ -87,28 +89,28 @@ function readFileContent(fileName) {
 }
 
 function readDirectoryRecursive(
-    directory, 
-    excluded = [], 
+    directory,
+    excluded = [],
     currentPath = __dirname
 ) {
-  
+
   const isExcluded = (file) => excluded.some(exclude => file.includes(exclude));
 
   const dirents = fs.readdirSync(directory, {withFileTypes: true});
 
   const files = dirents.filter(dirent => dirent.isFile())
-      .filter(dirent => !isExcluded(dirent.name))
-      .map(dirent => `${dirent.name}`);
-  
+  .filter(dirent => !isExcluded(dirent.name))
+  .map(dirent => `${dirent.name}`);
+
   const directories = dirents.filter(dirent => dirent.isDirectory())
-      .filter(dirent => !isExcluded(`${dirent.name}`));
-  
+  .filter(dirent => !isExcluded(`${dirent.name}`));
+
   directories.forEach(dir => {
     const recursedFiles = readDirectoryRecursive(
         path.join(currentPath, dir.name),
         excluded,
         `${currentPath}/${dir.name}`)
-        .map(filename => `${dir.name}/${filename}`);
+    .map(filename => `${dir.name}/${filename}`);
     files.push(...recursedFiles);
   });
   return files;
@@ -124,23 +126,26 @@ const LINTER_EXCLUDED = [
 ];
 
 readDirectoryRecursive(".", LINTER_EXCLUDED)
-    .map(file => ({filename: file, content: readFileContent(file)}))
-    .forEach(lintFile)
+.map(file => ({filename: file, content: readFileContent(file)}))
+.forEach(lintFile)
 
 function lintFile(file) {
   if (!file.content.endsWith("\n")) {
     fail(`\`${file.filename}\` is missing a new line at the end`);
   }
 
-  if(/import [^*]+\.\*;/.test(file.content)) {
+  if (/import [^*]+\.\*;/.test(file.content)) {
     fail(`\`${file.filename}\` is using a wildcard import`);
   }
-  
-  if((/System\.out/.test(file.content) || /System\.err/.test(file.content)) && file.filename !== 'dangerfile.js') {
-    fail(`\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
+
+  if ((/System\.out/.test(file.content) || /System\.err/.test(file.content))
+      && file.filename !== 'dangerfile.js') {
+    fail(
+        `\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
   }
 
-  if(!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
-    fail(`\`${file.filename}\` does not follow the \`/^[a-z0-9-_/]+\.[a-z0-9]+$/i\` regex`);
+  if (!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
+    fail(
+        `\`${file.filename}\` does not follow the \`/^[a-z0-9-_/]+\.[a-z0-9]+$/i\` regex`);
   }
 }

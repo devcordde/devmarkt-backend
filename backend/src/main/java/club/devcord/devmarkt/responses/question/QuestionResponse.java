@@ -24,5 +24,5 @@ public sealed interface QuestionResponse permits QuestionSuccess, QuestionFailed
     }
     return this;
   }
-  
+
 }

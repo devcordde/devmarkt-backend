@@ -50,14 +50,14 @@ public class QuestionService {
    */
   public QuestionResponse addQuestion(String templateName, String question, int number) {
     var templateIdOpt = templateRepo.getIdByName(templateName);
-    if(templateIdOpt.isEmpty()) {
+    if (templateIdOpt.isEmpty()) {
       return new QuestionFailed("No template with the given name found",
           templateName, QuestionErrors.TEMPLATE_NOT_FOUND, -1);
     }
     int templateId = templateIdOpt.get();
     if (number == -1) {
       number = questionRepo.getMaxNumberByTemplateId(templateId)
-          .map(i -> i+1)
+          .map(i -> i + 1)
           .orElse(0);
     } else {
       reorderQuestions(templateId, number, 1);
@@ -69,7 +69,7 @@ public class QuestionService {
 
   public QuestionResponse updateQuestion(String templateName, int number, String question) {
     var templateId = templateRepo.getIdByName(templateName);
-    if(templateId.isEmpty()) {
+    if (templateId.isEmpty()) {
       return new QuestionFailed("No template with the given name found",
           templateName, QuestionErrors.TEMPLATE_NOT_FOUND, number);
     }
@@ -83,7 +83,7 @@ public class QuestionService {
 
   public boolean deleteQuestion(String templateName, int number) {
     var templateIdOpt = templateRepo.getIdByName(templateName);
-    if(templateIdOpt.isEmpty()) {
+    if (templateIdOpt.isEmpty()) {
       return false;
     }
 
@@ -103,12 +103,14 @@ public class QuestionService {
       1, 2, 4 -> 1, 2, 5 (offset 2)
    */
   private void reorderQuestions(int templateId, int from, int offset) {
-    var questions = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId, from);
-    var updatedQuestions = new HashSet<RawQuestion>(questions.size()-from);
+    var questions = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId,
+        from);
+    var updatedQuestions = new HashSet<RawQuestion>(questions.size() - from);
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
       if (question.number() != i + offset) {
-        updatedQuestions.add(new RawQuestion(question.id(), templateId, i+offset, question.question()));
+        updatedQuestions.add(
+            new RawQuestion(question.id(), templateId, i + offset, question.question()));
       }
     }
 

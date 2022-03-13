@@ -24,7 +24,7 @@ CREATE TABLE questions
 (
     id          SERIAL PRIMARY KEY,
     template_id INT,
-    number       INT,
+    number      INT,
     question    VARCHAR,
     UNIQUE (template_id, number),
     FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE

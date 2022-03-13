@@ -25,5 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 @Singleton
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GraphQLType {
+
   String value();
 }

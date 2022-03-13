@@ -21,4 +21,5 @@ import club.devcord.devmarkt.entities.template.RawQuestion;
 public record QuestionSuccess(
     RawQuestion question
 ) implements QuestionResponse {
+
 }

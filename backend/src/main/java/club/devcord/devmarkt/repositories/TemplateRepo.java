@@ -25,6 +25,7 @@ import java.util.Optional;
 
 @JdbcRepository
 public interface TemplateRepo extends CrudRepository<Template, Integer> {
+
   boolean existsByName(String name);
 
   @Join("questions")

@@ -26,6 +26,7 @@ public record TemplateFailed(
 ) implements TemplateResponse {
 
   public static class TemplateErrors {
+
     public static final String NOT_FOUND = "NOT_FOUND";
     public static final String DUPLICATED = "DUPLICATED";
 

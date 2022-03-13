@@ -20,13 +20,14 @@ import club.devcord.devmarkt.GraphQLType;
 
 @GraphQLType("QuestionFailed")
 public record QuestionFailed(
-  String message,
-  String templateName,
-  String errorCode,
-  int number
-) implements QuestionResponse{
+    String message,
+    String templateName,
+    String errorCode,
+    int number
+) implements QuestionResponse {
 
   public static class QuestionErrors {
+
     public static final String TEMPLATE_NOT_FOUND = "TEMPLATE_NOT_FOUND";
     public static final String QUESTION_NOT_FOUND = "QUESTION_NOT_FOUND";
 

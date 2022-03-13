@@ -25,6 +25,7 @@ import java.util.Optional;
 
 @JdbcRepository
 public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
+
   boolean existsByTemplateIdAndNumber(int templateId, int number);
 
   Optional<Integer> getMaxNumberByTemplateId(int templateId);
@@ -34,5 +35,6 @@ public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
 
   void deleteByTemplateIdAndNumber(int templateId, int number);
 
-  List<RawQuestion> findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(int templateId, int number);
+  List<RawQuestion> findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(int templateId,
+      int number);
 }

@@ -35,7 +35,8 @@ public class TemplateService {
 
   public TemplateResponse create(Template template) {
     if (templateRepo.existsByName(template.name())) {
-      return new TemplateFailed(template.name(), TemplateErrors.DUPLICATED,"A template with the same name exists");
+      return new TemplateFailed(template.name(), TemplateErrors.DUPLICATED,
+          "A template with the same name exists");
     }
     var savedTemplate = templateRepo.save(template);
     return new TemplateSuccess(savedTemplate);
@@ -46,7 +47,8 @@ public class TemplateService {
     if (optional.isPresent()) {
       return new TemplateSuccess(optional.get());
     }
-    return new TemplateFailed(name, TemplateErrors.NOT_FOUND, "No template with the given name found.");
+    return new TemplateFailed(name, TemplateErrors.NOT_FOUND,
+        "No template with the given name found.");
   }
 
   public boolean delete(String name) {
