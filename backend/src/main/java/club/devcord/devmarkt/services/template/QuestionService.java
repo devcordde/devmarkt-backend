@@ -24,6 +24,7 @@ import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
 import club.devcord.devmarkt.responses.question.QuestionResponse;
 import club.devcord.devmarkt.responses.question.QuestionSuccess;
 import jakarta.inject.Singleton;
+import java.util.HashSet;
 
 @Singleton
 public class QuestionService {
@@ -37,15 +38,31 @@ public class QuestionService {
     this.questionRepo = questionRepo;
   }
 
-  public QuestionResponse addQuestion(String templateName, String question) {
-    var templateId = templateRepo.getIdByName(templateName);
-    if(templateId.isEmpty()) {
+
+  /*
+  If a number is provided (higher than -1), than the question will be inserted.
+  In detail all numbers of the questions from the given number on
+  are increased by 1 and the question is added on the given number.
+
+  Examples:
+  addQuestion(..., ..., -1): old, old, old -> old, old, old, new
+  assQuestion(..., ..., 2) old, old, old -> old, old, new, old
+   */
+  public QuestionResponse addQuestion(String templateName, String question, int number) {
+    var templateIdOpt = templateRepo.getIdByName(templateName);
+    if(templateIdOpt.isEmpty()) {
       return new QuestionFailed("No template with the given name found",
           templateName, QuestionErrors.TEMPLATE_NOT_FOUND, -1);
     }
-
-    var number = questionRepo.getMaxNumberByTemplateId(templateId.get()) + 1;
-    var questionObj = new RawQuestion(null, templateId.get(), number, question);
+    int templateId = templateIdOpt.get();
+    if (number == -1) {
+      number = questionRepo.getMaxNumberByTemplateId(templateId)
+          .map(i -> i+1)
+          .orElse(0);
+    } else {
+      reorderQuestions(templateId, number, 1);
+    }
+    var questionObj = new RawQuestion(null, templateId, number, question);
     var questionSaved = questionRepo.save(questionObj);
     return new QuestionSuccess(questionSaved);
   }
@@ -65,16 +82,38 @@ public class QuestionService {
   }
 
   public boolean deleteQuestion(String templateName, int number) {
-    var templateId = templateRepo.getIdByName(templateName);
-    if(templateId.isEmpty()) {
+    var templateIdOpt = templateRepo.getIdByName(templateName);
+    if(templateIdOpt.isEmpty()) {
       return false;
     }
 
-    if (!questionRepo.existsByTemplateIdAndNumber(templateId.get(), number)) {
+    int templateId = templateIdOpt.get();
+    if (!questionRepo.existsByTemplateIdAndNumber(templateId, number)) {
       return false;
     }
-    questionRepo.deleteByTemplateIdAndNumber(templateId.get(), number);
+    questionRepo.deleteByTemplateIdAndNumber(templateId, number);
+    reorderQuestions(templateId, number, 0);
     return true;
+  }
+
+  /*
+  Reorders (changes the number) of all questions with the given templateId, which
+  numbers are out of the line to it's right order, optionally with an offset.
+  Eg. 1, 2, 4 -> 1, 2, 4 (offset 0)
+      1, 2, 4 -> 1, 2, 5 (offset 2)
+   */
+  private void reorderQuestions(int templateId, int from, int offset) {
+    var questions = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId, from);
+    var updatedQuestions = new HashSet<RawQuestion>(questions.size()-from);
+    for (int i = 0; i < questions.size(); i++) {
+      var question = questions.get(i);
+      if (question.number() != i + offset) {
+        updatedQuestions.add(new RawQuestion(question.id(), templateId, i+offset, question.question()));
+      }
+    }
+
+    questionRepo.deleteAll(updatedQuestions);
+    questionRepo.saveAll(updatedQuestions);
   }
 
 }

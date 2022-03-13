@@ -30,8 +30,8 @@ public class QuestionTemplateMutationResolver implements GraphQLMutationResolver
     this.service = service;
   }
 
-  public Object addQuestion(String templateName, String question) {
-    return service.addQuestion(templateName, question).graphqlUnion();
+  public Object addQuestion(String templateName, String question, int number) {
+    return service.addQuestion(templateName, question, number).graphqlUnion();
   }
 
   public Object updateQuestion(String templateName, int number, String question) {
