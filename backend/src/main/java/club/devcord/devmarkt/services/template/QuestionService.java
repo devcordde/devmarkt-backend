@@ -121,8 +121,10 @@ public class QuestionService {
       }
     }
 
-    questionRepo.deleteAll(updatedQuestions);
-    questionRepo.saveAll(updatedQuestions);
+    if (updatedQuestions.size() > 0) {
+      questionRepo.deleteAll(updatedQuestions);
+      questionRepo.saveAll(updatedQuestions);
+    }
   }
 
 }
