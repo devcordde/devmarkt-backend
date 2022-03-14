@@ -47,11 +47,6 @@ public class Helpers {
     assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(value));
   }
 
-  public static void assertTemplate(Template template)
-      throws JsonProcessingException {
-    assertJson(TEMPLATE, template);
-  }
-
   public static Template unwrapTemplate(Object response) {
     assertTrue(response instanceof Template, "Response isn't a Template/TemplateSuccess");
     return (Template) response;

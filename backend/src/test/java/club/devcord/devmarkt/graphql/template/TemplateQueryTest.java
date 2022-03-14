@@ -17,7 +17,6 @@
 package club.devcord.devmarkt.graphql.template;
 
 import static club.devcord.devmarkt.graphql.Helpers.assertJson;
-import static club.devcord.devmarkt.graphql.Helpers.assertTemplate;
 import static club.devcord.devmarkt.graphql.Helpers.unwrapTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,7 +41,7 @@ public class TemplateQueryTest extends DevmarktTest {
     mutation.createTemplate("test", Helpers.QUESTIONS);
     var response = query.template("test");
 
-    assertTemplate(unwrapTemplate(response));
+    assertJson(Helpers.TEMPLATE, unwrapTemplate(response));
   }
 
   @Test
