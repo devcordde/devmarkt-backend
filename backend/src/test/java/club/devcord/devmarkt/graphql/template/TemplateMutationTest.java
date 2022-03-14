@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.template;
 
+import static club.devcord.devmarkt.graphql.Helpers.assertJson;
 import static club.devcord.devmarkt.graphql.Helpers.assertTemplate;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapFailed;
 import static club.devcord.devmarkt.graphql.Helpers.unwrapTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,17 +42,17 @@ public class TemplateMutationTest extends DevmarktTest {
   void createTemplate_success()
       throws JsonProcessingException {
     var response = mutation.createTemplate("test", Helpers.QUESTIONS);
-    assertTemplate(mapper, unwrapTemplate(response));
+    assertTemplate(unwrapTemplate(response));
 
     var verify = query.template("test");
-    assertTemplate(mapper, unwrapTemplate(verify));
+    assertTemplate(unwrapTemplate(verify));
   }
 
   @Test
   void createTemplate_duplicate() {
     mutation.createTemplate("test", Helpers.QUESTIONS);
     var response = mutation.createTemplate("test", Helpers.QUESTIONS);
-    assertEquals(TemplateErrors.DUPLICATED, unwrapFailed(response).errorCode());
+    assertEquals(TemplateErrors.DUPLICATED, Helpers.unwrapTemplateFailed(response).errorCode());
   }
 
   @Test
@@ -62,7 +62,7 @@ public class TemplateMutationTest extends DevmarktTest {
     assertTrue(response);
 
     var verify = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, unwrapFailed(verify).errorCode());
+    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(verify).errorCode());
   }
 
   @Test
@@ -78,11 +78,11 @@ public class TemplateMutationTest extends DevmarktTest {
     assertTrue(response);
 
     var verify = query.template("newTest");
-    assertEquals(mapper.writeValueAsString(new Template(-1, "newTest", Helpers.QUESTIONS)),
-        mapper.writeValueAsString(unwrapTemplate(verify)));
+    assertJson(new Template(-1, "newTest", Helpers.QUESTIONS),
+        unwrapTemplate(verify));
 
     var verifyOld = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, unwrapFailed(verifyOld).errorCode());
+    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(verifyOld).errorCode());
   }
 
   @Test
@@ -90,7 +90,4 @@ public class TemplateMutationTest extends DevmarktTest {
     var response = mutation.updateTemplateName("test", "newTest");
     assertFalse(response);
   }
-
-
-
 }

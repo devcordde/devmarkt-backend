@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt;
 
+import club.devcord.devmarkt.graphql.Helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;
@@ -42,13 +43,11 @@ public abstract class DevmarktTest implements TestPropertyProvider {
     CONTAINER.start();
   }
 
-  protected ObjectMapper mapper;
-
   @BeforeEach
   void beforeEach(Flyway flyway, ObjectMapper mapper) {
     flyway.clean();
     flyway.migrate();
-    this.mapper = mapper;
+    Helpers.initMapper(mapper);
   }
 
   @Override

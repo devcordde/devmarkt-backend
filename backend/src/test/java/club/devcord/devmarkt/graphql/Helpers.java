@@ -20,7 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.responses.question.QuestionFailed;
 import club.devcord.devmarkt.responses.template.TemplateFailed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,19 +36,40 @@ public class Helpers {
 
   public static final Template TEMPLATE = new Template(-1, "test", QUESTIONS);
 
-  public static void assertTemplate(ObjectMapper mapper, Template template)
+  private static ObjectMapper mapper;
+
+  public static void initMapper(ObjectMapper mapper) {
+    Helpers.mapper = mapper;
+  }
+
+  public static void assertJson(Object expected, Object value)
       throws JsonProcessingException {
-    assertEquals(mapper.writeValueAsString(TEMPLATE), mapper.writeValueAsString(template));
+    assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(value));
+  }
+
+  public static void assertTemplate(Template template)
+      throws JsonProcessingException {
+    assertJson(TEMPLATE, template);
   }
 
   public static Template unwrapTemplate(Object response) {
-    assertTrue(response instanceof Template, "Response isn't a Template");
+    assertTrue(response instanceof Template, "Response isn't a Template/TemplateSuccess");
     return (Template) response;
   }
 
-  public static TemplateFailed unwrapFailed(Object response) {
+  public static TemplateFailed unwrapTemplateFailed(Object response) {
     assertTrue(response instanceof TemplateFailed, "Response isn't a TemplateFailed");
     return (TemplateFailed) response;
+  }
+
+  public static RawQuestion unwrapQuestion(Object response) {
+    assertTrue(response instanceof RawQuestion, "Response isn't a (Raw)Question/QuestionSuccess");
+    return (RawQuestion) response;
+  }
+
+  public static QuestionFailed unwrapQuestionFailed(Object response) {
+    assertTrue(response instanceof QuestionFailed, "Response isn't a QuestionFailed");
+    return (QuestionFailed) response;
   }
 
 }

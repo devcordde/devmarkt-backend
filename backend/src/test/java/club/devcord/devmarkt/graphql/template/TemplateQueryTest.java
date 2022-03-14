@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.template;
 
+import static club.devcord.devmarkt.graphql.Helpers.assertJson;
 import static club.devcord.devmarkt.graphql.Helpers.assertTemplate;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapFailed;
 import static club.devcord.devmarkt.graphql.Helpers.unwrapTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,13 +42,13 @@ public class TemplateQueryTest extends DevmarktTest {
     mutation.createTemplate("test", Helpers.QUESTIONS);
     var response = query.template("test");
 
-    assertTemplate(mapper, unwrapTemplate(response));
+    assertTemplate(unwrapTemplate(response));
   }
 
   @Test
   void template_notFound() {
     var response = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, unwrapFailed(response).errorCode());
+    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(response).errorCode());
   }
 
   @Test
@@ -62,7 +62,7 @@ public class TemplateQueryTest extends DevmarktTest {
     var templateList = List.of(new Template(-1, "test1", Helpers.QUESTIONS),
         new Template(-1, "test2", Helpers.QUESTIONS),
         new Template(-1, "test3", Helpers.QUESTIONS));
-    assertEquals(mapper.writeValueAsString(templateList), mapper.writeValueAsString(response));
+    assertJson(templateList, response);
   }
 
 }
