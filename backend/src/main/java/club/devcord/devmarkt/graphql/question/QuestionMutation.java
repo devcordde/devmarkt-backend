@@ -17,19 +17,28 @@
 package club.devcord.devmarkt.graphql.question;
 
 import club.devcord.devmarkt.services.template.QuestionService;
-import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class QuestionQueryResolver implements GraphQLQueryResolver {
+public class QuestionMutation implements GraphQLMutationResolver {
 
   private final QuestionService service;
 
-  public QuestionQueryResolver(QuestionService service) {
+  public QuestionMutation(
+      QuestionService service) {
     this.service = service;
   }
 
-  public Object question(String templateName, int number) {
-    return service.question(templateName, number).graphqlUnion();
+  public Object addQuestion(String templateName, String question, int number) {
+    return service.addQuestion(templateName, question, number).graphqlUnion();
+  }
+
+  public Object updateQuestion(String templateName, int number, String question) {
+    return service.updateQuestion(templateName, number, question).graphqlUnion();
+  }
+
+  public boolean deleteQuestion(String templateName, int number) {
+    return service.deleteQuestion(templateName, number);
   }
 }

@@ -23,11 +23,11 @@ import jakarta.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class TemplateQueryResolver implements GraphQLQueryResolver {
+public class TemplateQuery implements GraphQLQueryResolver {
 
   private final TemplateService service;
 
-  public TemplateQueryResolver(TemplateService service) {
+  public TemplateQuery(TemplateService service) {
     this.service = service;
   }
 

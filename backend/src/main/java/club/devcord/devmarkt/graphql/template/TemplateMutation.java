@@ -24,11 +24,11 @@ import jakarta.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class TemplateMutationResolver implements GraphQLMutationResolver {
+public class TemplateMutation implements GraphQLMutationResolver {
 
   private final TemplateService service;
 
-  public TemplateMutationResolver(TemplateService service) {
+  public TemplateMutation(TemplateService service) {
     this.service = service;
   }
 
