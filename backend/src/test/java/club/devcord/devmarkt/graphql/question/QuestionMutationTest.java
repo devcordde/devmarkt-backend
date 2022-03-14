@@ -20,6 +20,8 @@ import static club.devcord.devmarkt.graphql.Helpers.assertJson;
 import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestion;
 import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestionFailed;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Question;
@@ -105,6 +107,28 @@ public class QuestionMutationTest extends DevmarktTest {
     templateMutation.createTemplate("test", List.of());
     var response = questionMutation.updateQuestion("test", 0, "How was your day?");
     assertEquals(QuestionErrors.QUESTION_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+  }
+
+  @Test
+  void deleteQuestion_success() throws JsonProcessingException {
+    templateMutation.createTemplate("test", Helpers.QUESTIONS);
+
+    var response = questionMutation.deleteQuestion("test", 0);
+    assertTrue(response);
+
+    var verifyFirst = unwrapQuestion(questionQuery.question("test", 0));
+    assertJson(verifyFirst, new RawQuestion(-1, -1, 0, verifyFirst.question()));
+
+    var verifySecond = unwrapQuestion(questionQuery.question("test", 1));
+    assertJson(verifySecond, new RawQuestion(-1, -1, 1, verifyFirst.question()));
+  }
+
+  @Test
+  void deleteQuestion_failed() {
+    templateMutation.createTemplate("test", List.of());
+
+    var response = questionMutation.deleteQuestion("test", 0);
+    assertFalse(response);
   }
 
 }
