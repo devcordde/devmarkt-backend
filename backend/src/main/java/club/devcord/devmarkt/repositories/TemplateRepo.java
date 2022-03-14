@@ -20,7 +20,9 @@ import club.devcord.devmarkt.entities.template.Template;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
+import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JdbcRepository
 public interface TemplateRepo extends CrudRepository<Template, Integer> {
@@ -35,4 +37,8 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   int updateByName(String oldName, String name);
 
   Optional<Integer> getIdByName(String name);
+
+  @NotNull
+  @Join("questions")
+  List<Template> findAll();
 }

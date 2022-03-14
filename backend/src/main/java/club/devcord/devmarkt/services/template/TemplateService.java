@@ -23,8 +23,6 @@ import club.devcord.devmarkt.responses.template.TemplateResponse;
 import club.devcord.devmarkt.responses.template.TemplateSuccess;
 import jakarta.inject.Singleton;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Singleton
 public class TemplateService {
@@ -59,8 +57,6 @@ public class TemplateService {
   }
 
   public List<Template> all() {
-    return StreamSupport
-        .stream(templateRepo.findAll().spliterator(), false)
-        .collect(Collectors.toList());
+    return templateRepo.findAll();
   }
 }
