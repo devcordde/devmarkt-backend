@@ -120,7 +120,7 @@ public class QuestionMutationTest extends DevmarktTest {
     assertJson(verifyFirst, new RawQuestion(-1, -1, 0, verifyFirst.question()));
 
     var verifySecond = unwrapQuestion(questionQuery.question("test", 1));
-    assertJson(verifySecond, new RawQuestion(-1, -1, 1, verifyFirst.question()));
+    assertJson(verifySecond, new RawQuestion(-1, -1, 1, verifySecond.question()));
   }
 
   @Test

@@ -32,7 +32,8 @@ public class Helpers {
 
   public static final List<Question> QUESTIONS = List.of(
       new Question(null, null, 0, "How are you?"),
-      new Question(null, null, 1, "Who are you?"));
+      new Question(null, null, 1, "Who are you?"),
+      new Question(null, null, 2, "What's your name?"));
 
   public static final Template TEMPLATE = new Template(-1, "test", QUESTIONS);
 
