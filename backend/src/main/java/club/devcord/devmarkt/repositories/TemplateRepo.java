@@ -41,4 +41,6 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   @NotNull
   @Join("questions")
   List<Template> findAll();
+
+  List<String> findName();
 }

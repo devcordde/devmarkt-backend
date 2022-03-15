@@ -59,4 +59,8 @@ public class TemplateService {
   public List<Template> all() {
     return templateRepo.findAll();
   }
+
+  public List<String> allNames() {
+    return templateRepo.findName();
+  }
 }

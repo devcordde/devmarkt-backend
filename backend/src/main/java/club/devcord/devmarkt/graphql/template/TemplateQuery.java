@@ -19,8 +19,10 @@ package club.devcord.devmarkt.graphql.template;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.services.template.TemplateService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
 import jakarta.inject.Singleton;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class TemplateQuery implements GraphQLQueryResolver {
@@ -35,7 +37,14 @@ public class TemplateQuery implements GraphQLQueryResolver {
     return service.find(name).graphqlUnion();
   }
 
-  public List<Template> templates() {
+  public List<Template> templates(DataFetchingEnvironment environment) {
+    var fields = environment.getSelectionSet().getFields();
+    if (fields.size() == 1 && fields.get(0).getName().equals("name")) {
+      return service.allNames()
+          .stream()
+          .map(name -> new Template(-1, name, List.of()))
+          .collect(Collectors.toList());
+    }
     return service.all();
   }
 }
