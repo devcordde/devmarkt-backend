@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.services.template;
+package club.devcord.devmarkt.services;
 
 import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.repositories.QuestionRepo;

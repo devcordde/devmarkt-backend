@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.graphql.question;
 
-import club.devcord.devmarkt.services.template.QuestionService;
+import club.devcord.devmarkt.services.QuestionService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 

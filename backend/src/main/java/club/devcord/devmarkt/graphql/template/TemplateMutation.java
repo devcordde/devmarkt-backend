@@ -18,7 +18,7 @@ package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.Template;
-import club.devcord.devmarkt.services.template.TemplateService;
+import club.devcord.devmarkt.services.TemplateService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 import java.util.List;
