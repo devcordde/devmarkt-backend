@@ -56,11 +56,25 @@ public class TemplateQueryTest extends DevmarktTest {
     mutation.createTemplate("test2", Helpers.QUESTIONS);
     mutation.createTemplate("test3", Helpers.QUESTIONS);
 
-    var response = query.templates();
+    var response = query.templates(new DataFetchingEnviromentMock("all"));
 
     var templateList = List.of(new Template(-1, "test1", Helpers.QUESTIONS),
         new Template(-1, "test2", Helpers.QUESTIONS),
         new Template(-1, "test3", Helpers.QUESTIONS));
+    assertJson(templateList, response);
+  }
+
+  @Test
+  void templates_onlyNames_success() throws JsonProcessingException {
+    mutation.createTemplate("test1", Helpers.QUESTIONS);
+    mutation.createTemplate("test2", Helpers.QUESTIONS);
+    mutation.createTemplate("test3", Helpers.QUESTIONS);
+
+    var response = query.templates(new DataFetchingEnviromentMock("name"));
+
+    var templateList = List.of(new Template(-1, "test1", List.of()),
+        new Template(-1, "test2", List.of()),
+        new Template(-1, "test3", List.of()));
     assertJson(templateList, response);
   }
 
