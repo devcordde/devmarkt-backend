@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.responses;
 
-import club.devcord.devmarkt.entities.template.RawQuestion;
-import club.devcord.devmarkt.responses.Success;
-
-public record QuestionSuccess(
-    RawQuestion question
-) implements QuestionResponse, Success {
-
+public interface Fail extends Response {
+  String errorCode();
 }

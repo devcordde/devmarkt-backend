@@ -17,13 +17,14 @@
 package club.devcord.devmarkt.responses.template;
 
 import club.devcord.devmarkt.GraphQLType;
+import club.devcord.devmarkt.responses.Fail;
 
 @GraphQLType("TemplateFailed")
 public record TemplateFailed(
     String name,
     String errorCode,
     String message
-) implements TemplateResponse {
+) implements TemplateResponse, Fail {
 
   public static TemplateFailed notFound(String name) {
     return new TemplateFailed(name, TemplateErrors.NOT_FOUND,

@@ -17,14 +17,18 @@
 package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.template.TemplateService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class TemplateMutation implements GraphQLMutationResolver {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(TemplateMutation.class);
 
   private final TemplateService service;
 
@@ -33,11 +37,14 @@ public class TemplateMutation implements GraphQLMutationResolver {
   }
 
   public Object createTemplate(String name, List<Question> questions) {
-    var template = new Template(-1, name, questions);
-    return service.create(template).graphqlUnion();
+    var response = service.create(name, questions);
+    LOGGER.info("template creation. Response: {}, Name: {}", LoggingUtil.responseStatus(response), name);
+    return response.graphqlUnion();
   }
 
   public boolean deleteTemplate(String name) {
+    var response = service.delete(name);
+    LOGGER.info("Template deletion. Successful: {}, Name: {}", response, name);
     return service.delete(name);
   }
 

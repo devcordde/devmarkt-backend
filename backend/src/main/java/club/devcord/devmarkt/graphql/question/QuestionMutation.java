@@ -16,12 +16,17 @@
 
 package club.devcord.devmarkt.graphql.question;
 
+import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.template.QuestionService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class QuestionMutation implements GraphQLMutationResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(QuestionMutation.class);
 
   private final QuestionService service;
 
@@ -31,14 +36,22 @@ public class QuestionMutation implements GraphQLMutationResolver {
   }
 
   public Object addQuestion(String templateName, String question, int number) {
-    return service.addQuestion(templateName, question, number).graphqlUnion();
+    var response = service.addQuestion(templateName, question, number);
+    LOGGER.info("Question addition. Response: {}, TemplateName: {}, Number: {}, Question: {}",
+        LoggingUtil.responseStatus(response), templateName, number, question);
+    return response.graphqlUnion();
   }
 
   public Object updateQuestion(String templateName, int number, String question) {
-    return service.updateQuestion(templateName, number, question).graphqlUnion();
+    var response = service.updateQuestion(templateName, number, question);
+    LOGGER.info("Question update, Response: {}, TemplateName: {}, Number: {}, Question: {}",
+        LoggingUtil.responseStatus(response), templateName, number, question);
+    return response.graphqlUnion();
   }
 
   public boolean deleteQuestion(String templateName, int number) {
-    return service.deleteQuestion(templateName, number);
+    var response = service.deleteQuestion(templateName, number);
+    LOGGER.info("Question deletion. Successful: {}, TemplateName: {}, Number: {}", response, templateName, number);
+    return response;
   }
 }
