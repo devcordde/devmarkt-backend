@@ -42,23 +42,28 @@ jobs:
       - name: Create Docker layers
         run: ./gradlew buildLayers dockerfile
         timeout-minutes: 10
+      - name: Determine correct docker tag
+        id: dockertag
+        run: echo "::set-output name=dockertag::${{ github.head_ref || github.ref_name }}_${{ github.sha }}"
       - name: Build Docker Image
-        run: docker build . -t registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+        run: docker build . -t registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ steps.dockertag.outputs.dockertag }}
         timeout-minutes: 30
         working-directory: backend/build/docker/main
       - name: Login to GitLab Registry
         run: echo ${{ secrets.DOCKER_PUSH_TOKEN }} | docker login -u ${{ secrets.DOCKER_PUSH_TOKEN_NAME }} --password-stdin registry.gitlab.com
         timeout-minutes: 1
       - name: Push Docker Image
-        run: docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+        run: docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ steps.dockertag.outputs.dockertag }}
         timeout-minutes: 30
       - name: Tag & Push latest Docker Image
         if: github.ref_name == 'main' || github.ref_type == 'tag'
         run: |
-          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
+          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ steps.dockertag.outputs.dockertag }} registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
           docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:latest
+        timeout-minutes: 30
       - name: Tag & Push tag Docker Image
         if: github.ref_type == 'tag'
         run: |
-          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+          docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ steps.dockertag.outputs.dockertag }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
           docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+        timeout-minutes: 30
