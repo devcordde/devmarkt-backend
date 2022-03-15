@@ -45,10 +45,12 @@ public class TemplateMutation implements GraphQLMutationResolver {
   public boolean deleteTemplate(String name) {
     var response = service.delete(name);
     LOGGER.info("Template deletion. Successful: {}, Name: {}", response, name);
-    return service.delete(name);
+    return response;
   }
 
   public boolean updateTemplateName(String oldName, String newName) {
-    return service.updateName(oldName, newName);
+    var response = service.updateName(oldName, newName);
+    LOGGER.info("Template update. Successful: {}, OldName: {}, NewName: {}", response, oldName, newName);
+    return response;
   }
 }
