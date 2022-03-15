@@ -29,7 +29,7 @@ public record RawQuestion(
 
     @JsonIgnore
     @Id @GeneratedValue
-    Integer id,
+    int id,
 
     @MappedProperty("template_id")
     @JsonIgnore

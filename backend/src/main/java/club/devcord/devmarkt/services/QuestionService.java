@@ -73,7 +73,7 @@ public class QuestionService {
       reorderQuestions(templateId, number, 1);
     }
 
-    var questionObj = new RawQuestion(null, templateId, number, question);
+    var questionObj = new RawQuestion(-1, templateId, number, question);
     var questionSaved = questionRepo.save(questionObj);
     return new QuestionSuccess(questionSaved);
   }
@@ -86,7 +86,7 @@ public class QuestionService {
 
     var updated = questionRepo.updateByTemplateIdAndNumber(templateIdOpt.get(), number, question);
     return updated != 0
-        ? new QuestionSuccess(new RawQuestion(null, -1, number, question))
+        ? new QuestionSuccess(new RawQuestion(-1, -1, number, question))
         : QuestionFailed.questionNotFound(templateName, number);
   }
 
