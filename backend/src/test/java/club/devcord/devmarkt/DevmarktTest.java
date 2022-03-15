@@ -21,14 +21,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;
 import java.util.Map;
-import org.flywaydb.core.Flyway;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@MicronautTest(rollback = false)
+@MicronautTest
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class DevmarktTest implements TestPropertyProvider {
 
@@ -44,9 +43,7 @@ public abstract class DevmarktTest implements TestPropertyProvider {
   }
 
   @BeforeEach
-  void beforeEach(Flyway flyway, ObjectMapper mapper) {
-    flyway.clean();
-    flyway.migrate();
+  void beforeEach(ObjectMapper mapper) {
     Helpers.initMapper(mapper);
   }
 
