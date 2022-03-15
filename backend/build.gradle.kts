@@ -30,6 +30,7 @@ dependencies {
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.graphql:micronaut-graphql")
     implementation("com.graphql-java-kickstart:graphql-java-tools:12.0.1")
+    implementation("io.micronaut:micronaut-validation")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
 

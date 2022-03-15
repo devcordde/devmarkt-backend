@@ -23,6 +23,8 @@ import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.annotation.Relation.Kind;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @MappedEntity("questions")
 public record Question(
@@ -36,7 +38,9 @@ public record Question(
     @Relation(Kind.MANY_TO_ONE)
     Template template,
 
+    @Min(0)
     int number,
+    @NotBlank
     String question
 ) {
 

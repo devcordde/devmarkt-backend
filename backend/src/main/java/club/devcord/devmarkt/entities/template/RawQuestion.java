@@ -22,6 +22,8 @@ import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @GraphQLType("QuestionSuccess")
 @MappedEntity("questions")
@@ -35,7 +37,9 @@ public record RawQuestion(
     @JsonIgnore
     int templateId,
 
+    @Min(0)
     int number,
+    @NotBlank
     String question
 ) {
 
