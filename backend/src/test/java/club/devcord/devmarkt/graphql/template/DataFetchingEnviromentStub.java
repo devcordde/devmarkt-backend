@@ -42,11 +42,11 @@ import java.util.stream.Stream;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 
-public class DataFetchingEnviromentMock implements DataFetchingEnvironment {
+public class DataFetchingEnviromentStub implements DataFetchingEnvironment {
 
   private final String[] fields;
 
-  public DataFetchingEnviromentMock(String... fields) {
+  public DataFetchingEnviromentStub(String... fields) {
     this.fields = fields;
   }
 
@@ -147,7 +147,7 @@ public class DataFetchingEnviromentMock implements DataFetchingEnvironment {
 
   @Override
   public DataFetchingFieldSelectionSet getSelectionSet() {
-    return new DataFetchingSelectionSetMock(fields);
+    return new DataFetchingSelectionSetStub(fields);
   }
 
   @Override
@@ -190,11 +190,11 @@ public class DataFetchingEnviromentMock implements DataFetchingEnvironment {
     return null;
   }
 
-  private static class DataFetchingSelectionSetMock implements DataFetchingFieldSelectionSet {
+  private static class DataFetchingSelectionSetStub implements DataFetchingFieldSelectionSet {
 
     private final String[] fieldNames;
 
-    private DataFetchingSelectionSetMock(String[] fieldNames) {
+    private DataFetchingSelectionSetStub(String[] fieldNames) {
       this.fieldNames = fieldNames;
     }
 
@@ -216,7 +216,7 @@ public class DataFetchingEnviromentMock implements DataFetchingEnvironment {
     @Override
     public List<SelectedField> getFields() {
       return Stream.of(fieldNames)
-          .map(SelectedFieldMock::new)
+          .map(SelectedFieldStub::new)
           .collect(Collectors.toList());
     }
 
@@ -242,11 +242,11 @@ public class DataFetchingEnviromentMock implements DataFetchingEnvironment {
     }
   }
 
-  private static class SelectedFieldMock implements SelectedField {
+  private static class SelectedFieldStub implements SelectedField {
 
     private final String name;
 
-    private SelectedFieldMock(String field) {
+    private SelectedFieldStub(String field) {
       this.name = field;
     }
 

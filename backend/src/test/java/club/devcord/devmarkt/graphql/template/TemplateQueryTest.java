@@ -56,7 +56,7 @@ public class TemplateQueryTest extends DevmarktTest {
     mutation.createTemplate("test2", Helpers.QUESTIONS);
     mutation.createTemplate("test3", Helpers.QUESTIONS);
 
-    var response = query.templates(new DataFetchingEnviromentMock("name", "questions"));
+    var response = query.templates(new DataFetchingEnviromentStub("name", "questions"));
 
     var templateList = List.of(new Template(-1, "test1", Helpers.QUESTIONS),
         new Template(-1, "test2", Helpers.QUESTIONS),
@@ -70,7 +70,7 @@ public class TemplateQueryTest extends DevmarktTest {
     mutation.createTemplate("test2", Helpers.QUESTIONS);
     mutation.createTemplate("test3", Helpers.QUESTIONS);
 
-    var response = query.templates(new DataFetchingEnviromentMock("name"));
+    var response = query.templates(new DataFetchingEnviromentStub("name"));
 
     var templateList = List.of(new Template(-1, "test1", List.of()),
         new Template(-1, "test2", List.of()),
