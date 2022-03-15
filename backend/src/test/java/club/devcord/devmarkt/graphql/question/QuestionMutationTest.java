@@ -103,7 +103,7 @@ public class QuestionMutationTest extends DevmarktTest {
   }
 
   @Test
-  void updateQuestion_questionNotFond() {
+  void updateQuestion_questionNotFound() {
     templateMutation.createTemplate("test", List.of());
     var response = questionMutation.updateQuestion("test", 0, "How was your day?");
     assertEquals(QuestionErrors.QUESTION_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
