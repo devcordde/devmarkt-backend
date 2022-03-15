@@ -17,6 +17,7 @@
 package club.devcord.devmarkt.responses.question;
 
 import club.devcord.devmarkt.GraphQLType;
+import club.devcord.devmarkt.responses.Fail;
 
 @GraphQLType("QuestionFailed")
 public record QuestionFailed(
@@ -24,7 +25,7 @@ public record QuestionFailed(
     String templateName,
     String errorCode,
     int number
-) implements QuestionResponse {
+) implements QuestionResponse, Fail {
 
   public static QuestionFailed templateNotFound(String templateName, int number) {
     return new QuestionFailed("No template with the given name found.",

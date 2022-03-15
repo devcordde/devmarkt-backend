@@ -19,9 +19,13 @@ package club.devcord.devmarkt.graphql.question;
 import club.devcord.devmarkt.services.QuestionService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class QuestionQuery implements GraphQLQueryResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(QuestionQuery.class);
 
   private final QuestionService service;
 
@@ -30,6 +34,8 @@ public class QuestionQuery implements GraphQLQueryResolver {
   }
 
   public Object question(String templateName, int number) {
-    return service.question(templateName, number).graphqlUnion();
+    var response = service.question(templateName, number).graphqlUnion();
+    LOGGER.info("Question fetch. TemplateName: {}, Number: {}", templateName, number);
+    return response;
   }
 }

@@ -16,7 +16,9 @@
 
 package club.devcord.devmarkt.responses.question;
 
-public sealed interface QuestionResponse permits QuestionSuccess, QuestionFailed {
+import club.devcord.devmarkt.responses.Response;
+
+public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
 
   default Object graphqlUnion() {
     if (this instanceof QuestionSuccess success) {

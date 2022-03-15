@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.services;
 
+import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.template.TemplateFailed;
@@ -33,12 +34,11 @@ public class TemplateService {
     this.templateRepo = repo;
   }
 
-  public TemplateResponse create(Template template) {
-    var name = template.name();
+  public TemplateResponse create(String name, List<Question> questions) {
     if (templateRepo.existsByName(name)) {
       return TemplateFailed.duplicated(name);
     }
-    var savedTemplate = templateRepo.save(template);
+    var savedTemplate = templateRepo.save(new Template(-1, name, questions));
     return new TemplateSuccess(savedTemplate);
   }
 

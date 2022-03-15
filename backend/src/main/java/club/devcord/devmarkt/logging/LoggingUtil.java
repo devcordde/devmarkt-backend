@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.logging;
 
-import club.devcord.devmarkt.entities.template.RawQuestion;
+import club.devcord.devmarkt.responses.Fail;
+import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
 
-public record QuestionSuccess(
-    RawQuestion question
-) implements QuestionResponse, Success {
+public class LoggingUtil {
+
+  private LoggingUtil() {
+
+  }
+
+  public static String responseStatus(Response response) {
+    if (response instanceof Fail fail) {
+      return fail.errorCode();
+    } else if (response instanceof Success) {
+      return "success";
+    }
+    return "unexpected response";
+  }
 
 }
