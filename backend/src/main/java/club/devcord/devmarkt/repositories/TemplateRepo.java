@@ -18,6 +18,7 @@ package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.template.Template;
 import io.micronaut.data.annotation.Join;
+import io.micronaut.data.annotation.Join.Type;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
 import java.util.List;
@@ -30,6 +31,7 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   boolean existsByName(String name);
 
   @Join("questions")
+  @Join(value = "questions", type = Type.LEFT_FETCH)
   Optional<Template> findByName(String name);
 
   int deleteByName(String name);
@@ -39,7 +41,7 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   Optional<Integer> getIdByName(String name);
 
   @NotNull
-  @Join("questions")
+  @Join(value = "questions", type = Type.LEFT_FETCH)
   List<Template> findAll();
 
   List<String> findName();
