@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.entities.template;
 
-import club.devcord.devmarkt.GraphQLType;
+import club.devcord.devmarkt.graphql.GraphQLType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;

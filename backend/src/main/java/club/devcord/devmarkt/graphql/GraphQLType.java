@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.graphql;
 
 import jakarta.inject.Singleton;
 import java.lang.annotation.Inherited;

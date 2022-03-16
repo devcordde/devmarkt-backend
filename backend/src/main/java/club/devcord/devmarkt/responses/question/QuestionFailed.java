@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.responses.question;
 
-import club.devcord.devmarkt.GraphQLType;
+import club.devcord.devmarkt.graphql.GraphQLType;
 import club.devcord.devmarkt.responses.Fail;
 
 @GraphQLType("QuestionFailed")
