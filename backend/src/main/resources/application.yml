@@ -15,3 +15,10 @@ flyway:
       enabled: true
       locations:
         - classpath:db/migrations
+graphql:
+  enabled: true
+  path: "/graphql"
+  schemas: /graphql
+  graphiql:
+    enabled: true
+    path: "/graphiql"

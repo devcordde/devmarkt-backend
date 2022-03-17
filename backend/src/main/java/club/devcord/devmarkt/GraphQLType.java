@@ -16,11 +16,15 @@
 
 package club.devcord.devmarkt;
 
-import io.micronaut.runtime.Micronaut;
+import jakarta.inject.Singleton;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class Application {
+@Inherited
+@Singleton
+@Retention(RetentionPolicy.RUNTIME)
+public @interface GraphQLType {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
+  String value();
 }

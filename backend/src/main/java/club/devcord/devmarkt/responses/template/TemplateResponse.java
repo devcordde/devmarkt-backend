@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.responses.template;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.responses.Response;
 
-public class Application {
+public sealed interface TemplateResponse extends Response permits TemplateFailed, TemplateSuccess {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
+  default Object graphqlUnion() {
+    if (this instanceof TemplateSuccess success) {
+      return success.template();
+    }
+    return this;
   }
 }

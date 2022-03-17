@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.responses.template;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.responses.Success;
 
-public class Application {
+public record TemplateSuccess(
+    Template template
+) implements TemplateResponse, Success {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
 }

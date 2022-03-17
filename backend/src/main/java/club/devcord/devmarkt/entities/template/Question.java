@@ -14,13 +14,30 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.entities.template;
 
-import io.micronaut.runtime.Micronaut;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Kind;
 
-public class Application {
+@MappedEntity("questions")
+public record Question(
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
+    @JsonIgnore
+    @Id @GeneratedValue
+    Integer id,
+
+    @JsonIgnore
+    @Nullable
+    @Relation(Kind.MANY_TO_ONE)
+    Template template,
+
+    int number,
+    String question
+) {
+
 }

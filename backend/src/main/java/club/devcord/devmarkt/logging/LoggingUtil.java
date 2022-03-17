@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.logging;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.responses.Fail;
+import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.responses.Success;
 
-public class Application {
+public class LoggingUtil {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
+  private LoggingUtil() {
+
   }
+
+  public static String responseStatus(Response response) {
+    if (response instanceof Fail fail) {
+      return fail.errorCode();
+    } else if (response instanceof Success) {
+      return "success";
+    }
+    return "unexpected response";
+  }
+
 }

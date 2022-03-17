@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.responses.question;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.responses.Response;
 
-public class Application {
+public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
+  default Object graphqlUnion() {
+    if (this instanceof QuestionSuccess success) {
+      return success.question();
+    }
+    return this;
   }
+
 }

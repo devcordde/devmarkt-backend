@@ -1,0 +1,20 @@
+type Query {
+    templates: [TemplateSuccess!]!
+    template(name: String!): TemplateResponse!
+    question(templateName: String!, number: Int!): QuestionResponse!
+}
+
+type Mutation {
+    createTemplate(name: String!, questions: [QuestionInput!]!): TemplateResponse!
+    deleteTemplate(name: String!): Boolean!
+    updateTemplateName(oldName: String!, newName: String!): Boolean
+    addQuestion(templateName: String!, question: String!, number: Int = -1): QuestionResponse!
+    updateQuestion(templateName: String!, number: Int!, question: String!): QuestionResponse!
+    deleteQuestion(templateName: String!, number: Int!): Boolean!
+}
+
+# common
+interface Error {
+    message: String!
+    errorCode: String!
+}

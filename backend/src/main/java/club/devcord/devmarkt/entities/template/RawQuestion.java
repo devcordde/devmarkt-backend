@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.entities.template;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.GraphQLType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.MappedProperty;
 
-public class Application {
+@GraphQLType("QuestionSuccess")
+@MappedEntity("questions")
+public record RawQuestion(
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
+    @JsonIgnore
+    @Id @GeneratedValue
+    int id,
+
+    @MappedProperty("template_id")
+    @JsonIgnore
+    int templateId,
+
+    int number,
+    String question
+) {
+
 }

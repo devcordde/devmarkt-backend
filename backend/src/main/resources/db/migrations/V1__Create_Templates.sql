@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+CREATE TABLE templates
+(
+    id   SERIAL PRIMARY KEY,
+    name VARCHAR UNIQUE
+);
 
-import io.micronaut.runtime.Micronaut;
-
-public class Application {
-
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
-}
+CREATE TABLE questions
+(
+    id          SERIAL PRIMARY KEY,
+    template_id INT,
+    number      INT,
+    question    VARCHAR,
+    UNIQUE (template_id, number),
+    FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
+);

@@ -21,22 +21,17 @@ micronaut {
 
 dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
-    annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut:micronaut-inject-java")
-    implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
-    implementation("javax.annotation:javax.annotation-api")
     implementation("io.micronaut.data:micronaut-data-jdbc")
-    implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut.flyway:micronaut-flyway")
+    implementation("io.micronaut.graphql:micronaut-graphql")
+    implementation("com.graphql-java-kickstart:graphql-java-tools:12.0.1")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
-    compileOnly("io.swagger.core.v3:swagger-annotations")
 
     implementation(project(":dto_common"))
 
-    testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:testcontainers:1.16.3")
     testImplementation("org.testcontainers:postgresql:1.16.3")
 }

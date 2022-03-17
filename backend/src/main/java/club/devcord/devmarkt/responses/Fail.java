@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.responses;
 
-import io.micronaut.runtime.Micronaut;
-
-public class Application {
-
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
-  }
+public interface Fail extends Response {
+  String errorCode();
 }
