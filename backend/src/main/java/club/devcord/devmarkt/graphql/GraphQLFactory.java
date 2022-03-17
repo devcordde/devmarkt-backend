@@ -111,7 +111,7 @@ public class GraphQLFactory {
     try {
       return Map.entry(path, Files.readString(path));
     } catch (IOException e) {
-      LOGGER.error("Error reading graphql schema file: %s.".formatted(path), e);
+      LOGGER.error("Error reading graphql schema file: {}.", path, e);
       return null;
     }
   }
