@@ -31,8 +31,7 @@ public class QuestionService {
   private final TemplateRepo templateRepo;
   private final QuestionRepo questionRepo;
 
-  public QuestionService(TemplateRepo repo,
-      QuestionRepo questionRepo) {
+  public QuestionService(TemplateRepo repo, QuestionRepo questionRepo) {
     this.templateRepo = repo;
     this.questionRepo = questionRepo;
   }

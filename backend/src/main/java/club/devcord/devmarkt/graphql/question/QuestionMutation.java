@@ -30,8 +30,7 @@ public class QuestionMutation implements GraphQLMutationResolver {
 
   private final QuestionService service;
 
-  public QuestionMutation(
-      QuestionService service) {
+  public QuestionMutation(QuestionService service) {
     this.service = service;
   }
 

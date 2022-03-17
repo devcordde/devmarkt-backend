@@ -10,7 +10,6 @@ datasources:
     username: ${devmarkt.postgres.user}
     password: ${devmarkt.postgres.password}
 flyway:
-  clean-schema: true
   datasources:
     default:
       enabled: true
