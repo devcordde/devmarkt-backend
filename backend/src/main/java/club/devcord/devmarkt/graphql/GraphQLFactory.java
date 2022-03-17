@@ -86,8 +86,8 @@ public class GraphQLFactory {
         .filter(Objects::nonNull)
         .findFirst();
 
-    try {
-      Files.walk(dir.orElseThrow())
+    try(var stream = Files.walk(dir.orElseThrow())) {
+      stream
           .filter(Files::isRegularFile)
           .map(this::readFile)
           .filter(Objects::nonNull)
