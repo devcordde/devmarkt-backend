@@ -30,10 +30,25 @@ import java.util.List;
 
 public class Helpers {
 
+  public static final List<Template> SEED = List.of(
+      new Template(-1, "Dev Searched", List.of(
+          new Question(-1, null, 0, "Where are we?"),
+          new Question(-1, null, 1, "Why should you join us?"),
+          new Question(-1, null, 2, "What programming languages should you know?"),
+          new Question(-1, null, 3, "Custom text:")
+      )),
+      new Template(-1, "Dev offered", List.of(
+          new Question(-1, null, 0, "Who am I?"),
+          new Question(-1, null, 1, "What programming language do I know?"),
+          new Question(-1, null, 2, "Why should you choose me?")
+      )),
+      new Template(-1, "Empty template", List.of())
+  );
+
   public static final List<Question> QUESTIONS = List.of(
-      new Question(null, null, 0, "How are you?"),
-      new Question(null, null, 1, "Who are you?"),
-      new Question(null, null, 2, "What's your name?"));
+      new Question(null, null, 0, "Where's the policeman who stole my newspaper?"),
+      new Question(null, null, 1, "Should I really try to eat uranium?"),
+      new Question(null, null, 2, "Oh no, is my table really pregnant?"));
 
   public static final Template TEMPLATE = new Template(-1, "test", QUESTIONS);
 
