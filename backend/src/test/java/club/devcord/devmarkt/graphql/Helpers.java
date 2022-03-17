@@ -22,27 +22,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.responses.Fail;
 import club.devcord.devmarkt.responses.question.QuestionFailed;
 import club.devcord.devmarkt.responses.template.TemplateFailed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 
 public class Helpers {
 
-  public static final List<Template> SEED = List.of(
-      new Template(-1, "Dev Searched", List.of(
-          new Question(-1, null, 0, "Where are we?"),
-          new Question(-1, null, 1, "Why should you join us?"),
-          new Question(-1, null, 2, "What programming languages should you know?"),
-          new Question(-1, null, 3, "Custom text:")
+  public static final Map<String, Template> SEED = Map.of(
+      "Dev searched", new Template(-1, "Dev searched", List.of(
+          new Question(null, null, 0, "Where are we?"),
+          new Question(null, null, 1, "Why should you join us?"),
+          new Question(null, null, 2, "What programming languages should you know?"),
+          new Question(null, null, 3, "Custom text:")
       )),
-      new Template(-1, "Dev offered", List.of(
-          new Question(-1, null, 0, "Who am I?"),
-          new Question(-1, null, 1, "What programming language do I know?"),
-          new Question(-1, null, 2, "Why should you choose me?")
+      "Dev offered", new Template(-1, "Dev offered", List.of(
+          new Question(null, null, 0, "Who am I?"),
+          new Question(null, null, 1, "What programming language do I know?"),
+          new Question(null, null, 2, "Why should you choose me?")
       )),
-      new Template(-1, "Empty template", List.of())
+      "Empty template", new Template(-1, "Empty template", List.of())
   );
 
   public static final List<Question> QUESTIONS = List.of(
@@ -61,6 +64,21 @@ public class Helpers {
   public static void assertJson(Object expected, Object value)
       throws JsonProcessingException {
     assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(value));
+  }
+
+  public static void verify(String expectedErrorCode, Object response) {
+    if (response instanceof Fail fail) {
+      Assertions.assertEquals(expectedErrorCode, fail.errorCode());
+    }
+  }
+
+  public static <T> void verify(T excepted, Object response) {
+    Assertions.assertTrue(response.getClass().isInstance(excepted));
+    try {
+      assertJson(excepted, response);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 
   public static Template unwrapTemplate(Object response) {

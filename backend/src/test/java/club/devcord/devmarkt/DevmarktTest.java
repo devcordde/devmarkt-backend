@@ -50,7 +50,7 @@ public abstract class DevmarktTest implements TestPropertyProvider {
     flyway.migrate();
 
     Helpers.initMapper(mapper);
-    repo.saveAll(Helpers.SEED);
+    repo.saveAll(Helpers.SEED.values());
   }
 
   @Override
