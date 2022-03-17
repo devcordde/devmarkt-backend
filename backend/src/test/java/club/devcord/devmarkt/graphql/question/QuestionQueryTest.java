@@ -16,18 +16,13 @@
 
 package club.devcord.devmarkt.graphql.question;
 
-import static club.devcord.devmarkt.graphql.Helpers.assertJson;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestion;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestionFailed;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static club.devcord.devmarkt.graphql.Helpers.SEED;
+import static club.devcord.devmarkt.graphql.Helpers.verify;
 
 import club.devcord.devmarkt.DevmarktTest;
-import club.devcord.devmarkt.graphql.Helpers;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;
 import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.inject.Inject;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class QuestionQueryTest extends DevmarktTest {
@@ -38,25 +33,21 @@ public class QuestionQueryTest extends DevmarktTest {
   TemplateMutation templateMutation;
 
   @Test
-  void question_success() throws JsonProcessingException {
-    templateMutation.createTemplate("test", Helpers.QUESTIONS);
-
-    var response = questionQuery.question("test", 0);
-    assertJson(Helpers.QUESTIONS.get(0), unwrapQuestion(response));
+  void question_success() {
+    var response = questionQuery.question("Dev searched", 0);
+    verify(SEED.get("Dev searched").questions().get(0), response);
   }
 
   @Test
   void question_templateNotFound() {
-    var response = questionQuery.question("test", 0);
-    assertEquals(QuestionErrors.TEMPLATE_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionQuery.question("Krusty Crab Guestbook", 0);
+    verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
   @Test
   void question_questionNotFound() {
-    templateMutation.createTemplate("test", List.of());
-
-    var response = questionQuery.question("test", 0);
-    assertEquals(QuestionErrors.QUESTION_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionQuery.question("Dev searched", 10);
+    verify(QuestionErrors.QUESTION_NOT_FOUND, response);
   }
 
 }

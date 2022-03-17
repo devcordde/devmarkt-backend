@@ -16,22 +16,20 @@
 
 package club.devcord.devmarkt.graphql.question;
 
-import static club.devcord.devmarkt.graphql.Helpers.assertJson;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestion;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapQuestionFailed;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static club.devcord.devmarkt.graphql.Helpers.SEED;
+import static club.devcord.devmarkt.graphql.Helpers.verify;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.RawQuestion;
-import club.devcord.devmarkt.graphql.Helpers;
+import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;
+import club.devcord.devmarkt.graphql.template.TemplateQuery;
 import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.inject.Inject;
-import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class QuestionMutationTest extends DevmarktTest {
@@ -42,92 +40,88 @@ public class QuestionMutationTest extends DevmarktTest {
   QuestionMutation questionMutation;
   @Inject
   QuestionQuery questionQuery;
+  @Inject
+  TemplateQuery templateQuery;
 
   @Test
-  void addQuestion_success() throws JsonProcessingException {
-    var question = new RawQuestion(-1, -1, 1, "How old are you?");
-    templateMutation.createTemplate("test",
-        List.of(new Question(null, null, 0, "What's your name?")));
-
-    var response = questionMutation.addQuestion("test", question.question(), -1);
-    assertJson(question, unwrapQuestion(response));
-
-    var verify = questionQuery.question("test", 1);
-    assertJson(question, unwrapQuestion(verify));
+  void addQuestion_success() {
+    var question = new RawQuestion(-1, -1, 4, "How old are you?");
+    var response = questionMutation.addQuestion("Dev searched", question.question(), -1);
+    verify(question, response);
+    verify(question, questionQuery.question("Dev searched", 4));
   }
 
   @Test
   void addQuestion_templateNotFound() {
-    var response = questionMutation.addQuestion("test", "Where does Santa live?", -1);
-    assertEquals(QuestionErrors.TEMPLATE_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionMutation.addQuestion("Secret Information", "Where does Santa live?", -1);
+    verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
   @Test
-  void addQuestion__withNumber_success() throws JsonProcessingException {
-    var question = new RawQuestion(-1, -1, 0, "Where are Johnny's underpants?");
-    templateMutation.createTemplate("test",
-        List.of(new Question(null, null, 0, "What's your name?")));
+  void addQuestion__withNumber_success() {
+    var question = new Question(null, null, 0, "Where are Johnny's underpants?");
+    var response = questionMutation.addQuestion("Dev offered", question.question(), 0);
+    verify(question, response);
 
-    var response = questionMutation.addQuestion("test", question.question(), 0);
-    assertJson(question, unwrapQuestion(response));
+    var reorderedQuestions = SEED.get("Dev offered")
+        .questions()
+        .stream()
+        .map(question1 -> new Question(-1, null, question1.number() + 1, question1.question()))
+        .collect(Collectors.toList());
+    reorderedQuestions.add(question);
 
-    var verifyFirst = questionQuery.question("test", 0);
-    assertJson(question, unwrapQuestion(verifyFirst));
+    verify(reorderedQuestions, ((Template) templateQuery.template("Dev offered")).questions());
 
-    var verifySecond = questionQuery.question("test", 1);
-    assertJson(new RawQuestion(-1, -1, 1, "What's your name?"), unwrapQuestion(verifySecond));
+
   }
 
   @Test
   void addQuestion__withNumber_templateNotFound() {
-    var response = questionMutation.addQuestion("test", "Am I cool?", 1);
-    assertEquals(QuestionErrors.TEMPLATE_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionMutation.addQuestion("NASA secret file ", "How many aliens where there?", 1);
+    verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
   @Test
-  void updateQuestion_success() throws JsonProcessingException {
+  void updateQuestion_success() {
     var question = new RawQuestion(-1, -1, 1, "Is SpongeBob blue?");
-    templateMutation.createTemplate("test", Helpers.QUESTIONS);
 
-    var response = questionMutation.updateQuestion("test", 1, question.question());
-    assertJson(question, unwrapQuestion(response));
+    var response = questionMutation.updateQuestion("Dev searched", 1, question.question());
+    verify(question, response);
 
-    var verify = questionQuery.question("test", 1);
-    assertJson(question, unwrapQuestion(verify));
+    var verify = questionQuery.question("Dev searched", 1);
+    verify(verify, response);
   }
 
   @Test
   void updateQuestion_templateNotFound() {
-    var response = questionMutation.updateQuestion("test", 1, "How was your day?");
-    assertEquals(QuestionErrors.TEMPLATE_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionMutation.updateQuestion("ANTI-PHP-Petition", 1, "How bad is php really?");
+    verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
   @Test
   void updateQuestion_questionNotFound() {
-    templateMutation.createTemplate("test", List.of());
-    var response = questionMutation.updateQuestion("test", 0, "How was your day?");
-    assertEquals(QuestionErrors.QUESTION_NOT_FOUND, unwrapQuestionFailed(response).errorCode());
+    var response = questionMutation.updateQuestion("Empty template", 0, "How was your day?");
+    verify(QuestionErrors.QUESTION_NOT_FOUND, response);
   }
 
   @Test
-  void deleteQuestion_success() throws JsonProcessingException {
-    templateMutation.createTemplate("test", Helpers.QUESTIONS);
-
-    var response = questionMutation.deleteQuestion("test", 0);
+  void deleteQuestion_success()  {
+    var response = questionMutation.deleteQuestion("Dev offered", 0);
     assertTrue(response);
 
-    var verifyFirst = unwrapQuestion(questionQuery.question("test", 0));
-    assertJson(verifyFirst, new RawQuestion(-1, -1, 0, verifyFirst.question()));
+    var reorderedQuestions = SEED.get("Dev offered")
+        .questions()
+        .stream()
+        .map(question1 -> new Question(-1, null, question1.number() - 1, question1.question()))
+        .filter(question -> question.number() >= 0)
+        .collect(Collectors.toList());
 
-    var verifySecond = unwrapQuestion(questionQuery.question("test", 1));
-    assertJson(verifySecond, new RawQuestion(-1, -1, 1, verifySecond.question()));
+    verify(reorderedQuestions, ((Template) templateQuery.template("Dev offered")).questions());
   }
 
   @Test
   void deleteQuestion_failed() {
-    templateMutation.createTemplate("test", List.of());
-
-    var response = questionMutation.deleteQuestion("test", 0);
+    var response = questionMutation.deleteQuestion("Empty template", 0);
     assertFalse(response);
   }
 

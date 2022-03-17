@@ -17,18 +17,17 @@
 package club.devcord.devmarkt.graphql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.responses.Fail;
-import club.devcord.devmarkt.responses.question.QuestionFailed;
-import club.devcord.devmarkt.responses.template.TemplateFailed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 
 public class Helpers {
@@ -61,9 +60,12 @@ public class Helpers {
     Helpers.mapper = mapper;
   }
 
-  public static void assertJson(Object expected, Object value)
-      throws JsonProcessingException {
-    assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(value));
+  public static void assertJson(Object expected, Object value) {
+    try {
+      assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(value));
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 
   public static void verify(String expectedErrorCode, Object response) {
@@ -72,33 +74,26 @@ public class Helpers {
     }
   }
 
-  public static <T> void verify(T excepted, Object response) {
-    Assertions.assertTrue(response.getClass().isInstance(excepted));
-    try {
-      assertJson(excepted, response);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
+  public static <T> void verify(T expected, Object actual) {
+    assertJson(expected, actual);
   }
 
-  public static Template unwrapTemplate(Object response) {
-    assertTrue(response instanceof Template, "Response isn't a Template/TemplateSuccess");
-    return (Template) response;
+  public static <T> void verify(Collection<T> expected, Collection<T> actual) {
+    assertEquals(jsonSet(expected), jsonSet(actual));
   }
 
-  public static TemplateFailed unwrapTemplateFailed(Object response) {
-    assertTrue(response instanceof TemplateFailed, "Response isn't a TemplateFailed");
-    return (TemplateFailed) response;
-  }
-
-  public static RawQuestion unwrapQuestion(Object response) {
-    assertTrue(response instanceof RawQuestion, "Response isn't a (Raw)Question/QuestionSuccess");
-    return (RawQuestion) response;
-  }
-
-  public static QuestionFailed unwrapQuestionFailed(Object response) {
-    assertTrue(response instanceof QuestionFailed, "Response isn't a QuestionFailed");
-    return (QuestionFailed) response;
+  private static Set<String> jsonSet(Collection<?> objects) {
+    return objects
+        .stream()
+        .map(value -> {
+          try {
+            return mapper.writeValueAsString(value);
+          } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+          }
+        })
+        .collect(Collectors.toSet());
   }
 
 }
