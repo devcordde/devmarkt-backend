@@ -89,6 +89,7 @@ public class GraphQLFactory {
     try(var stream = Files.walk(dir.orElseThrow())) {
       stream
           .filter(Files::isRegularFile)
+          .filter(path -> path.toString().endsWith(".graphql"))
           .map(this::readFile)
           .filter(Objects::nonNull)
           .forEach(node -> {
