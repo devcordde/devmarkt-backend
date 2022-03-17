@@ -1,16 +1,47 @@
 type Query {
     templates: [TemplateSuccess!]!
-    template(name: String!): TemplateResponse!
-    question(templateName: String!, number: Int!): QuestionResponse!
+
+    template(
+        name: String! @NotBlank
+    ):TemplateResponse!
+
+    question(
+        templateName: String! @NotBlank,
+        number: Int! @Min(value: 0)
+    ): QuestionResponse!
 }
 
 type Mutation {
-    createTemplate(name: String!, questions: [QuestionInput!]!): TemplateResponse!
-    deleteTemplate(name: String!): Boolean!
-    updateTemplateName(oldName: String!, newName: String!): Boolean
-    addQuestion(templateName: String!, question: String!, number: Int = -1): QuestionResponse!
-    updateQuestion(templateName: String!, number: Int!, question: String!): QuestionResponse!
-    deleteQuestion(templateName: String!, number: Int!): Boolean!
+    createTemplate(
+        name: String! @NotBlank,
+        questions: [QuestionInput!]!
+    ): TemplateResponse!
+
+    deleteTemplate(
+        name: String! @NotBlank
+    ): Boolean!
+
+    updateTemplateName(
+        oldName: String! @NotBlank,
+        newName: String! @NotBlank
+    ): Boolean
+
+    addQuestion(
+        templateName: String! @NotBlank,
+        question: String! @NotBlank,
+        number: Int = -1 @Min(value: -1)
+    ): QuestionResponse!
+
+    updateQuestion(
+        templateName: String! @NotBlank,
+        number: Int! @Min(value: -1),
+        question: String! @NotBlank
+    ): QuestionResponse!
+
+    deleteQuestion(
+        templateName: String! @NotBlank,
+        number: Int! @Min(value: -1)
+    ): Boolean!
 }
 
 # common

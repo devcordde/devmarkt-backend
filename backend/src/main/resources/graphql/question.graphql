@@ -4,8 +4,8 @@ type Question {
 }
 
 input QuestionInput {
-    question: String!
-    number: Int!
+    question: String! @NotBlank
+    number: Int! @Min(value: 0)
 }
 
 union QuestionResponse = QuestionSuccess | QuestionFailed
