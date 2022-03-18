@@ -54,7 +54,7 @@ if (danger.github) {
   }
 
   if (!danger.github.pr?.labels.length) {
-    warn("No lables have been set");
+    warn("No labels have been set");
   }
 
   if (danger.github.pr?.labels.some(
@@ -80,6 +80,11 @@ if (
 if (modifiedFiles.some(file => file.includes(".idea"))) {
   const fn = isCollaborator() ? message : warn;
   fn("This PR modifies the IntelliJ IDEA setting files");
+}
+
+if(modifiedFiles.some(file => file.includes("src/main/resources/db/seeder"))
+    !== modifiedFiles.some(file => file.includes("src/test/java/club/devcord/devmarkt/Seed.java"))) {
+  warn("The `Seed` class needs to be checked if it is up to date");
 }
 
 // Linter
@@ -146,6 +151,6 @@ function lintFile(file) {
 
   if (!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
     fail(
-        `\`${file.filename}\` does not follow the \`/^[a-z0-9-_/]+\.[a-z0-9]+$/i\` regex`);
+        `\`${file.filename}\` does not follow the file naming convention`);
   }
 }
