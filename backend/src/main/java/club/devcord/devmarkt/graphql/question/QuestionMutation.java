@@ -50,7 +50,8 @@ public class QuestionMutation implements GraphQLMutationResolver {
 
   public boolean deleteQuestion(String templateName, int number) {
     var response = service.deleteQuestion(templateName, number);
-    LOGGER.info("Question deletion. Successful: {}, TemplateName: {}, Number: {}", response, templateName, number);
+    LOGGER.info("Question deletion. Successful: {}, TemplateName: {}, Number: {}", response,
+        templateName, number);
     return response;
   }
 }

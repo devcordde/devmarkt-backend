@@ -46,10 +46,16 @@ public class LoggingUtilTest {
     assertEquals("unexpected response", status);
   }
 
-  private record UnexpectedResponse() implements Response {}
+  private record UnexpectedResponse() implements Response {
 
-  private record FailResponse (String errorCode) implements Response, Fail {}
+  }
 
-  private record SuccessResponse () implements Response, Success {}
+  private record FailResponse(String errorCode) implements Response, Fail {
+
+  }
+
+  private record SuccessResponse() implements Response, Success {
+
+  }
 
 }

@@ -77,7 +77,8 @@ public class QuestionMutationTest extends DevmarktTest {
 
   @Test
   void addQuestion__withNumber_templateNotFound() {
-    var response = questionMutation.addQuestion("NASA secret file ", "How many aliens where there?", 1);
+    var response = questionMutation.addQuestion("NASA secret file ", "How many aliens where there?",
+        1);
     verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
@@ -94,7 +95,8 @@ public class QuestionMutationTest extends DevmarktTest {
 
   @Test
   void updateQuestion_templateNotFound() {
-    var response = questionMutation.updateQuestion("ANTI-PHP-Petition", 1, "How bad is php really?");
+    var response = questionMutation.updateQuestion("ANTI-PHP-Petition", 1,
+        "How bad is php really?");
     verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
@@ -105,7 +107,7 @@ public class QuestionMutationTest extends DevmarktTest {
   }
 
   @Test
-  void deleteQuestion_success()  {
+  void deleteQuestion_success() {
     var response = questionMutation.deleteQuestion("Dev offered", 0);
     assertTrue(response);
 

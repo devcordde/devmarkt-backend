@@ -79,7 +79,7 @@ public class TemplateRepoTest extends DevmarktTest {
     assertEquals(1, updated);
   }
 
-   @Test
+  @Test
   void updateByName__updateName_fail() {
     var updated = repo.updateByName("Pool building permit", "i wAnT tO bUiLd A pOoL!?");
     assertEquals(0, updated);
@@ -87,14 +87,14 @@ public class TemplateRepoTest extends DevmarktTest {
 
   @Test
   void getIdByName__noVerify_success() {
-   var opt = repo.getIdByName("Dev offered");
-   assertPresent(opt);
+    var opt = repo.getIdByName("Dev offered");
+    assertPresent(opt);
   }
 
   @Test
   void getIdByName__noVerify_fail() {
-   var opt = repo.getIdByName("White house sale contract");
-   assertEmpty(opt);
+    var opt = repo.getIdByName("White house sale contract");
+    assertEmpty(opt);
   }
 
   @Test

@@ -17,5 +17,6 @@
 package club.devcord.devmarkt.responses;
 
 public interface Fail extends Response {
+
   String errorCode();
 }

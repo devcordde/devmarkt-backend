@@ -110,13 +110,15 @@ public class QuestionRepoTest extends DevmarktTest {
         .filter(question -> question.number() >= 2)
         .toList();
 
-    var list = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId("Dev offered"), 2);
+    var list = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(
+        templateId("Dev offered"), 2);
     verify(numbers, list);
   }
 
   @Test
   void findByNumberGreaterOrEquals__noTemplate_fail() {
-    var list = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(freeTemplateID(), 1);
+    var list = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(
+        freeTemplateID(), 1);
     verify(List.of(), list);
   }
 

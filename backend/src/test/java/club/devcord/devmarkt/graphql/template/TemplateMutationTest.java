@@ -63,10 +63,11 @@ public class TemplateMutationTest extends DevmarktTest {
   }
 
   @Test
-  void updateTemplateName_success()  {
+  void updateTemplateName_success() {
     var response = mutation.updateTemplateName("Dev searched", "CIA employment contract");
     assertTrue(response);
-    verify(new Template(-1, "CIA employment contract", TEMPLATE_SEED.get("Dev searched").questions()),
+    verify(
+        new Template(-1, "CIA employment contract", TEMPLATE_SEED.get("Dev searched").questions()),
         query.template("CIA employment contract"));
     verify(TemplateErrors.NOT_FOUND, query.template("Dev searched"));
   }

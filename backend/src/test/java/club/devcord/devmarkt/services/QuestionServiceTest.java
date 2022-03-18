@@ -36,6 +36,8 @@ public class QuestionServiceTest extends DevmarktTest {
 
   @Inject
   QuestionService service;
+  @Inject
+  TemplateRepo templateRepo;
 
   @Test
   void addQuestion_success() {
@@ -47,7 +49,8 @@ public class QuestionServiceTest extends DevmarktTest {
 
   @Test
   void addQuestion_templateNotFound() {
-    var response = service.addQuestion("Willi Wonka's chocolate recipe", "How much sugar is int it?", -1);
+    var response = service.addQuestion("Willi Wonka's chocolate recipe",
+        "How much sugar is int it?", -1);
     assertTrue(response instanceof QuestionFailed);
     verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
@@ -70,7 +73,8 @@ public class QuestionServiceTest extends DevmarktTest {
 
   @Test
   void updateQuestion_templateNotFound() {
-    var response = service.updateQuestion("Nick's Self-talk", 2, "What should I eat today's night?");
+    var response = service.updateQuestion("Nick's Self-talk", 2,
+        "What should I eat today's night?");
     verify(QuestionErrors.TEMPLATE_NOT_FOUND, response);
   }
 
@@ -98,9 +102,6 @@ public class QuestionServiceTest extends DevmarktTest {
     assertFalse(deleted);
   }
 
-  @Inject
-  TemplateRepo templateRepo;
-
   @Test
   void reorderQuestions__allIncrementByOne() {
     var reorderedQuestions = TEMPLATE_SEED
@@ -117,30 +118,30 @@ public class QuestionServiceTest extends DevmarktTest {
         .questions();
 
     verify(reorderedQuestions, actual);
-   }
+  }
 
   @Test
   void reorderQuestions__from2IncrementByThree() {
-     var reorderedQuestions = TEMPLATE_SEED
-         .get("Dev offered")
-         .questions()
-         .stream()
-         .map(question -> {
-           if (question.number() >= 2) {
-             return new Question(-1, null, question.number() + 3, question.question());
-           }
-           return question;
-         })
-         .toList();
+    var reorderedQuestions = TEMPLATE_SEED
+        .get("Dev offered")
+        .questions()
+        .stream()
+        .map(question -> {
+          if (question.number() >= 2) {
+            return new Question(-1, null, question.number() + 3, question.question());
+          }
+          return question;
+        })
+        .toList();
 
-     service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 2, 3);
+    service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 2, 3);
 
-     var actual = templateRepo.findByName("Dev offered")
-         .orElseThrow()
-         .questions();
+    var actual = templateRepo.findByName("Dev offered")
+        .orElseThrow()
+        .questions();
 
-     verify(reorderedQuestions, actual);
-   }
+    verify(reorderedQuestions, actual);
+  }
 
   @Test
   void reorderQuestions__allToRightOrderNumbersNotSequential() {
@@ -150,6 +151,6 @@ public class QuestionServiceTest extends DevmarktTest {
     service.addQuestion("Dev offered", "Outlined question", 6);
     service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 0, 0);
     verify(questions, templateRepo.findByName("Dev offered").orElseThrow().questions());
-   }
+  }
 
 }
