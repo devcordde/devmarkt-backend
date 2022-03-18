@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class Seed {
 
-  public static final Map<String, Template> SEED = Map.of(
+  public static final Map<String, Template> TEMPLATE_SEED = Map.of(
       "Dev searched", new Template(-1, "Dev searched", List.of(
           new Question(null, null, 0, "Who are we?"),
           new Question(null, null, 1, "Why should you join us?"),
