@@ -90,7 +90,7 @@ public class QuestionMutationTest extends DevmarktTest {
     verify(question, response);
 
     var verify = questionQuery.question("Dev searched", 1);
-    verify(verify, response);
+    verify(question, verify);
   }
 
   @Test
