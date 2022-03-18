@@ -38,4 +38,11 @@ public class Seed {
       "Empty template", new Template(-1, "Empty template", List.of())
   );
 
+  public static List<String> templateNames() {
+    return TEMPLATE_SEED.values()
+        .stream()
+        .map(Template::name)
+        .toList();
+  }
+
 }
