@@ -16,17 +16,16 @@
 
 package club.devcord.devmarkt.graphql.template;
 
-import static club.devcord.devmarkt.graphql.Helpers.assertJson;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapTemplate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static club.devcord.devmarkt.Helpers.TEMPLATE;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
+import club.devcord.devmarkt.Helpers;
 import club.devcord.devmarkt.entities.template.Template;
-import club.devcord.devmarkt.graphql.Helpers;
 import club.devcord.devmarkt.responses.template.TemplateFailed.TemplateErrors;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -38,55 +37,43 @@ public class TemplateMutationTest extends DevmarktTest {
   TemplateQuery query;
 
   @Test
-  void createTemplate_success()
-      throws JsonProcessingException {
-    var response = mutation.createTemplate("test", Helpers.QUESTIONS);
-    assertJson(Helpers.TEMPLATE, unwrapTemplate(response));
-
-    var verify = query.template("test");
-    assertJson(Helpers.TEMPLATE, unwrapTemplate(verify));
+  void createTemplate_success() {
+    var response = mutation.createTemplate("test", TEMPLATE.questions());
+    verify(Helpers.TEMPLATE, response);
+    verify(Helpers.TEMPLATE, query.template(TEMPLATE.name()));
   }
 
   @Test
   void createTemplate_duplicate() {
-    mutation.createTemplate("test", Helpers.QUESTIONS);
-    var response = mutation.createTemplate("test", Helpers.QUESTIONS);
-    assertEquals(TemplateErrors.DUPLICATED, Helpers.unwrapTemplateFailed(response).errorCode());
+    var response = mutation.createTemplate("Dev searched", Helpers.QUESTIONS);
+    verify(TemplateErrors.DUPLICATED, response);
   }
 
   @Test
   void deleteTemplate_success() {
-    mutation.createTemplate("test", Helpers.QUESTIONS);
-    var response = mutation.deleteTemplate("test");
+    var response = mutation.deleteTemplate("Dev searched");
     assertTrue(response);
-
-    var verify = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(verify).errorCode());
+    verify(TemplateErrors.NOT_FOUND, query.template("Dev searched"));
   }
 
   @Test
   void deleteTemplate_notFound() {
-    var response = mutation.deleteTemplate("test");
+    var response = mutation.deleteTemplate("Sick bill");
     assertFalse(response);
   }
 
   @Test
-  void updateTemplateName_success() throws JsonProcessingException {
-    mutation.createTemplate("test", Helpers.QUESTIONS);
-    var response = mutation.updateTemplateName("test", "newTest");
+  void updateTemplateName_success()  {
+    var response = mutation.updateTemplateName("Dev searched", "CIA employment contract");
     assertTrue(response);
-
-    var verify = query.template("newTest");
-    assertJson(new Template(-1, "newTest", Helpers.QUESTIONS),
-        unwrapTemplate(verify));
-
-    var verifyOld = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(verifyOld).errorCode());
+    verify(new Template(-1, "CIA employment contract", TEMPLATE_SEED.get("Dev searched").questions()),
+        query.template("CIA employment contract"));
+    verify(TemplateErrors.NOT_FOUND, query.template("Dev searched"));
   }
 
   @Test
   void updateTemplateName_notFound() {
-    var response = mutation.updateTemplateName("test", "newTest");
+    var response = mutation.updateTemplateName("Driving license", "007 License to kill");
     assertFalse(response);
   }
 }

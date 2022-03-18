@@ -16,15 +16,12 @@
 
 package club.devcord.devmarkt.graphql.template;
 
-import static club.devcord.devmarkt.graphql.Helpers.assertJson;
-import static club.devcord.devmarkt.graphql.Helpers.unwrapTemplate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Template;
-import club.devcord.devmarkt.graphql.Helpers;
 import club.devcord.devmarkt.responses.template.TemplateFailed.TemplateErrors;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.inject.Inject;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -37,45 +34,32 @@ public class TemplateQueryTest extends DevmarktTest {
   TemplateQuery query;
 
   @Test
-  void template_success() throws JsonProcessingException {
-    mutation.createTemplate("test", Helpers.QUESTIONS);
-    var response = query.template("test");
-
-    assertJson(Helpers.TEMPLATE, unwrapTemplate(response));
+  void template_success() {
+    var response = query.template("Dev searched");
+    verify(TEMPLATE_SEED.get("Dev searched"), response);
   }
 
   @Test
   void template_notFound() {
-    var response = query.template("test");
-    assertEquals(TemplateErrors.NOT_FOUND, Helpers.unwrapTemplateFailed(response).errorCode());
+    var response = query.template("Lilly's 'Tabellenschubsergang' Membership request");
+    verify(TemplateErrors.NOT_FOUND, response);
   }
 
   @Test
-  void templates_success() throws JsonProcessingException {
-    mutation.createTemplate("test1", Helpers.QUESTIONS);
-    mutation.createTemplate("test2", Helpers.QUESTIONS);
-    mutation.createTemplate("test3", Helpers.QUESTIONS);
-
+  void templates_success() {
     var response = query.templates(new DataFetchingEnviromentStub("name", "questions"));
-
-    var templateList = List.of(new Template(-1, "test1", Helpers.QUESTIONS),
-        new Template(-1, "test2", Helpers.QUESTIONS),
-        new Template(-1, "test3", Helpers.QUESTIONS));
-    assertJson(templateList, response);
+    verify(TEMPLATE_SEED.values(), response);
   }
 
   @Test
-  void templates_onlyNames_success() throws JsonProcessingException {
-    mutation.createTemplate("test1", Helpers.QUESTIONS);
-    mutation.createTemplate("test2", Helpers.QUESTIONS);
-    mutation.createTemplate("test3", Helpers.QUESTIONS);
+  void templates_onlyNames_success() {
+    var onlyNameList = TEMPLATE_SEED.values()
+        .stream()
+        .map(template -> new Template(-1, template.name(), List.of()))
+        .toList();
 
     var response = query.templates(new DataFetchingEnviromentStub("name"));
-
-    var templateList = List.of(new Template(-1, "test1", List.of()),
-        new Template(-1, "test2", List.of()),
-        new Template(-1, "test3", List.of()));
-    assertJson(templateList, response);
+    verify(onlyNameList, response);
   }
 
 }

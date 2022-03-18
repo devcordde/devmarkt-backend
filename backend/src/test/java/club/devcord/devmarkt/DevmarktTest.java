@@ -16,11 +16,13 @@
 
 package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.graphql.Helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.micronaut.test.support.TestPropertyProvider;
+import jakarta.inject.Inject;
 import java.util.Map;
+import org.flywaydb.core.Flyway;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -42,8 +44,14 @@ public abstract class DevmarktTest implements TestPropertyProvider {
     CONTAINER.start();
   }
 
+  @Inject
+  ApplicationContext context;
+
   @BeforeEach
-  void beforeEach(ObjectMapper mapper) {
+  void beforeEach(ObjectMapper mapper, Flyway flyway) {
+    flyway.clean();
+    flyway.migrate();
+
     Helpers.initMapper(mapper);
   }
 
