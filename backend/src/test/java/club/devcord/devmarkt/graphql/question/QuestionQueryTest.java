@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.question;
 
-import static club.devcord.devmarkt.graphql.Helpers.SEED;
-import static club.devcord.devmarkt.graphql.Helpers.verify;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;

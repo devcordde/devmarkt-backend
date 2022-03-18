@@ -5,3 +5,10 @@ micronaut:
   server:
     port: ${random.port}
     host: "localhost"
+
+flyway:
+  datasources:
+    default:
+      locations:
+        - classpath:db/migrations
+        - classpath:db/seeder

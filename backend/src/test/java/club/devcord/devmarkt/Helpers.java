@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql;
+package club.devcord.devmarkt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,27 +25,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 
 public class Helpers {
-
-  public static final Map<String, Template> SEED = Map.of(
-      "Dev searched", new Template(-1, "Dev searched", List.of(
-          new Question(null, null, 0, "Where are we?"),
-          new Question(null, null, 1, "Why should you join us?"),
-          new Question(null, null, 2, "What programming languages should you know?"),
-          new Question(null, null, 3, "Custom text:")
-      )),
-      "Dev offered", new Template(-1, "Dev offered", List.of(
-          new Question(null, null, 0, "Who am I?"),
-          new Question(null, null, 1, "What programming language do I know?"),
-          new Question(null, null, 2, "Why should you choose me?")
-      )),
-      "Empty template", new Template(-1, "Empty template", List.of())
-  );
 
   public static final List<Question> QUESTIONS = List.of(
       new Question(null, null, 0, "Where's the policeman who stole my newspaper?"),

@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.question;
 
-import static club.devcord.devmarkt.graphql.Helpers.SEED;
-import static club.devcord.devmarkt.graphql.Helpers.verify;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.SEED;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

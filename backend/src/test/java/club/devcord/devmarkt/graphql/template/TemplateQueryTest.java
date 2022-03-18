@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.template;
 
-import static club.devcord.devmarkt.graphql.Helpers.SEED;
-import static club.devcord.devmarkt.graphql.Helpers.verify;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Template;
@@ -55,7 +55,8 @@ public class TemplateQueryTest extends DevmarktTest {
   void templates_onlyNames_success() {
     var onlyNameList = SEED.values()
         .stream()
-        .map(template -> new Template(-1, template.name(), List.of()));
+        .map(template -> new Template(-1, template.name(), List.of()))
+        .toList();
 
     var response = query.templates(new DataFetchingEnviromentStub("name"));
     verify(onlyNameList, response);

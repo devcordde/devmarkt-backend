@@ -16,15 +16,15 @@
 
 package club.devcord.devmarkt.graphql.template;
 
-import static club.devcord.devmarkt.graphql.Helpers.SEED;
-import static club.devcord.devmarkt.graphql.Helpers.TEMPLATE;
-import static club.devcord.devmarkt.graphql.Helpers.verify;
+import static club.devcord.devmarkt.Helpers.TEMPLATE;
+import static club.devcord.devmarkt.Helpers.verify;
+import static club.devcord.devmarkt.Seed.SEED;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
+import club.devcord.devmarkt.Helpers;
 import club.devcord.devmarkt.entities.template.Template;
-import club.devcord.devmarkt.graphql.Helpers;
 import club.devcord.devmarkt.responses.template.TemplateFailed.TemplateErrors;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
