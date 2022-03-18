@@ -107,13 +107,17 @@ public class QuestionService {
   Eg. 1, 2, 4 -> 1, 2, 3 (offset 0)
       1, 2, 4 -> 1, 2, 5 (offset 2)
    */
-  private void reorderQuestions(int templateId, int from, int offset) {
+  public void reorderQuestions(int templateId, int from, int offset) {
     var questions = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId,
         from);
-    var updatedQuestions = new HashSet<RawQuestion>(questions.size() - from);
+
+    var updatedQuestions = new HashSet<RawQuestion>(questions.size());
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
-      int rightNum = i + offset;
+
+      var num = i + from;
+
+      int rightNum = num + offset;
       if (question.number() != rightNum) {
         updatedQuestions.add(
             new RawQuestion(question.id(), templateId, rightNum, question.question()));

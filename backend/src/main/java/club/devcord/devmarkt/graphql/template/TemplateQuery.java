@@ -40,14 +40,15 @@ public class TemplateQuery implements GraphQLQueryResolver {
 
   public Object template(String name) {
     var response = service.find(name);
-    LOGGER.info("Template fetching. Response: {}, Name: {}", LoggingUtil.responseStatus(response), name);
+    LOGGER.info("Template fetching. Response: {}, Name: {}", LoggingUtil.responseStatus(response),
+        name);
     return response.graphqlUnion();
   }
 
   public List<Template> templates(DataFetchingEnvironment environment) {
     var fields = environment.getSelectionSet().getFields();
     if (fields.size() == 1 && fields.get(0).getName().equals("name")) {
-      var names =  service.allNames()
+      var names = service.allNames()
           .stream()
           .map(name -> new Template(-1, name, List.of()))
           .collect(Collectors.toList());

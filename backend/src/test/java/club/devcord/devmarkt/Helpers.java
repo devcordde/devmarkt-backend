@@ -17,6 +17,7 @@
 package club.devcord.devmarkt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.Template;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
@@ -78,6 +80,14 @@ public class Helpers {
           }
         })
         .collect(Collectors.toSet());
+  }
+
+  public static void assertEmpty(Optional<?> opt) {
+    assertTrue(opt.isEmpty(), "Optional isn't empty");
+  }
+
+  public static void assertPresent(Optional<?> opt) {
+    assertTrue(opt.isPresent(), "Optional is empty");
   }
 
 }

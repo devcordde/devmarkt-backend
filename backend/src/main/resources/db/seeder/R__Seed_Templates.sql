@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-DELETE FROM templates WHERE name IN ('Dev searched', 'Dev offered', 'Empty template');
+DELETE
+FROM templates
+WHERE name IN ('Dev searched', 'Dev offered', 'Empty template');
 
-WITH templateId AS (INSERT INTO templates(name) VALUES ('Dev searched') RETURNING id)
-INSERT INTO questions(template_id, number, question) VALUES
-                                                            ((SELECT id FROM templateId), 0, 'Who are we?'),
-                                                            ((SELECT id FROM templateId), 1, 'Why should you join us?'),
-                                                            ((SELECT id FROM templateId), 2, 'What programming languages should you know?'),
-                                                            ((SELECT id FROM templateId), 3, 'Custom text:');
+WITH templateId AS (INSERT INTO templates (name) VALUES ('Dev searched') RETURNING id)
+INSERT
+INTO questions(template_id, number, question)
+VALUES ((SELECT id FROM templateId), 0, 'Who are we?'),
+       ((SELECT id FROM templateId), 1, 'Why should you join us?'),
+       ((SELECT id FROM templateId), 2, 'What programming languages should you know?'),
+       ((SELECT id FROM templateId), 3, 'Custom text:');
 
-WITH templateId AS (INSERT INTO templates(name) VALUES ('Dev offered') RETURNING id)
-INSERT INTO questions(template_id, number, question) VALUES
-                                                         ((SELECT id FROM templateId), 0, 'Who am I?'),
-                                                         ((SELECT id FROM templateId), 1, 'What programming language do I know?'),
-                                                         ((SELECT id FROM templateId), 2, 'Why should you choose me?');
+WITH templateId AS (INSERT INTO templates (name) VALUES ('Dev offered') RETURNING id)
+INSERT
+INTO questions(template_id, number, question)
+VALUES ((SELECT id FROM templateId), 0, 'Who am I?'),
+       ((SELECT id FROM templateId), 1, 'What programming language do I know?'),
+       ((SELECT id FROM templateId), 2, 'Why should you choose me?');
 
-INSERT INTO templates(name) VALUES ('Empty template');
+INSERT INTO templates(name)
+VALUES ('Empty template');
 
 
 

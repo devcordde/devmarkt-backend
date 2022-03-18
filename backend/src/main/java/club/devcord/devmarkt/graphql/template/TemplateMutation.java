@@ -38,7 +38,8 @@ public class TemplateMutation implements GraphQLMutationResolver {
 
   public Object createTemplate(String name, List<Question> questions) {
     var response = service.create(name, questions);
-    LOGGER.info("template creation. Response: {}, Name: {}", LoggingUtil.responseStatus(response), name);
+    LOGGER.info("template creation. Response: {}, Name: {}", LoggingUtil.responseStatus(response),
+        name);
     return response.graphqlUnion();
   }
 
@@ -50,7 +51,8 @@ public class TemplateMutation implements GraphQLMutationResolver {
 
   public boolean updateTemplateName(String oldName, String newName) {
     var response = service.updateName(oldName, newName);
-    LOGGER.info("Template update. Successful: {}, OldName: {}, NewName: {}", response, oldName, newName);
+    LOGGER.info("Template update. Successful: {}, OldName: {}, NewName: {}", response, oldName,
+        newName);
     return response;
   }
 }

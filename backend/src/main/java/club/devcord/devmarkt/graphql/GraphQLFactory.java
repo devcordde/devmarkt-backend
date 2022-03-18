@@ -73,7 +73,8 @@ public class GraphQLFactory {
     }
   }
 
-  private void readSchemas(SchemaParserBuilder builder, String location, ResourceResolver resolver) {
+  private void readSchemas(SchemaParserBuilder builder, String location,
+      ResourceResolver resolver) {
     var dir = resolver.getResources(location) // there's sadly no way to get the directory directly
         .map(url -> {
           try {
@@ -86,7 +87,7 @@ public class GraphQLFactory {
         .filter(Objects::nonNull)
         .findFirst();
 
-    try(var stream = Files.walk(dir.orElseThrow())) {
+    try (var stream = Files.walk(dir.orElseThrow())) {
       stream
           .filter(Files::isRegularFile)
           .filter(path -> path.toString().endsWith(".graphql"))
@@ -108,7 +109,7 @@ public class GraphQLFactory {
     return resolver.getClass();
   }
 
-  private Map.Entry<Path, String> readFile(Path path)  {
+  private Map.Entry<Path, String> readFile(Path path) {
     try {
       return Map.entry(path, Files.readString(path));
     } catch (IOException e) {
