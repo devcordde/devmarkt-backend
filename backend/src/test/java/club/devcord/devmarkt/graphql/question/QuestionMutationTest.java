@@ -17,7 +17,7 @@
 package club.devcord.devmarkt.graphql.question;
 
 import static club.devcord.devmarkt.Helpers.verify;
-import static club.devcord.devmarkt.Seed.SEED;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,7 +63,7 @@ public class QuestionMutationTest extends DevmarktTest {
     var response = questionMutation.addQuestion("Dev offered", question.question(), 0);
     verify(question, response);
 
-    var reorderedQuestions = SEED.get("Dev offered")
+    var reorderedQuestions = TEMPLATE_SEED.get("Dev offered")
         .questions()
         .stream()
         .map(question1 -> new Question(-1, null, question1.number() + 1, question1.question()))
@@ -109,7 +109,7 @@ public class QuestionMutationTest extends DevmarktTest {
     var response = questionMutation.deleteQuestion("Dev offered", 0);
     assertTrue(response);
 
-    var reorderedQuestions = SEED.get("Dev offered")
+    var reorderedQuestions = TEMPLATE_SEED.get("Dev offered")
         .questions()
         .stream()
         .map(question1 -> new Question(-1, null, question1.number() - 1, question1.question()))

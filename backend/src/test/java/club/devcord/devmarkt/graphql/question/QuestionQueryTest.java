@@ -17,7 +17,7 @@
 package club.devcord.devmarkt.graphql.question;
 
 import static club.devcord.devmarkt.Helpers.verify;
-import static club.devcord.devmarkt.Seed.SEED;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;
@@ -35,7 +35,7 @@ public class QuestionQueryTest extends DevmarktTest {
   @Test
   void question_success() {
     var response = questionQuery.question("Dev searched", 0);
-    verify(SEED.get("Dev searched").questions().get(0), response);
+    verify(TEMPLATE_SEED.get("Dev searched").questions().get(0), response);
   }
 
   @Test

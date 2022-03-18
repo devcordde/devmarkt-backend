@@ -17,7 +17,7 @@
 package club.devcord.devmarkt.graphql.template;
 
 import static club.devcord.devmarkt.Helpers.verify;
-import static club.devcord.devmarkt.Seed.SEED;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Template;
@@ -36,7 +36,7 @@ public class TemplateQueryTest extends DevmarktTest {
   @Test
   void template_success() {
     var response = query.template("Dev searched");
-    verify(SEED.get("Dev searched"), response);
+    verify(TEMPLATE_SEED.get("Dev searched"), response);
   }
 
   @Test
@@ -48,12 +48,12 @@ public class TemplateQueryTest extends DevmarktTest {
   @Test
   void templates_success() {
     var response = query.templates(new DataFetchingEnviromentStub("name", "questions"));
-    verify(SEED.values(), response);
+    verify(TEMPLATE_SEED.values(), response);
   }
 
   @Test
   void templates_onlyNames_success() {
-    var onlyNameList = SEED.values()
+    var onlyNameList = TEMPLATE_SEED.values()
         .stream()
         .map(template -> new Template(-1, template.name(), List.of()))
         .toList();

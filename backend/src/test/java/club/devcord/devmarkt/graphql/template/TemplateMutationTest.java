@@ -18,7 +18,7 @@ package club.devcord.devmarkt.graphql.template;
 
 import static club.devcord.devmarkt.Helpers.TEMPLATE;
 import static club.devcord.devmarkt.Helpers.verify;
-import static club.devcord.devmarkt.Seed.SEED;
+import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -66,7 +66,7 @@ public class TemplateMutationTest extends DevmarktTest {
   void updateTemplateName_success()  {
     var response = mutation.updateTemplateName("Dev searched", "CIA employment contract");
     assertTrue(response);
-    verify(new Template(-1, "CIA employment contract", SEED.get("Dev searched").questions()),
+    verify(new Template(-1, "CIA employment contract", TEMPLATE_SEED.get("Dev searched").questions()),
         query.template("CIA employment contract"));
     verify(TemplateErrors.NOT_FOUND, query.template("Dev searched"));
   }
