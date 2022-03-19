@@ -149,7 +149,7 @@ function lintFile(file) {
         `\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
   }
 
-  if (!/^[a-z0-9-_/]+\.[a-z0-9]+$/i.test(file.filename)) {
+  if (!/^[a-z0-9-_/.]+\.[a-z0-9]+$/i.test(file.filename)) {
     fail(
         `\`${file.filename}\` does not follow the file naming convention`);
   }

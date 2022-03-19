@@ -56,6 +56,6 @@ describe("Template Mutation", () => {
 
   it("Does not create duplicate templates", async () => {
     await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("DuplicatedTemplate"));
-    await test(createTemplate, createTemplateDuplicatedResponse, templateCreateVars("DuplicatedTemplate"))
+    await test(createTemplate, createTemplateDuplicatedResponse, templateCreateVars("DuplicatedTemplate"));
   })
 })
