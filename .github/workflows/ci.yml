@@ -69,11 +69,13 @@ jobs:
       - deploy-docker
     services:
       postgres:
-        image: postgres
+        image: postgres:14.2
         env:
           POSTGRES_PASSWORD: devmarkt-qa
           POSTGRES_USER: devmarkt-qa
           POSTGRES_DB: devmarkt-qa
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -87,7 +89,7 @@ jobs:
       - name: Start backend
         run: |
           docker network create --subnet=172.16.0.0/16 backend-network
-          docker run -d --name backend -p 8080:8080 -e MICRONAUT_ENVIRONMENTS=qa -e DEVMARKT_POSTGRES_HOST=postgres -e DEVMARKT_POSTGRES_DATABASE=devmarkt-qa -e DEVMARKT_POSTGRES_USER=devmarkt-qa -e DEVMARKT_POSTGRES_PASSWORD=devmarkt-qa registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+          docker run -d --name backend -p 8080:8080 -e MICRONAUT_ENVIRONMENTS=qa -e DEVMARKT_POSTGRES_HOST=172.16.0.1 -e DEVMARKT_POSTGRES_DATABASE=devmarkt-qa -e DEVMARKT_POSTGRES_USER=devmarkt-qa -e DEVMARKT_POSTGRES_PASSWORD=devmarkt-qa registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
           docker network connect --ip 172.16.0.2 backend-network backend
       - name: Install dependencies
         run: yarn install
