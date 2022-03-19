@@ -62,3 +62,45 @@ jobs:
         run: |
           docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
           docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+
+  qa:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-docker
+    services:
+      postgres:
+        image: postgres:14.2
+        env:
+          POSTGRES_PASSWORD: devmarkt-qa
+          POSTGRES_USER: devmarkt-qa
+          POSTGRES_DB: devmarkt-qa
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Start backend
+        run: |
+          docker network create --subnet=172.16.0.0/16 backend-network
+          docker run -d --name backend -p 8080:8080 -e MICRONAUT_ENVIRONMENTS=qa -e DEVMARKT_POSTGRES_HOST=172.16.0.1 -e DEVMARKT_POSTGRES_DATABASE=devmarkt-qa -e DEVMARKT_POSTGRES_USER=devmarkt-qa -e DEVMARKT_POSTGRES_PASSWORD=devmarkt-qa registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+          docker network connect --ip 172.16.0.2 backend-network backend
+      - name: Install dependencies
+        run: yarn install
+        working-directory: qa
+      - name: Run Tests
+        run: BACKEND_HOST=http://172.16.0.2:8080 yarn test:ci
+        working-directory: qa
+      - name: Stop backend
+        if: always()
+        run: |
+          docker stop backend
+          docker logs backend
+          docker rm backend
+          docker network rm backend-network

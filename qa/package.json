@@ -1,0 +1,25 @@
+{
+  "name": "devmarkt-backend-qa",
+  "version": "1.0.0",
+  "description": "QA Tests for the Devmarkt-Backend",
+  "main": "index.js",
+  "type": "module",
+  "repository": "https://github.com/devcordde/devmarkt-backend",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "jest-junit": "^13.0.0",
+    "node-fetch": "^3.2.3"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:ci": "yarn test --ci --reporters=default --reporters=jest-junit"
+  },
+  "jest": {
+    "testMatch": [
+      "**/?(*.)(spec|test).js"
+    ],
+    "maxWorkers": 1
+  }
+}

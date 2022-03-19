@@ -1,0 +1,45 @@
+{
+  "data": {
+    "templates": [
+      {
+        "questions": [
+          {
+            "number": 0,
+            "question": "Who are we?"
+          },
+          {
+            "number": 1,
+            "question": "Why should you join us?"
+          },
+          {
+            "number": 2,
+            "question": "What programming languages should you know?"
+          },
+          {
+            "number": 3,
+            "question": "Custom text:"
+          }
+        ]
+      },
+      {
+        "questions": [
+          {
+            "number": 0,
+            "question": "Who am I?"
+          },
+          {
+            "number": 1,
+            "question": "What programming language do I know?"
+          },
+          {
+            "number": 2,
+            "question": "Why should you choose me?"
+          }
+        ]
+      },
+      {
+        "questions": []
+      }
+    ]
+  }
+}

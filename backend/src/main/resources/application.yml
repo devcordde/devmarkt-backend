@@ -18,7 +18,7 @@ flyway:
 graphql:
   enabled: true
   path: "/graphql"
-  schemas: classpath:graphql
+  schemas: classpath:graphql/schemas
   graphiql:
     enabled: true
     path: "/graphiql"

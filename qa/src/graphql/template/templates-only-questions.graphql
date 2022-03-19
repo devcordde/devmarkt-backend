@@ -1,0 +1,8 @@
+query {
+    templates {
+        questions {
+            number
+            question
+        }
+    }
+}

@@ -33,10 +33,6 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,32 +69,15 @@ public class GraphQLFactory {
     }
   }
 
-  private void readSchemas(SchemaParserBuilder builder, String location,
-      ResourceResolver resolver) {
-    var dir = resolver.getResources(location) // there's sadly no way to get the directory directly
-        .map(url -> {
-          try {
-            return Path.of(url.toURI());
-          } catch (URISyntaxException e) {
-            LOGGER.error("Error while converting URL to Path", e);
-            return null;
-          }
-        })
-        .filter(Objects::nonNull)
-        .findFirst();
-
-    try (var stream = Files.walk(dir.orElseThrow())) {
-      stream
-          .filter(Files::isRegularFile)
-          .filter(path -> path.toString().endsWith(".graphql"))
-          .map(this::readFile)
-          .filter(Objects::nonNull)
-          .forEach(node -> {
-            builder.schemaString(node.getValue());
-            LOGGER.info("Schema read: {}", node.getKey().getFileName());
-          });
-    } catch (IOException e) {
-      LOGGER.error("Error while reading schema files", e);
+  private void readSchemas(SchemaParserBuilder builder, String location, ResourceResolver resolver) {
+    var reader = new SchemaResolver();
+    try {
+      reader.resolveSchemas(location, resolver)
+          .stream()
+          .peek(s -> LOGGER.info("Reading schema: {}", s))
+          .forEach(builder::file);
+    } catch (URISyntaxException | IOException e) {
+      LOGGER.error("An error occurred during schema loading", e);
     }
   }
 
@@ -107,15 +86,6 @@ public class GraphQLFactory {
       return resolver.getClass().getSuperclass();
     }
     return resolver.getClass();
-  }
-
-  private Map.Entry<Path, String> readFile(Path path) {
-    try {
-      return Map.entry(path, Files.readString(path));
-    } catch (IOException e) {
-      LOGGER.error("Error reading graphql schema file: {}.", path, e);
-      return null;
-    }
   }
 
   private void registerTypes(SchemaParserBuilder builder, BeanContext context) {
