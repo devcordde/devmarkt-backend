@@ -37,13 +37,14 @@ public class SchemaResolver {
     if (url.isPresent()) {
       try (var pathStream = Files.walk(Paths.get(url.get().toURI()))) {
         var shortedLocation = location.substring("classpath:".length());
-        return pathStream.filter(Files::isRegularFile)
+        return pathStream
+            .filter(Files::isRegularFile)
             .map(path -> Path.of(shortedLocation, path.getFileName().toString()))
             .map(Path::toString)
             .collect(Collectors.toSet());
       }
     } else {
-        LOGGER.error("No schema files found");
+      LOGGER.error("No schema files found");
       return null;
     }
   }
