@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-import test from "../executor.js";
-import createTemplate from "../graphql/template/create-template.graphql";
-import listTemplateNames from "../graphql/template/template-names.graphql";
-import listTemplatesWithQuestions from "../graphql/template/templates.graphql";
-import listTemplatesWithoutNames from "../graphql/template/templates-only-questions.graphql";
-import createTemplateDuplicatedResponse from "../fixtures/template/create-template-duplicated.json";
-import createTemplateSuccessResponse from "../fixtures/template/create-template-success.json";
-import listTemplateNamesResponse from "../fixtures/template/template-names.json";
-import listTemplatesWithQuestionsResponse from "../fixtures/template/templates.json";
-import listTemplatesWithoutNamesResponse from "../fixtures/template/templates-only-questions.json";
+import test, {curryLoad, curryTestNamed} from "../executor.js";
+
+const load = curryLoad("template");
+const testNamed = curryTestNamed("template");
 
 describe("Template Query", () => {
   it("Lists all template names", async () => {
-    await test(listTemplateNames, listTemplateNamesResponse);
+    await testNamed("template-names.graphql", "template-names.json");
   })
 
   it("Lists all templates with questions", async () => {
-    await test(listTemplatesWithQuestions, listTemplatesWithQuestionsResponse);
+    await testNamed("templates.graphql", "templates.json");
   })
 
   it("Lists all templates with questions and no name", async () => {
-    await test(listTemplatesWithoutNames, listTemplatesWithoutNamesResponse);
+    await testNamed("templates-only-questions.graphql", "templates-only-questions.json");
   })
 })
 
@@ -49,6 +43,10 @@ describe("Template Mutation", () => {
       }
     ]
   });
+
+  const createTemplate = load("create-template.graphql");
+  const createTemplateSuccessResponse = load("create-template-success.json");
+  const createTemplateDuplicatedResponse = load("create-template-duplicated.json");
 
   it("Creates a template", async () => {
     await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("Template"));

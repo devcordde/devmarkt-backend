@@ -15,6 +15,8 @@
  */
 
 import fetch from "node-fetch";
+import {readFileSync} from "fs";
+import {resolve} from "path";
 
 const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 
@@ -25,13 +27,41 @@ export function execute(graphql, variables = {}) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: graphql.loc.source.body,
+      query: graphql,
       variables
     })
   }).then(response => response.json());
 }
 
 export default async function test(graphql, expectedResponse, variables = {}) {
-  const actualResponse = await execute(graphql, variables);
-  expect(actualResponse).toEqual(expectedResponse);
+  const loadedGraphql = await Promise.resolve(graphql);
+  const loadedExpectedResponse = await Promise.resolve(expectedResponse);
+  const actualResponse = await execute(loadedGraphql, variables);
+  expect(actualResponse).toEqual(loadedExpectedResponse);
+}
+
+export function testNamed(graphql, response, variables = {}) {
+  return test(load(graphql), load(response), variables);
+}
+
+export function curryTestNamed(prefix) {
+  return (graphql, response, variables = {}) => testNamed(`${prefix}/${graphql}`, `${prefix}/${response}`, variables);
+}
+
+export async function load(file) {
+  if (file.endsWith(".graphql")) {
+    return Promise.resolve(readFile(resolve(`./src/graphql/${file}`)));
+  }
+  if (file.endsWith(".json")) {
+    return Promise.resolve((await import(`./fixtures/${file}`)).default);
+  }
+  return Promise.reject("Unknown File Type");
+}
+
+export function curryLoad(prefix) {
+  return (name) => load(`${prefix}/${name}`);
+}
+
+function readFile(file) {
+  return readFileSync(file, "utf-8");
 }
