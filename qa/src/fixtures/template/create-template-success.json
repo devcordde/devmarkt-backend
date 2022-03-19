@@ -1,0 +1,13 @@
+{
+  "data": {
+    "createTemplate": {
+      "__typename": "TemplateSuccess",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Question"
+        }
+      ]
+    }
+  }
+}

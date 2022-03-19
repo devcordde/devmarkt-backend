@@ -18,7 +18,7 @@ import fetch from "node-fetch";
 
 const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 
-export default function execute(graphql, variables = {}) {
+export function execute(graphql, variables = {}) {
   return fetch(endpoint, {
     method: "post",
     headers: {
@@ -29,4 +29,9 @@ export default function execute(graphql, variables = {}) {
       variables
     })
   }).then(response => response.json());
+}
+
+export default async function test(graphql, expectedResponse, variables = {}) {
+  const actualResponse = await execute(graphql, variables);
+  expect(actualResponse).toEqual(expectedResponse);
 }

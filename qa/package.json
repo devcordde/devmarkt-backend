@@ -28,6 +28,7 @@
     },
     "transformIgnorePatterns": [
       "node_modules"
-    ]
+    ],
+    "maxWorkers": 1
   }
 }

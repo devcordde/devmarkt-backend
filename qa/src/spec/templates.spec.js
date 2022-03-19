@@ -14,14 +14,48 @@
  * limitations under the License.
  */
 
-import execute from "../requester.js";
-import listTemplateNames from "./graphql/template-names.graphql";
-import listTemplateNamesResponse from "./fixtures/template-names.json";
+import test from "../executor.js";
+import createTemplate from "../graphql/template/create-template.graphql";
+import listTemplateNames from "../graphql/template/template-names.graphql";
+import listTemplatesWithQuestions from "../graphql/template/templates.graphql";
+import listTemplatesWithoutNames from "../graphql/template/templates-only-questions.graphql";
+import createTemplateDuplicatedResponse from "../fixtures/template/create-template-duplicated.json";
+import createTemplateSuccessResponse from "../fixtures/template/create-template-success.json";
+import listTemplateNamesResponse from "../fixtures/template/template-names.json";
+import listTemplatesWithQuestionsResponse from "../fixtures/template/templates.json";
+import listTemplatesWithoutNamesResponse from "../fixtures/template/templates-only-questions.json";
 
 describe("Template Query", () => {
   it("Lists all template names", async () => {
-    const response = await execute(listTemplateNames);
+    await test(listTemplateNames, listTemplateNamesResponse);
+  })
 
-    expect(response).toEqual(listTemplateNamesResponse);
+  it("Lists all templates with questions", async () => {
+    await test(listTemplatesWithQuestions, listTemplatesWithQuestionsResponse);
+  })
+
+  it("Lists all templates with questions and no name", async () => {
+    await test(listTemplatesWithoutNames, listTemplatesWithoutNamesResponse);
+  })
+})
+
+describe("Template Mutation", () => {
+  const templateCreateVars = (name) => ({
+    name,
+    questions: [
+      {
+        number: 1,
+        question: "Question"
+      }
+    ]
+  });
+
+  it("Creates a template", async () => {
+    await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("Template"));
+  })
+
+  it("Does not create duplicate templates", async () => {
+    await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("DuplicatedTemplate"));
+    await test(createTemplate, createTemplateDuplicatedResponse, templateCreateVars("DuplicatedTemplate"))
   })
 })

@@ -1,0 +1,15 @@
+mutation($questions: [QuestionInput!]!, $name: String!) {
+    createTemplate(questions: $questions, name: $name) {
+        __typename
+        ...on TemplateSuccess {
+            questions {
+                number
+                question
+            }
+        }
+        ...on TemplateFailed {
+            errorCode
+            message
+        }
+    }
+}
