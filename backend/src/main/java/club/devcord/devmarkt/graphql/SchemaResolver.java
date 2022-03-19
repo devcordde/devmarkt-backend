@@ -41,6 +41,7 @@ public class SchemaResolver {
             .filter(Files::isRegularFile)
             .map(path -> Path.of(shortedLocation, path.getFileName().toString()))
             .map(Path::toString)
+            .filter(s -> s.endsWith(".graphql"))
             .collect(Collectors.toSet());
       }
     } else {
