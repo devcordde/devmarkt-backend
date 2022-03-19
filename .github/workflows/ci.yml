@@ -62,3 +62,29 @@ jobs:
         run: |
           docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
           docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+
+  qa:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-docker
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Start backend
+        run: |
+          docker network create --subnet=172.18.0.0/16 backend_network
+          docker run -d --name backend --net backend_network -p 8080:8080 -e MICRONAUT_ENVIRONMENTS=qa registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
+      - name: Install dependencies
+        run: yarn install
+        working-directory: qa
+      - name: Run Tests
+        run: yarn test:ci
+        working-directory: qa
+      - name: Stop backend
+        if: always()
+        run: |
+          docker stop backend
+          docker rm backend
+          docker network rm backend_network

@@ -1,0 +1,9 @@
+micronaut:
+  server:
+    host: '0.0.0.0'
+flyway:
+  datasources:
+    default:
+      locations:
+        - classpath:db/migrations
+        - classpath:db/seeder
