@@ -104,7 +104,11 @@ jobs:
           path: qa-image.tar
       - name: Load stored image if running as fork
         if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
-        run: docker load -i qa-image.tar
+        run: |
+          ls
+          ls qa-image.tar || true
+          docker load -i qa-image.tar || true
+          docker load -i qa-image.tar/qa-image.tar || true
       - name: Start backend
         run: |
           docker network create --subnet=172.16.0.0/16 backend-network
