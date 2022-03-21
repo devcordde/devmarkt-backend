@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.graphql;
 
+import club.devcord.devmarkt.auth.AuthGraphQlInstruments;
 import graphql.GraphQL;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;
@@ -48,7 +49,8 @@ public class GraphQLFactory {
       @Value("${graphql.schemas}") String location,
       GraphQLResolver<?>[] resolver,
       ResourceResolver resourceResolver,
-      BeanContext context) {
+      BeanContext context,
+      AuthGraphQlInstruments instruments) {
     var builder = new SchemaParserBuilder();
 
     readSchemas(builder, location, resourceResolver);
@@ -58,7 +60,9 @@ public class GraphQLFactory {
 
     var schema = builder.build()
         .makeExecutableSchema();
+
     return GraphQL.newGraphQL(schema)
+        .instrumentation(instruments)
         .build();
   }
 
