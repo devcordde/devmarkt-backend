@@ -9,7 +9,7 @@
   "private": true,
   "devDependencies": {
     "jest": "^27.5.1",
-    "jest-junit": "^13.0.0",
+    "jest-junit": "^13.1.0",
     "node-fetch": "^3.2.3"
   },
   "scripts": {
