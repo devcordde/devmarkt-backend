@@ -38,7 +38,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
 
     testImplementation("org.testcontainers:testcontainers:1.16.3")
-    testImplementation("org.testcontainers:postgresql:1.16.3")
+    testImplementation("org.testcontainers:postgresql:1.17.0")
 }
 
 
