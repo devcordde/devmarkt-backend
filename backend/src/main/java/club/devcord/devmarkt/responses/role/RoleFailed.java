@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.responses.role;
 
-import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.graphql.GraphQLType;
+import club.devcord.devmarkt.responses.Fail;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+@GraphQLType("RoleFailed")
+public record RoleFailed(
+    String name,
+    String message,
+    String errorCode
+) implements Fail, RoleResponse {
 
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
+  public static class RoleErrors {
+
+    public static final String NOT_FOUND = "NOT_FOUND";
+    public static final String DUPLICATED = "DUPLICATED";
+
+    private RoleErrors() {
     }
-    return this;
   }
 
 }

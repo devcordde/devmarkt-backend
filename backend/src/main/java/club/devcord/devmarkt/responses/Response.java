@@ -18,4 +18,6 @@ package club.devcord.devmarkt.responses;
 
 public interface Response {
 
+  Object graphQlUnion();
+
 }

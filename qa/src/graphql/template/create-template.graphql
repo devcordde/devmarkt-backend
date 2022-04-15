@@ -1,5 +1,5 @@
-mutation($questions: [QuestionInput!]!, $name: String!) {
-    createTemplate(questions: $questions, name: $name) {
+mutation {
+    createTemplate(questions: [{number: 0, question: "Halts fmaul"}], name: "Nudfelauflauf") {
         __typename
         ...on TemplateSuccess {
             questions {

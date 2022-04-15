@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.graphql.role;
 
-import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.services.RoleService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import jakarta.inject.Singleton;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+@Singleton
+public class RoleQuery implements GraphQLQueryResolver {
 
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
+  private final RoleService service;
+
+  public RoleQuery(RoleService service) {
+    this.service = service;
   }
 
+  public Object role(String name) {
+    return service.find(name).graphQlUnion();
+  }
 }

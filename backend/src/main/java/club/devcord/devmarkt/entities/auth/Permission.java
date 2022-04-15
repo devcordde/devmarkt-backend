@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.responses.Response;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
-
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
-  }
+@MappedEntity("permissions")
+public record Permission(
+    @GeneratedValue @Id
+    Integer id,
+    Operation operation,
+    String query
+) {
 
 }

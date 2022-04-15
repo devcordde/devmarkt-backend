@@ -20,6 +20,7 @@ import static club.devcord.devmarkt.Helpers.verify;
 import static club.devcord.devmarkt.Seed.TEMPLATE_SEED;
 
 import club.devcord.devmarkt.DevmarktTest;
+import club.devcord.devmarkt.graphql.template.QuestionQuery;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;
 import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
 import jakarta.inject.Inject;

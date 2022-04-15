@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.template;
+package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.graphql.GraphQLType;
-import club.devcord.devmarkt.responses.Success;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Cascade;
+import io.micronaut.data.annotation.Relation.Kind;
+import io.micronaut.data.jdbc.annotation.JoinTable;
+import java.util.Set;
 
-@GraphQLType("TemplateSuccess")
-public record TemplateSuccess(
-    Template template
-) implements TemplateResponse, Success {
+@MappedEntity("roles")
+@GraphQLType("RoleSuccess")
+public record Role(
+    @GeneratedValue @Id
+    Integer id,
+    String name,
+    @Relation(value = Kind.ONE_TO_MANY, cascade = Cascade.ALL)
+    @JoinTable(name = "role_permissions")
+    Set<Permission> permissions
+) {
 
 }

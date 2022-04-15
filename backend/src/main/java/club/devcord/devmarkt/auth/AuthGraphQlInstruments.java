@@ -31,10 +31,10 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthGraphQlInstruments.class);
 
-  private final AuthenticationBridge authCache;
+  private final AuthenticationBridge bridge;
 
   public AuthGraphQlInstruments(AuthenticationBridge authCache) {
-    this.authCache = authCache;
+    this.bridge = authCache;
   }
 
   @Override
@@ -50,7 +50,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
         return;
       }
 
-      authCache.authentication((String) token)
+      bridge.authentication((String) token)
           .ifPresentOrElse(authentication -> {
             var userId = authentication.getName();
               // TODO: Implement permission checking

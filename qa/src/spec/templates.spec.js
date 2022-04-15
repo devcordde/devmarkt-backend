@@ -21,7 +21,7 @@ const testNamed = curryTestNamed("template");
 
 describe("Template Query", () => {
   it("Lists all template names", async () => {
-    await testNamed("template-names.graphql", "template-names.json");
+
   })
 
   it("Lists all templates with questions", async () => {

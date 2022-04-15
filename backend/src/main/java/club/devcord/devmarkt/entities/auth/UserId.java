@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.responses.Response;
+import io.micronaut.data.annotation.Embeddable;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.MappedProperty;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+@Embeddable
+public record UserId(
+    @MappedProperty("id_type")
+    String type,
+    @MappedEntity("user_id")
+    long id) {
 
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
+    private static UserId fromMerged(String userId) {
+      var split= userId.split(":");
+      return new UserId(split[0], Long.parseLong(split[1]));
     }
-    return this;
   }
-
-}

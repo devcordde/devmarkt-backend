@@ -20,7 +20,8 @@ import club.devcord.devmarkt.responses.Response;
 
 public sealed interface TemplateResponse extends Response permits TemplateFailed, TemplateSuccess {
 
-  default Object graphqlUnion() {
+  @Override
+  default Object graphQlUnion() {
     if (this instanceof TemplateSuccess success) {
       return success.template();
     }

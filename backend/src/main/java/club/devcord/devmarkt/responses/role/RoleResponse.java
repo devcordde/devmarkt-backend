@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.responses.role;
 
 import club.devcord.devmarkt.responses.Response;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+public sealed interface RoleResponse extends Response permits RoleFailed, RoleSuccess {
 
   @Override
   default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
+    if (this instanceof RoleSuccess success) {
+      return success.role();
     }
     return this;
   }
-
 }

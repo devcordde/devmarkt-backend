@@ -16,6 +16,6 @@
 
 package club.devcord.devmarkt.responses;
 
-public interface Success extends Response {
+public interface Success<T> extends Response {
 
 }

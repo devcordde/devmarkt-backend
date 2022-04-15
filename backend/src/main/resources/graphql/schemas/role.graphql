@@ -1,0 +1,27 @@
+union RoleResponse = RoleSuccess | RoleFailed
+
+enum Operation {
+    QUERY,
+    MUTATION,
+    SUBSCRIPTION
+}
+input PermissionInput {
+    operation: Operation!
+    query: String! @NotBlank
+}
+
+type Permission {
+    operation: Operation!
+    query: String!
+}
+
+type RoleSuccess {
+    name: String!
+    permissions: [Permission!]!
+}
+
+type RoleFailed implements Error {
+    name: String!
+    message: String!
+    errorCode: String!
+}

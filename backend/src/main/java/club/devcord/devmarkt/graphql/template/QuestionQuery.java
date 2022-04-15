@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth;
+package club.devcord.devmarkt.graphql.template;
 
-import io.micronaut.security.authentication.Authentication;
+import club.devcord.devmarkt.services.QuestionService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class AuthenticationBridge {
+public class QuestionQuery implements GraphQLQueryResolver {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationBridge.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(QuestionQuery.class);
 
-  private final Map<String, Authentication> authenticationMap = new ConcurrentHashMap<>();
+  private final QuestionService service;
 
-  public void authentication(String token, Authentication authentication) {
-    authenticationMap.put(token, authentication);
+  public QuestionQuery(QuestionService service) {
+    this.service = service;
   }
 
-  public Optional<Authentication> authentication(String token) {
-    return Optional.ofNullable(authenticationMap.remove(token));
+  public Object question(String templateName, int number) {
+    var response = service.question(templateName, number).graphQlUnion();
+    LOGGER.info("Question fetch. TemplateName: {}, Number: {}", templateName, number);
+    return response;
   }
-
 }

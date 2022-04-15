@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql.question;
+package club.devcord.devmarkt.graphql.role;
 
-import club.devcord.devmarkt.services.QuestionService;
+import club.devcord.devmarkt.entities.auth.Permission;
+import club.devcord.devmarkt.services.PermissionService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
 
 @Singleton
-public class QuestionQuery implements GraphQLQueryResolver {
+public class PermissionQuery implements GraphQLQueryResolver {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(QuestionQuery.class);
+  private final PermissionService service;
 
-  private final QuestionService service;
-
-  public QuestionQuery(QuestionService service) {
+  public PermissionQuery(PermissionService service) {
     this.service = service;
   }
 
-  public Object question(String templateName, int number) {
-    var response = service.question(templateName, number).graphqlUnion();
-    LOGGER.info("Question fetch. TemplateName: {}, Number: {}", templateName, number);
-    return response;
+  public Set<Permission> permissions() {
+    return service.permissions();
   }
 }

@@ -3,12 +3,18 @@ type Query {
 
     template(
         name: String! @NotBlank
-    ):TemplateResponse!
+    ): TemplateResponse!
 
     question(
         templateName: String! @NotBlank,
         number: Int! @Min(value: 0)
     ): QuestionResponse!
+
+    role(
+        name: String! @NotBlank,
+    ): RoleResponse!
+
+    permissions: [Permission!]!
 }
 
 type Mutation {
@@ -42,6 +48,25 @@ type Mutation {
         templateName: String! @NotBlank,
         number: Int! @Min(value: -1)
     ): Boolean!
+
+    createRole(
+        name: String! @NotBlank
+        permissions: [PermissionInput!]!
+    ): RoleResponse!
+
+    deleteRole(
+        name: String! @NotBlank
+    ): Boolean!
+
+    addPermissions(
+        roleName: String! @NotBlank
+        permissions: [PermissionInput!]!
+    ): RoleResponse!
+
+    removePermissions(
+        roleName: String! @NotBlank
+        permissions: [PermissionInput!]!
+    ): RoleResponse!
 }
 
 # common

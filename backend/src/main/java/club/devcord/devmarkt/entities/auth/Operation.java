@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.responses.Response;
-
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
-
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
-  }
-
+public enum Operation {
+  QUERY,
+  MUTATION,
+  SUBSCRIPTION
 }

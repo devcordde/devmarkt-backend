@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.services;
 
-import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.entities.auth.Permission;
+import club.devcord.devmarkt.repositories.PermissionRepo;
+import jakarta.inject.Singleton;
+import java.util.Set;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+@Singleton
+public class PermissionService {
 
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
+  private final PermissionRepo repo;
+
+  public PermissionService(PermissionRepo repo) {
+    this.repo = repo;
   }
+
+  public Set<Permission> permissions() {
+    return repo.findAll();
+  }
+
 
 }

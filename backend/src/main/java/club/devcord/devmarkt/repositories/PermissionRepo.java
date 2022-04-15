@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.repositories;
 
-import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.entities.auth.Permission;
+import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.model.query.builder.sql.Dialect;
+import io.micronaut.data.repository.CrudRepository;
+import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+@JdbcRepository(dialect = Dialect.POSTGRES)
+public interface PermissionRepo extends CrudRepository<Permission, Integer> {
 
+  @NotNull
   @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
-  }
-
+  Set<Permission> findAll();
 }

@@ -16,6 +16,8 @@
 
 package club.devcord.devmarkt.auth;
 
+import club.devcord.devmarkt.repositories.PermissionRepo;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
@@ -30,10 +32,10 @@ import java.util.Map;
 public class TestFactory {
 
   @Context
-  public String testLol(JwtTokenGenerator generator) {
+  public String testLol(JwtTokenGenerator generator, BeanContext context, PermissionRepo repo) {
+
     System.out.println(generator.generateToken(Map.of(
         "sub", "abc:1234567890",
-        "exp", 1647727093194L,
         "roles", List.of("USER"),
         "iat", 1516239022
     )).get());

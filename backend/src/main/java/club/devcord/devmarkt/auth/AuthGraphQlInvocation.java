@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
 @Replaces(DefaultGraphQLInvocation.class)
 public class AuthGraphQlInvocation implements GraphQLInvocation {
 
-  private final static Pattern TOKEN_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
+  private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
 
   private final JwtTokenValidator validator;
   private final DefaultGraphQLInvocation defaultGraphQLInvocation;
@@ -60,19 +60,21 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
 
     return Flux.from(extractAuth(invocationData.getVariables()))
         .flatMap(token -> Flux.from(validator.validateToken(token, httpRequest))
-                .flatMap(authentication -> Flux.from(validateUserId(authentication))
-                    .doOnNext(a -> cache.authentication(token, a))
-                    .flatMap(a -> defaultGraphQLInvocation.invoke(invocationData, httpRequest, httpResponse))
-                    .switchIfEmpty(Mono.just(new InvalidTokenError(token, AuthError.INVALID_USERID).toResult()))
-                )
-                .switchIfEmpty(Mono.just(new InvalidTokenError(token, AuthError.INVALID_TOKEN).toResult()))
+            .flatMap(authentication -> Flux.from(validateUserId(authentication))
+                .doOnNext(a -> cache.authentication(token, a))
+                .flatMap(a -> defaultGraphQLInvocation.invoke(invocationData, httpRequest, httpResponse))
+                .switchIfEmpty(
+                    Mono.just(new InvalidTokenError(token, AuthError.INVALID_USERID).toResult()))
             )
+            .switchIfEmpty(
+                Mono.just(new InvalidTokenError(token, AuthError.INVALID_TOKEN).toResult()))
+        )
         .switchIfEmpty(Mono.just(new UnauthenticatedError().toResult()));
   }
 
   private Publisher<Authentication> validateUserId(Authentication authentication) {
     return Mono.just(authentication.getName())
-        .filter(name -> name != null && TOKEN_REGEX.matcher(name).matches())
+        .filter(name -> name != null && USERID_REGEX.matcher(name).matches())
         .map(s -> authentication);
   }
 

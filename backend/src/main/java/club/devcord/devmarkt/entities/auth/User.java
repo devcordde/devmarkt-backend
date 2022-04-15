@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.responses.Response;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.jdbc.annotation.JoinTable;
+import java.util.Set;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
-
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
-  }
+@MappedEntity("users")
+public record User(
+    @GeneratedValue @Id
+    int id,
+    UserId userId,
+    @JoinTable(name = "user_roles")
+    Set<Role> roles
+) {
 
 }
