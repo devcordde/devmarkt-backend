@@ -27,9 +27,8 @@ jobs:
         run: ./gradlew --build-cache test
         timeout-minutes: 30
 
-  deploy-docker:
+  build-docker:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     environment: gitlab-docker-registry
     needs:
       - build
@@ -47,9 +46,11 @@ jobs:
         timeout-minutes: 30
         working-directory: backend/build/docker/main
       - name: Login to GitLab Registry
+        if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
         run: echo ${{ secrets.DOCKER_PUSH_TOKEN }} | docker login -u ${{ secrets.DOCKER_PUSH_TOKEN_NAME }} --password-stdin registry.gitlab.com
         timeout-minutes: 1
       - name: Push Docker Image
+        if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
         run: docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }}
         timeout-minutes: 30
       - name: Tag & Push latest Docker Image
@@ -62,11 +63,20 @@ jobs:
         run: |
           docker image tag registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
           docker push registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.ref_name }}
+      - name: Store Image as artifact if running as fork
+        if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
+        run: docker save registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} > qa-image.tar
+      - name: Upload stored Images as artifact
+        if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
+        uses: actions/upload-artifact@v2
+        with:
+          name: qa-image
+          path: qa-image.tar
 
   qa:
     runs-on: ubuntu-latest
     needs:
-      - deploy-docker
+      - build-docker
     services:
       postgres:
         image: postgres:14.2
@@ -86,6 +96,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+      - name: Download stored image as artifact
+        if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
+        uses: actions/download-artifact@v2
+        with:
+          name: qa-image
+          path: qa-image.tar
+      - name: Load stored image if running as fork
+        if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
+        run: docker load -i qa-image.tar/qa-image.tar
       - name: Start backend
         run: |
           docker network create --subnet=172.16.0.0/16 backend-network

@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.3.0"
+    id("io.micronaut.application") version "3.3.2"
 }
 
 version = "0.1"
@@ -37,6 +37,8 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
+
+    implementation("ch.qos.logback:logback-classic")
 
     testImplementation("org.testcontainers:testcontainers:1.16.3")
     testImplementation("org.testcontainers:postgresql:1.16.3")
