@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities.auth;
+package club.devcord.devmarkt.graphql.user;
 
-import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
-import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
-import io.micronaut.data.jdbc.annotation.JoinTable;
+import club.devcord.devmarkt.entities.auth.UserId;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import jakarta.inject.Singleton;
 import java.util.Set;
 
-@MappedEntity("roles")
-@GraphQLType("RoleSuccess")
-public record Role(
-    @GeneratedValue @Id
-    Integer id,
-    String name,
-    @Relation(value = Kind.MANY_TO_MANY)
-    @JoinTable(name = "role_permissions")
-    Set<Permission> permissions
-) {
+@Singleton
+public class UserMutation implements GraphQLMutationResolver {
+
+  public Object createUser(UserId userId, Set<String> roles) {
+    return null;
+  }
+
+  public Object deleteUser(UserId userId) {
+    return null;
+  }
 
 }

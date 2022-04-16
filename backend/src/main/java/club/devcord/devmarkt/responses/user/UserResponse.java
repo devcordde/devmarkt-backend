@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities.auth;
+package club.devcord.devmarkt.responses.user;
 
-import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.Embeddable;
-import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.MappedProperty;
+import club.devcord.devmarkt.responses.Response;
 
-@GraphQLType("UserId")
-@Embeddable
-public record UserId(
-    @MappedProperty("id_type")
-    String type,
-    @MappedEntity("user_id")
-    long id) {
-  
+public sealed interface UserResponse extends Response permits UserSuccess, UserFailed {
+
+  @Override
+  default Object graphQlUnion() {
+    if (this instanceof UserSuccess success) {
+      return success.user();
+    }
+    return this;
+  }
 }

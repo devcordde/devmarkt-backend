@@ -15,6 +15,10 @@ type Query {
     ): RoleResponse!
 
     permissions: [Permission!]!
+
+    user(
+        id: UserIdInput!
+    ): UserResponse!
 }
 
 type Mutation {
@@ -67,6 +71,15 @@ type Mutation {
         roleName: String! @NotBlank
         permissions: [PermissionInput!]!
     ): RoleResponse!
+
+    createUser(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse!
+
+    deleteUser(
+        id: UserIdInput!
+    ): Boolean!
 }
 
 # common

@@ -16,17 +16,23 @@
 
 package club.devcord.devmarkt.entities.auth;
 
+import club.devcord.devmarkt.graphql.GraphQLType;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.jdbc.annotation.JoinTable;
 import java.util.Set;
 
+@GraphQLType("UserSuccess")
 @MappedEntity("users")
 public record User(
     @GeneratedValue @Id
     int id,
+    @Relation(Kind.EMBEDDED)
     UserId userId,
+    @Relation(Kind.MANY_TO_MANY)
     @JoinTable(name = "user_roles")
     Set<Role> roles
 ) {

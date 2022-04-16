@@ -20,6 +20,7 @@ import club.devcord.devmarkt.auth.AuthGraphQlInstruments;
 import graphql.GraphQL;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;
+import graphql.scalars.java.JavaPrimitives;
 import graphql.validation.rules.OnValidationErrorStrategy;
 import graphql.validation.rules.ValidationRules;
 import graphql.validation.schemawiring.ValidationSchemaWiring;
@@ -57,6 +58,8 @@ public class GraphQLFactory {
     addResolvers(resolver, builder);
     registerTypes(builder, context);
     initValidation(builder);
+
+    builder.scalars(JavaPrimitives.GraphQLLong);
 
     var schema = builder.build()
         .makeExecutableSchema();

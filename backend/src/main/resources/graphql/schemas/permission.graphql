@@ -3,6 +3,7 @@ enum Operation {
     MUTATION,
     SUBSCRIPTION
 }
+
 input PermissionInput {
     operation: Operation!
     query: String! @NotBlank

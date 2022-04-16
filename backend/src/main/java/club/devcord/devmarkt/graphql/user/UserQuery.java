@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities.auth;
+package club.devcord.devmarkt.graphql.user;
 
-import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.Embeddable;
-import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.MappedProperty;
+import club.devcord.devmarkt.entities.auth.UserId;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import jakarta.inject.Singleton;
 
-@GraphQLType("UserId")
-@Embeddable
-public record UserId(
-    @MappedProperty("id_type")
-    String type,
-    @MappedEntity("user_id")
-    long id) {
-  
+@Singleton
+public class UserQuery implements GraphQLQueryResolver {
+
+  public Object user(UserId userId) {
+    return null;
+  }
+
 }
