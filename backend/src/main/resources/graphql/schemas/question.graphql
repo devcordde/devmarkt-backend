@@ -1,8 +1,3 @@
-type Question {
-    question: String!
-    number: Int!
-}
-
 input QuestionInput {
     question: String! @NotBlank
     number: Int! @Min(value: 0)

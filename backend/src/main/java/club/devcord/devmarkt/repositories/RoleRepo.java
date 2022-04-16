@@ -79,7 +79,7 @@ public abstract class RoleRepo implements CrudRepository<Role, Integer> {
           SELECT id FROM roles WHERE name = ? LIMIT 1
         ),
         to_delete_perm AS (
-          SELECT id FROM permissions p
+          SELECT p.id, p.operation, p.query FROM permissions p
           WHERE
             (p.operation = 'QUERY'::operation AND p.query = ANY (?)) OR
             (p.operation = 'MUTATION'::operation AND p.query = ANY (?)) OR
@@ -91,6 +91,7 @@ public abstract class RoleRepo implements CrudRepository<Role, Integer> {
     return jdbcOperations.prepareStatement(query, statement -> {
       statement.setString(1, roleName);
       setPermissions(statement, permissions, 2);
+
       return statement.executeUpdate();
     });
   }

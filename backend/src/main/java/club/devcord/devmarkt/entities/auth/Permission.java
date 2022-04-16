@@ -19,13 +19,33 @@ package club.devcord.devmarkt.entities.auth;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.jdbc.annotation.ColumnTransformer;
+import java.util.Objects;
 
 @MappedEntity("permissions")
 public record Permission(
     @GeneratedValue @Id
     Integer id,
+    @ColumnTransformer(write = "?::operation")
     Operation operation,
     String query
 ) {
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Permission that = (Permission) o;
+        return operation == that.operation
+            && Objects.equals(query, that.query);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(operation, query);
+    }
 }

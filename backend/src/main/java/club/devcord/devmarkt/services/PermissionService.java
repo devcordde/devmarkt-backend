@@ -19,6 +19,7 @@ package club.devcord.devmarkt.services;
 import club.devcord.devmarkt.entities.auth.Permission;
 import club.devcord.devmarkt.repositories.PermissionRepo;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.Set;
 
 @Singleton
@@ -28,6 +29,26 @@ public class PermissionService {
 
   public PermissionService(PermissionRepo repo) {
     this.repo = repo;
+  }
+
+  public void updatePermissions(Collection<Permission> newPermissions) {
+    System.out.println(newPermissions);
+    var current = repo.findAll();
+    var toDelete = current
+        .stream()
+        .filter(permission -> !newPermissions.contains(permission))
+        .toList();
+    if (!toDelete.isEmpty()) {
+      repo.deleteAll(toDelete);
+    }
+
+    var toAdd = newPermissions
+        .stream()
+        .filter(permission -> !current.contains(permission))
+        .toList();
+    if (!toAdd.isEmpty()) {
+      repo.saveAll(toAdd);
+    }
   }
 
   public Set<Permission> permissions() {

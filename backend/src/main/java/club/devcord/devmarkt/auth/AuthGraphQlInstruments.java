@@ -53,6 +53,8 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       bridge.authentication((String) token)
           .ifPresentOrElse(authentication -> {
             var userId = authentication.getName();
+            parameters.getExecutionContext().getDocument().getDefinitions()
+                .forEach(System.out::println);
               // TODO: Implement permission checking
           }, () -> {
             future.complete(new UnauthenticatedError().toResult());

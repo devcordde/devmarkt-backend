@@ -2,7 +2,7 @@ union TemplateResponse = TemplateSuccess | TemplateFailed
 
 type TemplateSuccess {
     name: String!
-    questions: [Question!]!
+    questions: [QuestionSuccess!]!
 }
 
 type TemplateFailed implements Error {
