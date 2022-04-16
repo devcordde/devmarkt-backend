@@ -20,11 +20,6 @@ type RoleSuccess {
     permissions: [Permission!]!
 }
 
-type RoleSuccess2 {
-    name: String!
-    permissions: [Permission!]!
-}
-
 type RoleFailed implements Error {
     name: String!
     message: String!

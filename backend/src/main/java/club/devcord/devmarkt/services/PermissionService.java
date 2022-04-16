@@ -32,7 +32,6 @@ public class PermissionService {
   }
 
   public void updatePermissions(Collection<Permission> newPermissions) {
-    System.out.println(newPermissions);
     var current = repo.findAll();
     var toDelete = current
         .stream()
