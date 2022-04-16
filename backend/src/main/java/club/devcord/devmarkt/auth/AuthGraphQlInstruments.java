@@ -33,6 +33,8 @@ import graphql.language.FragmentSpread;
 import graphql.language.InlineFragment;
 import graphql.language.Selection;
 import graphql.language.SelectionSetContainer;
+import graphql.validation.ValidationError;
+import graphql.validation.ValidationErrorType;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Set;
@@ -107,7 +109,8 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       perm += "." + fragment.getTypeCondition().getName();
       return addChildren(fragment, perm, fragments);
     }
-    return null; // TODO: Throw error
+    abort(new ValidationError(ValidationErrorType.UnknownType, node.getSourceLocation(), "Unknown Type during permission generation"));
+    return null;
   }
 
   private Stream<String> addChildren(SelectionSetContainer<?> field, String perm, Map<String, FragmentDefinition> fragments) {
