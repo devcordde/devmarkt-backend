@@ -44,6 +44,8 @@ const modifiedFiles = danger.git.created_files
 .concat(danger.git.deleted_files)
 .concat(danger.git.modified_files);
 
+const notAddedFiles = danger.git.deleted_files.concat(danger.git.modified_files);
+
 // PR checks (assignee, labels, milestone)
 if (danger.github) {
   if (
@@ -85,6 +87,16 @@ if (modifiedFiles.some(file => file.includes(".idea"))) {
 if(modifiedFiles.some(file => file.includes("src/main/resources/db/seeder"))
     !== modifiedFiles.some(file => file.includes("src/test/java/club/devcord/devmarkt/Seed.java"))) {
   warn("The `Seed` class needs to be checked if it is up to date");
+}
+
+if(notAddedFiles.some(file => file.includes("src/main/resources/db/migrations"))
+    && danger.github?.pr?.base?.ref === 'main'
+) {
+  fail(`Migrations can't be changed (\`${
+    notAddedFiles
+    .filter(file => file.includes("src/main/resources/db/migrations"))
+    .join('`, `')
+  }\`)`);
 }
 
 // Linter
