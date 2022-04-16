@@ -40,6 +40,8 @@ import java.util.stream.Stream;
 @Singleton
 public class PermissionUpdater implements ApplicationEventListener<StartupEvent> {
 
+  public static final String PERMISSION_SEPARATOR = ".";
+
   private final PermissionService service;
   private final GraphQL graphQL;
 
@@ -78,11 +80,11 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
       return Stream.of();
     }
     if (definition instanceof GraphQLFieldDefinition type) {
-      return addChildren(type, perm + "." + type.getName(), false);
+      return addChildren(type, perm + PERMISSION_SEPARATOR + type.getName(), false);
     }
     if (definition instanceof GraphQLNamedSchemaElement element) {
       perm += includeName
-          ? "." + element.getName()
+          ? PERMISSION_SEPARATOR + element.getName()
           : "";
       return addChildren(element, perm, element instanceof GraphQLUnionType);
     }

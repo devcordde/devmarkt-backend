@@ -36,8 +36,10 @@ import graphql.language.SelectionSetContainer;
 import graphql.validation.ValidationError;
 import graphql.validation.ValidationErrorType;
 import jakarta.inject.Singleton;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,15 +75,24 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
     bridge.authentication((String) token)
         .ifPresentOrElse(authentication -> {
           var userId = authentication.getName();
+          var permissions = new HashSet<String>();
           for (var selection : context.getOperationDefinition().getSelectionSet().getSelections()) {
             if (!(selection instanceof Field field)) {
               LOGGER.warn("selection {} is no instance of Field", selection);
               abort(new SelectionNoFieldError(selection));
               return;
             }
-            addLevel(field, field.getName(), context.getFragmentsByName())
-                .forEach(System.out::println);
+            if (field.getSelectionSet() == null) {
+                permissions.add(field.getName());
+                continue;
+            }
+            permissions.addAll(addChildren(field, field.getName(), context.getFragmentsByName()).collect(
+                    Collectors.toSet()));
           }
+
+          permissions
+              .forEach(System.out::println);
+          //TODO: implement check
         }, () -> {
           abort(new InvalidTokenError(null, AuthError.UNAUTHENTICATED));
           LOGGER.warn("No authentication found for token {}", token);
@@ -94,19 +105,19 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       if (field.getName().startsWith("__")) {
         return Stream.of();
       }
-      perm += "." + field.getName();
+      perm += PermissionUpdater.PERMISSION_SEPARATOR + field.getName();
       if (field.getSelectionSet() == null) {
         return Stream.of(perm);
       }
       return addChildren(field, perm, fragments);
     }
     if (node instanceof InlineFragment inlineFragment) {
-      perm += "." + inlineFragment.getTypeCondition().getName();
+      perm += PermissionUpdater.PERMISSION_SEPARATOR + inlineFragment.getTypeCondition().getName();
       return addChildren(inlineFragment, perm, fragments);
     }
     if (node instanceof FragmentSpread fragmentSpread) {
       var fragment = fragments.get(fragmentSpread.getName());
-      perm += "." + fragment.getTypeCondition().getName();
+      perm += PermissionUpdater.PERMISSION_SEPARATOR + fragment.getTypeCondition().getName();
       return addChildren(fragment, perm, fragments);
     }
     abort(new ValidationError(ValidationErrorType.UnknownType, node.getSourceLocation(), "Unknown Type during permission generation"));
