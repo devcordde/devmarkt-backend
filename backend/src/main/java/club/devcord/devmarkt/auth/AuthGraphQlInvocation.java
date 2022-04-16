@@ -16,9 +16,9 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.results.AuthError;
-import club.devcord.devmarkt.auth.results.InvalidTokenError;
-import club.devcord.devmarkt.auth.results.UnauthenticatedError;
+import club.devcord.devmarkt.auth.error.AuthError;
+import club.devcord.devmarkt.auth.error.InvalidTokenError;
+import club.devcord.devmarkt.auth.error.UnauthenticatedError;
 import graphql.ExecutionResult;
 import io.micronaut.configuration.graphql.DefaultGraphQLInvocation;
 import io.micronaut.configuration.graphql.GraphQLInvocation;

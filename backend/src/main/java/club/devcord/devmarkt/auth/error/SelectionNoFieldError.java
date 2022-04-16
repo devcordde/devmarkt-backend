@@ -14,26 +14,34 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth.results;
+package club.devcord.devmarkt.auth.error;
 
 import graphql.ErrorClassification;
+import graphql.GraphQLError;
+import graphql.language.Selection;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public class UnauthenticatedError implements GraphQlErrorResult {
+public record SelectionNoFieldError(
+    Selection<?> selection
+) implements GraphQLError {
 
   @Override
   public String getMessage() {
-    return "No 'Authorization' variable provided";
+    return "Selection %s is no instance of Field".formatted(selection);
   }
 
   @Override
   public List<SourceLocation> getLocations() {
-    return null;
+    return List.of(selection.getSourceLocation());
   }
 
   @Override
   public ErrorClassification getErrorType() {
-    return AuthError.UNAUTHENTICATED;
+    return Error.SELECTION_IS_NO_FIELD;
+  }
+
+  private enum Error implements ErrorClassification {
+    SELECTION_IS_NO_FIELD
   }
 }

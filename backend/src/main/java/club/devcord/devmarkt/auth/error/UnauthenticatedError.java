@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth.results;
+package club.devcord.devmarkt.auth.error;
 
 import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public record InvalidTokenError(
-    String token,
-    AuthError error
-) implements GraphQlErrorResult {
+public class UnauthenticatedError implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "Invalid token %s".formatted(token);
+    return "No 'Authorization' variable provided";
   }
 
   @Override
@@ -37,6 +34,6 @@ public record InvalidTokenError(
 
   @Override
   public ErrorClassification getErrorType() {
-    return error;
+    return AuthError.UNAUTHENTICATED;
   }
 }

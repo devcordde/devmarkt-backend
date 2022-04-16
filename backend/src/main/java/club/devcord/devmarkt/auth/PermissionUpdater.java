@@ -21,6 +21,7 @@ import club.devcord.devmarkt.entities.auth.Permission;
 import club.devcord.devmarkt.services.PermissionService;
 import graphql.GraphQL;
 import graphql.schema.GraphQLEnumType;
+import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNamedSchemaElement;
@@ -28,6 +29,7 @@ import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchemaElement;
+import graphql.schema.GraphQLUnionType;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.http.server.exceptions.InternalServerException;
@@ -61,13 +63,13 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     type
         .getFieldDefinitions()
         .stream()
-        .flatMap(fieldDefinition -> addLevel(fieldDefinition.getChildren().get(0), fieldDefinition.getName()))
+        .flatMap(fieldDefinition -> addLevel(fieldDefinition.getChildren().get(0), fieldDefinition.getName(), false))
         .forEach(s -> set.add(new Permission(-1, operation, s)));
   }
 
-  private Stream<String> addLevel(GraphQLSchemaElement definition, String perm) {
+  private Stream<String> addLevel(GraphQLSchemaElement definition, String perm, boolean includeName) {
     if (definition instanceof GraphQLNonNull nonNull) {
-      return addLevel(nonNull.getWrappedType(), perm);
+      return addLevel(nonNull.getWrappedType(), perm, false);
     }
     if (definition instanceof GraphQLScalarType || definition instanceof GraphQLEnumType) {
       return Stream.of(perm);
@@ -75,18 +77,24 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     if (definition instanceof GraphQLInterfaceType) {
       return Stream.of();
     }
-    if (definition instanceof GraphQLNamedSchemaElement unionType) {
-      return addChildren(unionType, perm + "." + unionType.getName());
+    if (definition instanceof GraphQLFieldDefinition type) {
+      return addChildren(type, perm + "." + type.getName(), false);
+    }
+    if (definition instanceof GraphQLNamedSchemaElement element) {
+      perm += includeName
+          ? "." + element.getName()
+          : "";
+      return addChildren(element, perm, element instanceof GraphQLUnionType);
     }
     if (definition instanceof GraphQLList) {
-      return addChildren(definition, perm);
+      return addChildren(definition, perm, false);
     }
     throw new InternalServerException("You're an idiot :3");
   }
 
-  private Stream<String> addChildren(GraphQLSchemaElement schemaElement, String perm) {
+  private Stream<String> addChildren(GraphQLSchemaElement schemaElement, String perm, boolean includeName) {
     return schemaElement.getChildren()
         .stream()
-        .flatMap(e -> addLevel(e, perm));
+        .flatMap(e -> addLevel(e, perm, includeName));
   }
 }

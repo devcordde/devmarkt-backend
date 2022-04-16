@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth.results;
+package club.devcord.devmarkt.auth.error;
 
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;

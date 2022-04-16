@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth.results;
+package club.devcord.devmarkt.auth.error;
 
 import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public record UnauthorizedResult (
-    String operation,
-    String query,
-    SourceLocation location
+public record InvalidTokenError(
+    String token,
+    AuthError error
 ) implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "You're unauthorized to use '%s' @ '%s'.".formatted(query, operation);
+    return "Invalid token %s".formatted(token);
   }
 
   @Override
   public List<SourceLocation> getLocations() {
-    return List.of(location);
+    return null;
   }
 
   @Override
   public ErrorClassification getErrorType() {
-    return null;
+    return error;
   }
 }
