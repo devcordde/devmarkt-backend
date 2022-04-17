@@ -28,5 +28,5 @@ public record UserId(
     String type,
     @MappedEntity("user_id")
     long id) {
-  
+
 }

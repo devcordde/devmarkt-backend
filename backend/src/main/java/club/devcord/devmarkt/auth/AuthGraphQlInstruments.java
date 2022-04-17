@@ -59,7 +59,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
   }
 
   private void abort(GraphQLError error) {
-    throw  new AbortExecutionException(Set.of(error));
+    throw new AbortExecutionException(Set.of(error));
   }
 
   @Override
@@ -83,10 +83,11 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
               return;
             }
             if (field.getSelectionSet() == null) {
-                permissions.add(field.getName());
-                continue;
+              permissions.add(field.getName());
+              continue;
             }
-            permissions.addAll(addChildren(field, field.getName(), context.getFragmentsByName()).collect(
+            permissions.addAll(
+                addChildren(field, field.getName(), context.getFragmentsByName()).collect(
                     Collectors.toSet()));
           }
 
@@ -100,7 +101,8 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
     return SimpleInstrumentationContext.noOp();
   }
 
-  private Stream<String> addLevel(Selection<?> node, String perm, Map<String, FragmentDefinition> fragments) {
+  private Stream<String> addLevel(Selection<?> node, String perm,
+      Map<String, FragmentDefinition> fragments) {
     if (node instanceof Field field) {
       if (field.getName().startsWith("__")) {
         return Stream.of();
@@ -120,11 +122,13 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       perm += PermissionUpdater.PERMISSION_SEPARATOR + fragment.getTypeCondition().getName();
       return addChildren(fragment, perm, fragments);
     }
-    abort(new ValidationError(ValidationErrorType.UnknownType, node.getSourceLocation(), "Unknown Type during permission generation"));
+    abort(new ValidationError(ValidationErrorType.UnknownType, node.getSourceLocation(),
+        "Unknown Type during permission generation"));
     return null;
   }
 
-  private Stream<String> addChildren(SelectionSetContainer<?> field, String perm, Map<String, FragmentDefinition> fragments) {
+  private Stream<String> addChildren(SelectionSetContainer<?> field, String perm,
+      Map<String, FragmentDefinition> fragments) {
     return field
         .getSelectionSet()
         .getSelections()

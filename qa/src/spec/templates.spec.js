@@ -29,7 +29,8 @@ describe("Template Query", () => {
   })
 
   it("Lists all templates with questions and no name", async () => {
-    await testNamed("templates-only-questions.graphql", "templates-only-questions.json");
+    await testNamed("templates-only-questions.graphql",
+        "templates-only-questions.json");
   })
 })
 
@@ -46,14 +47,18 @@ describe("Template Mutation", () => {
 
   const createTemplate = load("create-template.graphql");
   const createTemplateSuccessResponse = load("create-template-success.json");
-  const createTemplateDuplicatedResponse = load("create-template-duplicated.json");
+  const createTemplateDuplicatedResponse = load(
+      "create-template-duplicated.json");
 
   it("Creates a template", async () => {
-    await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("Template"));
+    await test(createTemplate, createTemplateSuccessResponse,
+        templateCreateVars("Template"));
   })
 
   it("Does not create duplicate templates", async () => {
-    await test(createTemplate, createTemplateSuccessResponse, templateCreateVars("DuplicatedTemplate"));
-    await test(createTemplate, createTemplateDuplicatedResponse, templateCreateVars("DuplicatedTemplate"));
+    await test(createTemplate, createTemplateSuccessResponse,
+        templateCreateVars("DuplicatedTemplate"));
+    await test(createTemplate, createTemplateDuplicatedResponse,
+        templateCreateVars("DuplicatedTemplate"));
   })
 })

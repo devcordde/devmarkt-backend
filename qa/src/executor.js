@@ -45,7 +45,8 @@ export function testNamed(graphql, response, variables = {}) {
 }
 
 export function curryTestNamed(prefix) {
-  return (graphql, response, variables = {}) => testNamed(`${prefix}/${graphql}`, `${prefix}/${response}`, variables);
+  return (graphql, response, variables = {}) => testNamed(
+      `${prefix}/${graphql}`, `${prefix}/${response}`, variables);
 }
 
 export async function load(file) {

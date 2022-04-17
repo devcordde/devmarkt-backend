@@ -62,7 +62,8 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
         .flatMap(token -> Flux.from(validator.validateToken(token, httpRequest))
             .flatMap(authentication -> Flux.from(validateUserId(authentication))
                 .doOnNext(a -> cache.authentication(token, a))
-                .flatMap(a -> defaultGraphQLInvocation.invoke(invocationData, httpRequest, httpResponse))
+                .flatMap(
+                    a -> defaultGraphQLInvocation.invoke(invocationData, httpRequest, httpResponse))
                 .switchIfEmpty(
                     Mono.just(new InvalidTokenError(token, AuthError.INVALID_USERID).toResult()))
             )

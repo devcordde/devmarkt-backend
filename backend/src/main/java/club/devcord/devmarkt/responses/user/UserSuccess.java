@@ -22,4 +22,5 @@ import club.devcord.devmarkt.responses.Success;
 public record UserSuccess(
     User user
 ) implements UserResponse, Success {
+
 }

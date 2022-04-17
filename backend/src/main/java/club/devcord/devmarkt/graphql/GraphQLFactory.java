@@ -76,7 +76,8 @@ public class GraphQLFactory {
     }
   }
 
-  private void readSchemas(SchemaParserBuilder builder, String location, ResourceResolver resolver) {
+  private void readSchemas(SchemaParserBuilder builder, String location,
+      ResourceResolver resolver) {
     var reader = new SchemaResolver();
     try {
       reader.resolveSchemas(location, resolver)

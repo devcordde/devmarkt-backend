@@ -22,12 +22,10 @@ micronaut:
         cookie:
           enabled: false
     intercept-url-map:
-      -
-        pattern: /graphql
+      - pattern: /graphql
         access:
           - isAnonymous()
-      -
-        pattern: /graphiql
+      - pattern: /graphiql
         access:
           - isAnonymous()
 

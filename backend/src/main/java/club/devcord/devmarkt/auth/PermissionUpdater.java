@@ -60,16 +60,21 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     service.updatePermissions(set);
   }
 
-  private void addPermissions(HashSet<Permission> set, GraphQLObjectType type, Operation operation) {
-    if (type == null) return;
+  private void addPermissions(HashSet<Permission> set, GraphQLObjectType type,
+      Operation operation) {
+    if (type == null) {
+      return;
+    }
     type
         .getFieldDefinitions()
         .stream()
-        .flatMap(fieldDefinition -> addLevel(fieldDefinition.getChildren().get(0), fieldDefinition.getName(), false))
+        .flatMap(fieldDefinition -> addLevel(fieldDefinition.getChildren().get(0),
+            fieldDefinition.getName(), false))
         .forEach(s -> set.add(new Permission(-1, operation, s)));
   }
 
-  private Stream<String> addLevel(GraphQLSchemaElement definition, String perm, boolean includeName) {
+  private Stream<String> addLevel(GraphQLSchemaElement definition, String perm,
+      boolean includeName) {
     if (definition instanceof GraphQLNonNull nonNull) {
       return addLevel(nonNull.getWrappedType(), perm, false);
     }
@@ -94,7 +99,8 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     throw new InternalServerException("You're an idiot :3");
   }
 
-  private Stream<String> addChildren(GraphQLSchemaElement schemaElement, String perm, boolean includeName) {
+  private Stream<String> addChildren(GraphQLSchemaElement schemaElement, String perm,
+      boolean includeName) {
     return schemaElement.getChildren()
         .stream()
         .flatMap(e -> addLevel(e, perm, includeName));

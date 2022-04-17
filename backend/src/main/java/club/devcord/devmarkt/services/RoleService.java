@@ -44,7 +44,8 @@ public class RoleService {
 
   public RoleResponse create(String name, Set<Permission> permissions) {
     if (roleRepo.existsByName(name)) {
-      return new RoleFailed(name, "A role with the same name already exists.", RoleErrors.DUPLICATED);
+      return new RoleFailed(name, "A role with the same name already exists.",
+          RoleErrors.DUPLICATED);
     }
     var saved = roleRepo.save(new Role(-1, name, permissions));
     return new RoleSuccess(saved);

@@ -20,7 +20,7 @@ import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public record UnauthorizedResult (
+public record UnauthorizedResult(
     String operation,
     String query,
     SourceLocation location

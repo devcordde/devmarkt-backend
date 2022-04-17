@@ -116,14 +116,16 @@ public abstract class RoleRepo implements CrudRepository<Role, Integer> {
     });
   }
 
-  private void setPermissions(PreparedStatement statement, Collection<Permission> permissions, int start)
+  private void setPermissions(PreparedStatement statement, Collection<Permission> permissions,
+      int start)
       throws SQLException {
     statement.setArray(start, varcharSqlArray(permissions, Operation.QUERY));
-    statement.setArray(start+1, varcharSqlArray(permissions, Operation.MUTATION));
-    statement.setArray(start+2, varcharSqlArray(permissions, Operation.SUBSCRIPTION));
+    statement.setArray(start + 1, varcharSqlArray(permissions, Operation.MUTATION));
+    statement.setArray(start + 2, varcharSqlArray(permissions, Operation.SUBSCRIPTION));
   }
 
-  private Array varcharSqlArray(Collection<Permission> permissions, Operation operation) throws SQLException {
+  private Array varcharSqlArray(Collection<Permission> permissions, Operation operation)
+      throws SQLException {
     var queries = permissions
         .stream()
         .filter(p -> p.operation() == operation)
