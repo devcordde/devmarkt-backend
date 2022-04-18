@@ -16,15 +16,14 @@
 
 package club.devcord.devmarkt.entities.auth;
 
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
+import club.devcord.devmarkt.entities.EntityID;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.jdbc.annotation.ColumnTransformer;
 import java.util.Objects;
 
 @MappedEntity("permissions")
 public record Permission(
-    @GeneratedValue @Id
+    @EntityID
     Integer id,
     @ColumnTransformer(write = "?::operation")
     Operation operation,
