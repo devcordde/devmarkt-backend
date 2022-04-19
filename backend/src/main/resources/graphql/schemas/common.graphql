@@ -80,6 +80,16 @@ type Mutation {
     deleteUser(
         id: UserIdInput!
     ): Boolean!
+
+    addUserRoles(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse!
+
+    removeUserRoles(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse!
 }
 
 # common

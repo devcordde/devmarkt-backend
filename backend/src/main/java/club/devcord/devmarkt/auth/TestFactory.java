@@ -16,11 +16,13 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.repositories.PermissionRepo;
+import club.devcord.devmarkt.entities.auth.Permission;
+import club.devcord.devmarkt.repositories.UserRepo;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.beans.BeanIntrospection;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration;
 import java.util.List;
@@ -32,7 +34,13 @@ import java.util.Map;
 public class TestFactory {
 
   @Context
-  public String testLol(JwtTokenGenerator generator, BeanContext context, PermissionRepo repo) {
+  public String testLol(JwtTokenGenerator generator, BeanContext context, UserRepo repo) {
+
+    BeanIntrospection.getIntrospection(Permission.class)
+            .getRequiredProperty("id", Integer.class)
+                .getAnnotationNames()
+                    .forEach(System.out::println);
+
 
     System.out.println(generator.generateToken(Map.of(
         "sub", "abc:1234567890",

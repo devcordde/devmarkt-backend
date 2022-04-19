@@ -17,19 +17,35 @@
 package club.devcord.devmarkt.graphql.user;
 
 import club.devcord.devmarkt.entities.auth.UserId;
+import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.Set;
 
 @Singleton
 public class UserMutation implements GraphQLMutationResolver {
 
-  public Object createUser(UserId userId, Set<String> roles) {
-    return null;
+  public final UserService service;
+
+  public UserMutation(UserService service) {
+    this.service = service;
   }
 
-  public Object deleteUser(UserId userId) {
-    return null;
+  public Object createUser(UserId userId, Set<String> roles) {
+    return service.save(userId, roles).graphQlUnion();
+  }
+
+  public boolean deleteUser(UserId userId) {
+    return service.delete(userId);
+  }
+
+  public Object addUserRoles(UserId id, Collection<String> roles) {
+    return service.addUserRoles(id, roles).graphQlUnion();
+  }
+
+  public Object removeUserRoles(UserId id, Collection<String> roles) {
+    return service.removeUserRoles(id, roles).graphQlUnion();
   }
 
 }

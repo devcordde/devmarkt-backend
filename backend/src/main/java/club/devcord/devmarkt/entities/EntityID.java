@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities.auth;
+package club.devcord.devmarkt.entities;
 
-import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.Embeddable;
-import io.micronaut.data.annotation.MappedProperty;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@GraphQLType("UserId")
-@Embeddable
-public record UserId(
-    @MappedProperty("id_type")
-    String type,
-    @MappedProperty("user_id")
-    long id) {
-
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EntityID {
+  String value() default "id";
 }

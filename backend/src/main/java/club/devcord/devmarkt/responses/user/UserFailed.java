@@ -25,4 +25,14 @@ public record UserFailed(
     String message
 ) implements UserResponse, Fail {
 
+  public static class UserErrors {
+
+    public static final String NOT_FOUND = "NOT_FOUND";
+    public static final String DUPLICATED = "DUPLICATED";
+
+    private UserErrors() {
+
+    }
+  }
+
 }

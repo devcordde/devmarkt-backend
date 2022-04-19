@@ -23,7 +23,7 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.jdbc.annotation.JoinTable;
-import java.util.Set;
+import java.util.Collection;
 
 @GraphQLType("UserSuccess")
 @MappedEntity("users")
@@ -32,9 +32,9 @@ public record User(
     int id,
     @Relation(Kind.EMBEDDED)
     UserId userId,
-    @Relation(Kind.MANY_TO_MANY)
+    @Relation(Kind.ONE_TO_MANY)
     @JoinTable(name = "user_roles")
-    Set<Role> roles
+    Collection<Role> roles
 ) {
 
 }

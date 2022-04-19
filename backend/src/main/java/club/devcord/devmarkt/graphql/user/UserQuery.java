@@ -17,14 +17,21 @@
 package club.devcord.devmarkt.graphql.user;
 
 import club.devcord.devmarkt.entities.auth.UserId;
+import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
 
 @Singleton
 public class UserQuery implements GraphQLQueryResolver {
 
+  public final UserService service;
+
+  public UserQuery(UserService service) {
+    this.service = service;
+  }
+
   public Object user(UserId userId) {
-    return null;
+    return service.find(userId).graphQlUnion();
   }
 
 }
