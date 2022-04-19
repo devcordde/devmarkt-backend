@@ -63,10 +63,11 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
           .map(userId -> {
             var variables = new HashMap<>(invocationData.getVariables());
             variables.put("Authorization", userId);
-            return new GraphQLInvocationData(invocationData.getQuery(), invocationData.getOperationName(), variables);
+            return new GraphQLInvocationData(invocationData.getQuery(),
+                invocationData.getOperationName(), variables);
           })
           .map(data -> Mono.from(
-              defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
+                  defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
               .block())
           .orElseGet(() -> new UnauthorizedError().toResult());
     });

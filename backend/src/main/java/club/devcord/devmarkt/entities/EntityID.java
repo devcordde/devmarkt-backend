@@ -21,5 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EntityID {
+
   String value() default "id";
 }

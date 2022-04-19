@@ -39,7 +39,8 @@ public class UserService {
   public UserResponse find(UserId userId) {
     return repo.findByUserId(userId)
         .map(user -> (UserResponse) new UserSuccess(user))
-        .orElseGet(() -> new UserFailed(UserErrors.NOT_FOUND, "No user with the given id was found"));
+        .orElseGet(
+            () -> new UserFailed(UserErrors.NOT_FOUND, "No user with the given id was found"));
   }
 
   public boolean delete(UserId userId) {

@@ -37,10 +37,9 @@ public class TestFactory {
   public String testLol(JwtTokenGenerator generator, BeanContext context, UserRepo repo) {
 
     BeanIntrospection.getIntrospection(Permission.class)
-            .getRequiredProperty("id", Integer.class)
-                .getAnnotationNames()
-                    .forEach(System.out::println);
-
+        .getRequiredProperty("id", Integer.class)
+        .getAnnotationNames()
+        .forEach(System.out::println);
 
     System.out.println(generator.generateToken(Map.of(
         "sub", "abc:1234567890",
