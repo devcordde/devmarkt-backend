@@ -20,14 +20,11 @@ import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public record InvalidTokenError(
-    String token,
-    AuthError error
-) implements GraphQlErrorResult {
+public class UnauthorizedError implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "Invalid token %s".formatted(token);
+    return "No or invalid authentication token found.";
   }
 
   @Override
@@ -37,6 +34,11 @@ public record InvalidTokenError(
 
   @Override
   public ErrorClassification getErrorType() {
-    return error;
+    return Error.UNAUTHORIZED;
   }
+
+  private enum Error implements ErrorClassification {
+    UNAUTHORIZED
+  }
+
 }

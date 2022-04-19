@@ -16,9 +16,8 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.error.AuthError;
-import club.devcord.devmarkt.auth.error.InvalidTokenError;
-import club.devcord.devmarkt.auth.error.UnauthenticatedError;
+import club.devcord.devmarkt.auth.error.UnauthorizedError;
+import club.devcord.devmarkt.entities.auth.UserId;
 import graphql.ExecutionResult;
 import io.micronaut.configuration.graphql.DefaultGraphQLInvocation;
 import io.micronaut.configuration.graphql.GraphQLInvocation;
@@ -29,10 +28,11 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Singleton
@@ -43,45 +43,55 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
 
   private final JwtTokenValidator validator;
   private final DefaultGraphQLInvocation defaultGraphQLInvocation;
-  private final AuthenticationBridge cache;
 
   public AuthGraphQlInvocation(
       JwtTokenValidator validator,
-      DefaultGraphQLInvocation defaultGraphQLInvocation,
-      AuthenticationBridge cache) {
+      DefaultGraphQLInvocation defaultGraphQLInvocation) {
     this.validator = validator;
     this.defaultGraphQLInvocation = defaultGraphQLInvocation;
-    this.cache = cache;
   }
 
   @Override
   public Publisher<ExecutionResult> invoke(GraphQLInvocationData invocationData,
       HttpRequest httpRequest, MutableHttpResponse<String> httpResponse) {
 
-    return Flux.from(extractAuth(invocationData.getVariables()))
-        .flatMap(token -> Flux.from(validator.validateToken(token, httpRequest))
-            .flatMap(authentication -> Flux.from(validateUserId(authentication))
-                .doOnNext(a -> cache.authentication(token, a))
-                .flatMap(
-                    a -> defaultGraphQLInvocation.invoke(invocationData, httpRequest, httpResponse))
-                .switchIfEmpty(
-                    Mono.just(new InvalidTokenError(token, AuthError.INVALID_USERID).toResult()))
-            )
-            .switchIfEmpty(
-                Mono.just(new InvalidTokenError(token, AuthError.INVALID_TOKEN).toResult()))
-        )
-        .switchIfEmpty(Mono.just(new UnauthenticatedError().toResult()));
+    return Mono.fromCallable(() -> {
+      var token = extractToken(invocationData.getVariables());
+      return token
+          .map(s -> Mono.from(validator.validateToken(s, httpRequest)).block())
+          .flatMap(this::validateAndParseUserId)
+          .map(userId -> {
+            var variables = new HashMap<>(invocationData.getVariables());
+            variables.put("Authorization", userId);
+            return new GraphQLInvocationData(invocationData.getQuery(), invocationData.getOperationName(), variables);
+          })
+          .map(data -> Mono.from(
+              defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
+              .block())
+          .orElseGet(() -> new UnauthorizedError().toResult());
+    });
   }
 
-  private Publisher<Authentication> validateUserId(Authentication authentication) {
-    return Mono.just(authentication.getName())
-        .filter(name -> name != null && USERID_REGEX.matcher(name).matches())
-        .map(s -> authentication);
-  }
-
-  private Publisher<String> extractAuth(Map<String, Object> vars) {
-    return Mono.justOrEmpty(vars.get("Authorization"))
+  private Optional<String> extractToken(Map<String, Object> vars) {
+    return Optional.ofNullable(vars.get("Authorization"))
         .filter(o -> o instanceof String)
         .map(o -> (String) o);
+  }
+
+  private UserId parseUserIdUnsafe(String token) {
+    var array = token.split(":", 2);
+    var type = array[0];
+    try {
+      long id = Long.parseLong(array[1]);
+      return new UserId(type, id);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
+  private Optional<UserId> validateAndParseUserId(Authentication authentication) {
+    return Optional.ofNullable(authentication.getName())
+        .filter(name -> USERID_REGEX.matcher(name).matches())
+        .map(this::parseUserIdUnsafe);
   }
 }

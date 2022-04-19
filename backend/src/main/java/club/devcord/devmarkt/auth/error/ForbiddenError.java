@@ -20,20 +20,28 @@ import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
 import java.util.List;
 
-public class UnauthenticatedError implements GraphQlErrorResult {
+public record ForbiddenError(
+    String operation,
+    String query,
+    SourceLocation location
+) implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "No 'Authorization' variable provided";
+    return "You're forbidden to use '%s' @ '%s'.".formatted(query, operation);
   }
 
   @Override
   public List<SourceLocation> getLocations() {
-    return null;
+    return List.of(location);
   }
 
   @Override
   public ErrorClassification getErrorType() {
-    return AuthError.UNAUTHENTICATED;
+    return Error.FORBIDDEN;
+  }
+
+  private enum Error implements ErrorClassification {
+    FORBIDDEN
   }
 }

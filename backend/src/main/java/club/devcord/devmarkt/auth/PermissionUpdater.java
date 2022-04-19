@@ -65,8 +65,7 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     if (type == null) {
       return;
     }
-    type
-        .getFieldDefinitions()
+    type.getFieldDefinitions()
         .stream()
         .flatMap(fieldDefinition -> addLevel(fieldDefinition.getChildren().get(0),
             fieldDefinition.getName(), false))

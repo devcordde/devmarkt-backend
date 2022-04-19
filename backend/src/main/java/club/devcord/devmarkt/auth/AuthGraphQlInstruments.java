@@ -16,10 +16,11 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.error.AuthError;
-import club.devcord.devmarkt.auth.error.InvalidTokenError;
 import club.devcord.devmarkt.auth.error.SelectionNoFieldError;
+import club.devcord.devmarkt.auth.error.UnauthorizedError;
+import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.services.PermissionService;
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQLError;
 import graphql.execution.AbortExecutionException;
@@ -49,56 +50,50 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthGraphQlInstruments.class);
 
-  private final AuthenticationBridge bridge;
   private final PermissionService permissionService;
 
-  public AuthGraphQlInstruments(AuthenticationBridge authCache,
-      PermissionService permissionService) {
-    this.bridge = authCache;
+  public AuthGraphQlInstruments(PermissionService permissionService) {
     this.permissionService = permissionService;
-  }
-
-  private void abort(GraphQLError error) {
-    throw new AbortExecutionException(Set.of(error));
   }
 
   @Override
   public InstrumentationContext<ExecutionResult> beginExecuteOperation(
       InstrumentationExecuteOperationParameters parameters) {
     var context = parameters.getExecutionContext();
-    var token = context.getExecutionInput().getVariables().get("Authorization");
-    if (token == null) {
-      LOGGER.warn("No token found on authorisation step");
-      abort(new InvalidTokenError(null, AuthError.INVALID_TOKEN));
+    var userId = extractUserId(context.getExecutionInput());
+    var permissions = new HashSet<String>();
+    for (var selection : context.getOperationDefinition().getSelectionSet().getSelections()) {
+      if (!(selection instanceof Field field)) {
+        LOGGER.warn("selection {} is no instance of Field", selection);
+        abort(new SelectionNoFieldError(selection));
+        return SimpleInstrumentationContext.noOp();
+      }
+      if (field.getSelectionSet() == null) {
+        permissions.add(field.getName());
+        continue;
+      }
+      permissions.addAll(
+          addChildren(field, field.getName(), context.getFragmentsByName()).collect(
+              Collectors.toSet()));
     }
 
-    bridge.authentication((String) token)
-        .ifPresentOrElse(authentication -> {
-          var userId = authentication.getName();
-          var permissions = new HashSet<String>();
-          for (var selection : context.getOperationDefinition().getSelectionSet().getSelections()) {
-            if (!(selection instanceof Field field)) {
-              LOGGER.warn("selection {} is no instance of Field", selection);
-              abort(new SelectionNoFieldError(selection));
-              return;
-            }
-            if (field.getSelectionSet() == null) {
-              permissions.add(field.getName());
-              continue;
-            }
-            permissions.addAll(
-                addChildren(field, field.getName(), context.getFragmentsByName()).collect(
-                    Collectors.toSet()));
-          }
-
-          permissions
-              .forEach(System.out::println);
-          //TODO: implement check
-        }, () -> {
-          abort(new InvalidTokenError(null, AuthError.UNAUTHENTICATED));
-          LOGGER.warn("No authentication found for token {}", token);
-        });
+    permissions
+        .forEach(System.out::println);
+    //TODO: implement check
     return SimpleInstrumentationContext.noOp();
+  }
+
+  private UserId extractUserId(ExecutionInput input) {
+    var value = input.getVariables().get("Authorization");
+    if (!(value instanceof UserId userId)) {
+      abort(new UnauthorizedError());
+      return null;
+    }
+    return userId;
+  }
+
+  private void abort(GraphQLError error) {
+    throw new AbortExecutionException(Set.of(error));
   }
 
   private Stream<String> addLevel(Selection<?> node, String perm,

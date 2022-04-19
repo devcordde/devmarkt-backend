@@ -28,7 +28,7 @@ public record SelectionNoFieldError(
 
   @Override
   public String getMessage() {
-    return "Selection %s is no instance of Field".formatted(selection);
+    return "Selection %s is no Field".formatted(selection);
   }
 
   @Override
