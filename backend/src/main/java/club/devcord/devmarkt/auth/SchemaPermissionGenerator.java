@@ -45,28 +45,28 @@ public class SchemaPermissionGenerator {
 
   public Collection<Permission> generate(GraphQLSchema schema) {
     var permissionSet = new HashSet<Permission>();
-    permissionSet.addAll(generatePermissions(schema.getQueryType(), Operation.QUERY));
-    permissionSet.addAll(generatePermissions(schema.getMutationType(), Operation.MUTATION));
-    permissionSet.addAll(generatePermissions(schema.getSubscriptionType(), Operation.QUERY));
+    permissionSet.addAll(generateOperation(schema.getQueryType(), Operation.QUERY));
+    permissionSet.addAll(generateOperation(schema.getMutationType(), Operation.MUTATION));
+    permissionSet.addAll(generateOperation(schema.getSubscriptionType(), Operation.QUERY));
     return permissionSet;
   }
 
-  private Collection<Permission> generatePermissions(GraphQLObjectType type, Operation operation) {
+  private Collection<Permission> generateOperation(GraphQLObjectType type, Operation operation) {
     if (type == null) {
       return Set.of();
     }
     return type.getFieldDefinitions()
         .stream()
-        .flatMap(element -> addLayer(element.getChildren().get(0), element.getName(),
+        .flatMap(element -> generateLayer(element.getChildren().get(0), element.getName(),
             type)) // first child is the return type, we always have one here
         .map(s -> new Permission(-1, operation, s))
         .collect(Collectors.toSet());
   }
 
-  private Stream<String> addLayer(GraphQLSchemaElement element, String perm,
+  private Stream<String> generateLayer(GraphQLSchemaElement element, String perm,
       GraphQLSchemaElement parent) {
     if (element instanceof GraphQLNonNull nonNull) {
-      return addLayer(nonNull.getWrappedType(), perm, nonNull); // unwrap single type
+      return generateLayer(nonNull.getWrappedType(), perm, nonNull); // unwrap single type
     }
     if (element instanceof GraphQLScalarType || element instanceof GraphQLEnumType) {
       return Stream.of(perm); // finalize this permission
@@ -75,14 +75,14 @@ public class SchemaPermissionGenerator {
         || element instanceof GraphQLUnionType) { // unwrap multiple union and list types
       return element.getChildren()
           .stream()
-          .flatMap(e -> addLayer(e, perm, element));
+          .flatMap(e -> generateLayer(e, perm, element));
     }
     if (element instanceof GraphQLObjectType objectType) {
       return element.getChildren()
           .stream()
           .flatMap(e -> {
             // Skip interface fields, they will be added as part of the interface type later
-            if (isInterfaceField(e, objectType)) {
+            if (isParentInterfaceField(e, objectType)) {
               return Stream.of();
             }
 
@@ -90,22 +90,22 @@ public class SchemaPermissionGenerator {
             // they will be passed to the addLayer method later, but we want the interface name and not the
             // object type name in the permission, so we need to exclude them
             var newPerm = parent instanceof GraphQLUnionType && !(e instanceof GraphQLInterfaceType)
-                ? addPermissionNode(perm, objectType.getName())
+                ? addNode(perm, objectType.getName())
                 : perm;
 
-            return addLayer(e, newPerm, objectType);
+            return generateLayer(e, newPerm, objectType);
           });
     }
     if (element instanceof GraphQLNamedSchemaElement namedElement) { // add named schema elements e.g. fields or interface with its name to the permission
       return namedElement
           .getChildren()
           .stream()
-          .flatMap(e -> addLayer(e, addPermissionNode(perm, namedElement.getName()), namedElement));
+          .flatMap(e -> generateLayer(e, addNode(perm, namedElement.getName()), namedElement));
     }
     throw new InternalServerException("You're an idiot :3");
   }
 
-  private boolean isInterfaceField(GraphQLSchemaElement element, GraphQLNamedSchemaElement type) {
+  private boolean isParentInterfaceField(GraphQLSchemaElement element, GraphQLNamedSchemaElement type) {
     return type instanceof GraphQLImplementingType implementingType
         && element instanceof GraphQLFieldDefinition named
         && implementingType
@@ -115,7 +115,7 @@ public class SchemaPermissionGenerator {
         .anyMatch(i -> i.getFieldDefinition(named.getName()) != null);
   }
 
-  private String addPermissionNode(String perm, String node) {
+  private String addNode(String perm, String node) {
     return perm + PERMISSION_SEPARATOR + node;
   }
 

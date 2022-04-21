@@ -16,7 +16,6 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.error.SelectionNoFieldError;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.services.PermissionService;
@@ -28,20 +27,8 @@ import graphql.execution.instrumentation.InstrumentationContext;
 import graphql.execution.instrumentation.SimpleInstrumentation;
 import graphql.execution.instrumentation.SimpleInstrumentationContext;
 import graphql.execution.instrumentation.parameters.InstrumentationExecuteOperationParameters;
-import graphql.language.Field;
-import graphql.language.FragmentDefinition;
-import graphql.language.FragmentSpread;
-import graphql.language.InlineFragment;
-import graphql.language.Selection;
-import graphql.language.SelectionSetContainer;
-import graphql.validation.ValidationError;
-import graphql.validation.ValidationErrorType;
 import jakarta.inject.Singleton;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,25 +48,12 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       InstrumentationExecuteOperationParameters parameters) {
     var context = parameters.getExecutionContext();
     var userId = extractUserId(context.getExecutionInput());
-    var permissions = new HashSet<String>();
-    for (var selection : context.getOperationDefinition().getSelectionSet().getSelections()) {
-      if (!(selection instanceof Field field)) {
-        LOGGER.warn("selection {} is no instance of Field", selection);
-        abort(new SelectionNoFieldError(selection));
-        return SimpleInstrumentationContext.noOp();
-      }
-      if (field.getSelectionSet() == null) {
-        permissions.add(field.getName());
-        continue;
-      }
-      permissions.addAll(
-          addChildren(field, field.getName(), context.getFragmentsByName()).collect(
-              Collectors.toSet()));
-    }
+    var generator = new QueryPermissionGenerator(context.getFragmentsByName(), context.getGraphQLSchema(),
+        context.getOperationDefinition());
 
-    permissions
-        .forEach(System.out::println);
-    //TODO: implement check
+    var permissions = generator.generate();
+    permissions.forEach(System.out::println);
+
     return SimpleInstrumentationContext.noOp();
   }
 
@@ -94,40 +68,5 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
 
   private void abort(GraphQLError error) {
     throw new AbortExecutionException(Set.of(error));
-  }
-
-  private Stream<String> addLevel(Selection<?> node, String perm,
-      Map<String, FragmentDefinition> fragments) {
-    if (node instanceof Field field) {
-      if (field.getName().startsWith("__")) {
-        return Stream.of();
-      }
-      perm += PermissionUpdater.PERMISSION_SEPARATOR + field.getName();
-      if (field.getSelectionSet() == null) {
-        return Stream.of(perm);
-      }
-      return addChildren(field, perm, fragments);
-    }
-    if (node instanceof InlineFragment inlineFragment) {
-      perm += PermissionUpdater.PERMISSION_SEPARATOR + inlineFragment.getTypeCondition().getName();
-      return addChildren(inlineFragment, perm, fragments);
-    }
-    if (node instanceof FragmentSpread fragmentSpread) {
-      var fragment = fragments.get(fragmentSpread.getName());
-      perm += PermissionUpdater.PERMISSION_SEPARATOR + fragment.getTypeCondition().getName();
-      return addChildren(fragment, perm, fragments);
-    }
-    abort(new ValidationError(ValidationErrorType.UnknownType, node.getSourceLocation(),
-        "Unknown Type during permission generation"));
-    return null;
-  }
-
-  private Stream<String> addChildren(SelectionSetContainer<?> field, String perm,
-      Map<String, FragmentDefinition> fragments) {
-    return field
-        .getSelectionSet()
-        .getSelections()
-        .stream()
-        .flatMap(node -> addLevel(node, perm, fragments));
   }
 }
