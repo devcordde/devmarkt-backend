@@ -16,9 +16,9 @@
 
 package club.devcord.devmarkt.repositories;
 
-import club.devcord.devmarkt.entities.auth.Operation;
 import club.devcord.devmarkt.entities.auth.Permission;
 import club.devcord.devmarkt.entities.auth.Role;
+import graphql.language.OperationDefinition.Operation;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Join.Type;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;

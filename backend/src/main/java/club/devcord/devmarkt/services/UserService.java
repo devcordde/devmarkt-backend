@@ -24,8 +24,10 @@ import club.devcord.devmarkt.responses.user.UserFailed;
 import club.devcord.devmarkt.responses.user.UserFailed.UserErrors;
 import club.devcord.devmarkt.responses.user.UserResponse;
 import club.devcord.devmarkt.responses.user.UserSuccess;
+import graphql.language.OperationDefinition.Operation;
 import jakarta.inject.Singleton;
 import java.util.Collection;
+import java.util.Set;
 
 @Singleton
 public class UserService {
@@ -34,6 +36,10 @@ public class UserService {
 
   public UserService(UserRepo repo) {
     this.repo = repo;
+  }
+
+  public Set<String> checkPermissions(Operation operation, Collection<String> permissions, UserId userId) {
+    return repo.checkPermissions(userId, permissions, operation);
   }
 
   public UserResponse find(UserId userId) {

@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.entities.auth.Operation;
 import club.devcord.devmarkt.entities.auth.Permission;
+import graphql.language.OperationDefinition.Operation;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLImplementingType;

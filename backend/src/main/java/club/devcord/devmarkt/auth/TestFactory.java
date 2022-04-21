@@ -42,7 +42,7 @@ public class TestFactory {
         .forEach(System.out::println);
 
     System.out.println(generator.generateToken(Map.of(
-        "sub", "abc:1234567890",
+        "sub", "test:123",
         "roles", List.of("USER"),
         "iat", 1516239022
     )).get());

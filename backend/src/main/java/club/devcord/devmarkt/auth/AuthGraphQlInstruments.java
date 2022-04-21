@@ -16,9 +16,10 @@
 
 package club.devcord.devmarkt.auth;
 
+import club.devcord.devmarkt.auth.QueryPermissionGenerator.UnknownTypeException;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
-import club.devcord.devmarkt.services.PermissionService;
+import club.devcord.devmarkt.services.UserService;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQLError;
@@ -27,6 +28,8 @@ import graphql.execution.instrumentation.InstrumentationContext;
 import graphql.execution.instrumentation.SimpleInstrumentation;
 import graphql.execution.instrumentation.SimpleInstrumentationContext;
 import graphql.execution.instrumentation.parameters.InstrumentationExecuteOperationParameters;
+import graphql.validation.ValidationError;
+import graphql.validation.ValidationErrorType;
 import jakarta.inject.Singleton;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -37,10 +40,10 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthGraphQlInstruments.class);
 
-  private final PermissionService permissionService;
+  private final UserService userService;
 
-  public AuthGraphQlInstruments(PermissionService permissionService) {
-    this.permissionService = permissionService;
+  public AuthGraphQlInstruments(UserService userService) {
+    this.userService = userService;
   }
 
   @Override
@@ -50,10 +53,19 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
     var userId = extractUserId(context.getExecutionInput());
     var generator = new QueryPermissionGenerator(context.getFragmentsByName(), context.getGraphQLSchema(),
         context.getOperationDefinition());
-
-    var permissions = generator.generate();
-    permissions.forEach(System.out::println);
-
+    try {
+      var permissions = generator.generate();
+      userService.checkPermissions(context.getOperationDefinition().getOperation(),
+          permissions, userId)
+          .forEach(System.out::println);
+    } catch (UnknownTypeException typeException) {
+      var error = ValidationError.newValidationError()
+          .validationErrorType(ValidationErrorType.UnknownType)
+          .sourceLocation(typeException.sourceLocation())
+          .description("Unknown type found during permission generation.")
+          .build();
+      abort(error);
+    }
     return SimpleInstrumentationContext.noOp();
   }
 

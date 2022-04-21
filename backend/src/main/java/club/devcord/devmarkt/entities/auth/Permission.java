@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.entities.auth;
 
+import graphql.language.OperationDefinition.Operation;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
