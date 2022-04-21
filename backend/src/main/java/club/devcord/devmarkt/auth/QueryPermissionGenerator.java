@@ -63,7 +63,7 @@ public class QueryPermissionGenerator {
             .collect(Collectors.toSet());
         permissions.addAll(newPermissions);
       } else {
-        throw new UnknownTypeException(null);
+        throw new UnknownTypeException(selection.getSourceLocation());
       }
     }
     return permissions;
