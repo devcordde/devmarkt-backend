@@ -56,7 +56,8 @@ public abstract class UserRepo implements CrudRepository<User, Integer> {
         INSERT INTO user_roles
             SELECT u.id, r.id FROM users u
               JOIN roles r ON r.name = ANY (?)
-            WHERE u.id_type = ? AND u.user_id = ?;
+            WHERE u.id_type = ? AND u.user_id = ?
+        ON CONFLICT DO NOTHING;
         """;
     operations.prepareStatement(sql, statement -> {
       statement.setArray(1, stringSqlArray(roleNames));

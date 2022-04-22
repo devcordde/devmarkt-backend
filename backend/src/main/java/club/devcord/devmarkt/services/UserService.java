@@ -66,8 +66,12 @@ public class UserService {
         .collect(Collectors.toSet());
   }
 
+  public boolean exists(UserId userId) {
+    return repo.existsByUserId(userId);
+  }
+
   private boolean isIntrospection(String perm) {
-    return perm.startsWith("__", perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
+    return perm.startsWith("__", perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR) + 1);
   }
 
   private boolean containsBeginsWith(Collection<String> set, String begin) {

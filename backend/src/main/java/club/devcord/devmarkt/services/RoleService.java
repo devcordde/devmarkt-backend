@@ -35,6 +35,10 @@ public class RoleService {
     this.roleRepo = roleRepo;
   }
 
+  public boolean exist(String name) {
+    return roleRepo.existsByName(name);
+  }
+
   public RoleResponse find(String name) {
     return roleRepo.findByName(name)
         .map(role -> (RoleResponse) new RoleSuccess(role))

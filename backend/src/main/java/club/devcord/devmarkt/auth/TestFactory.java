@@ -46,6 +46,12 @@ public class TestFactory {
         "roles", List.of("USER"),
         "iat", 1516239022
     )).get());
+
+    System.out.println(generator.generateToken(Map.of(
+        "sub", "internal:1",
+        "roles", List.of("USER"),
+        "iat", 1516239022
+    )).get());
     return "";
   }
 
