@@ -63,7 +63,7 @@ The id is a 64 bit long signed integer, often named long or int64.
 Together, they represent a unique identifier and should be treated as such.
 Users aren't always be real persons.
 
-The type "internal" is reserved by the backend and can't be used.
+The type "internal" is reserved by the backend and can't be used to create or modify users.
 
 ## The GraphQL API
 
