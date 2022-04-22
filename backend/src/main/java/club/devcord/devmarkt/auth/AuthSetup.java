@@ -27,7 +27,7 @@ import jakarta.inject.Singleton;
 import java.util.Set;
 
 @Singleton
-public class PermissionUpdater implements ApplicationEventListener<StartupEvent> {
+public class AuthSetup implements ApplicationEventListener<StartupEvent> {
 
   private final PermissionService permissionService;
   private final UserService userService;
@@ -36,7 +36,7 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
   private final GraphQL graphQL;
   private final SchemaPermissionGenerator schemaPermissionGenerator;
 
-  public PermissionUpdater(PermissionService service, GraphQL graphQL,
+  public AuthSetup(PermissionService service, GraphQL graphQL,
       SchemaPermissionGenerator schemaPermissionGenerator,
       UserService userService, RoleService roleService) {
     this.permissionService = service;
@@ -73,7 +73,7 @@ public class PermissionUpdater implements ApplicationEventListener<StartupEvent>
     if (exists) {
       userService.addUserRolesUnsafe(Admins.ADMIN_USERID, Set.of(Admins.ADMIN_ROLE_NAME));
     } else {
-      userService.save(Admins.ADMIN_USERID, Set.of(Admins.ADMIN_ROLE_NAME));
+      userService.saveUnsafe(Admins.ADMIN_USERID, Set.of(Admins.ADMIN_ROLE_NAME));
     }
   }
 }

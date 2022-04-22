@@ -18,7 +18,6 @@ package club.devcord.devmarkt.services;
 
 import club.devcord.devmarkt.auth.SchemaPermissionGenerator;
 import club.devcord.devmarkt.entities.auth.Permission;
-import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
@@ -94,15 +93,16 @@ public class UserService {
     return repo.deleteByUserId(userId) >= 1;
   }
 
+  public void saveUnsafe(UserId userId, Collection<String> roles) {
+    repo.save(new User(-1, userId, null));
+    addUserRolesUnsafe(userId, roles);
+  }
+
   public UserResponse save(UserId userId, Collection<String> roles) {
     if (repo.existsByUserId(userId)) {
       return new UserFailed(UserErrors.DUPLICATED, "A user with the same id already exists");
     }
-    var mappedRoles = roles
-        .stream()
-        .map(s -> new Role(-1, s, null))
-        .toList();
-    repo.save(new User(-1, userId, mappedRoles));
+    repo.save(new User(-1, userId, null));
     return addUserRoles(userId, roles);
   }
 
