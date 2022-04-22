@@ -200,7 +200,7 @@ query {
 }
 ```
 
-We remind that rootOperation has these permissions:
+We recall that rootOperation has these permissions:
 - `QUERY: rootOperation.Fail.errorCode`
 - `QUERY: rootOperation.Success.field1`
 - `QUERY: rootOperation.Success.field2.someField1`
