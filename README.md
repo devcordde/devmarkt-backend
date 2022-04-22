@@ -99,7 +99,7 @@ So we decided to build our own system here.
 For the authentication part we decided to use a jwt, with a "sub" and "iat" claim.
 The "sub" claim contains a user id in the following format: "type:id". The id is passed in a decimal
 string representation.
-The "iat" claim is not always needed, in case of missing claim the jwt token
+The "exp" claim is not always needed, in case of missing claim the jwt token
 has no expiration date.
 The token must be passed by a variable called "Authorization" in a string format.
 
@@ -186,6 +186,7 @@ In the graphql api, permission are a type that consists of "operation" and "quer
 our "QUERY", which is member of an enum type "Operation".
 
 #### Introspections
+
 Introspections haven't real permissions, root level introspections such as `__schema` are allowed to all users.
 When it comes to type introspections e.g. `__typename` then the user need at least one parent permission.
 
