@@ -55,9 +55,9 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
   public Publisher<ExecutionResult> invoke(GraphQLInvocationData invocationData,
       HttpRequest httpRequest, MutableHttpResponse<String> httpResponse) {
 
-    return Mono.fromCallable(() -> {
-      var token = extractToken(invocationData.getVariables());
-      return token
+    var token = extractToken(invocationData.getVariables());
+    return Mono.from(
+      token
           .map(s -> Mono.from(validator.validateToken(s, httpRequest)).block())
           .flatMap(this::validateAndParseUserId)
           .map(userId -> {
@@ -66,11 +66,9 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
             return new GraphQLInvocationData(invocationData.getQuery(),
                 invocationData.getOperationName(), variables);
           })
-          .map(data -> Mono.from(
-                  defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
-              .block())
-          .orElseGet(() -> new UnauthorizedError().toResult());
-    });
+          .map(data -> defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
+          .orElseGet(() -> Mono.just(new UnauthorizedError().toResult()))
+    );
   }
 
   private Optional<String> extractToken(Map<String, Object> vars) {
