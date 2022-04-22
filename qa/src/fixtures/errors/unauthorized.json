@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "message": "No or invalid authentication token found.",
+      "extensions": {
+        "classification": "UNAUTHORIZED"
+      }
+    }
+  ]
+}
