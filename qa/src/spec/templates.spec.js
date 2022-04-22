@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-import test, {curryLoad, curryTestNamed} from "../executor.js";
+import test, {
+  Authorization, execute,
+  prefixedLoad,
+  prefixedTestNamed
+} from "../executor.js";
 
-const load = curryLoad("template");
-const testNamed = curryTestNamed("template");
+const load = prefixedLoad("template");
+const testNamed = prefixedTestNamed("template");
 
 describe("Template Query", () => {
   it("Lists all template names", async () => {
-
+    await testNamed("template-names.graphql", "template-names.json", {}, Authorization.ADMIN);
   })
 
   it("Lists all templates with questions", async () => {
-    await testNamed("templates.graphql", "templates.json");
+    await testNamed("templates.graphql", "templates.json", {}, Authorization.ADMIN);
   })
 
   it("Lists all templates with questions and no name", async () => {
     await testNamed("templates-only-questions.graphql",
-        "templates-only-questions.json");
+        "templates-only-questions.json", {}, Authorization.ADMIN);
   })
 })
 
@@ -52,13 +56,19 @@ describe("Template Mutation", () => {
 
   it("Creates a template", async () => {
     await test(createTemplate, createTemplateSuccessResponse,
-        templateCreateVars("Template"));
+        templateCreateVars("Template"), Authorization.ADMIN);
   })
 
   it("Does not create duplicate templates", async () => {
     await test(createTemplate, createTemplateSuccessResponse,
-        templateCreateVars("DuplicatedTemplate"));
+        templateCreateVars("DuplicatedTemplate"), Authorization.ADMIN);
     await test(createTemplate, createTemplateDuplicatedResponse,
-        templateCreateVars("DuplicatedTemplate"));
+        templateCreateVars("DuplicatedTemplate"), Authorization.ADMIN);
+  })
+
+  afterEach(async () => {
+    const removeQuery = await load("delete-template.graphql");
+    await execute(removeQuery, { name: "Template" }, Authorization.ADMIN);
+    await execute(removeQuery, { name: "DuplicatedTemplate" }, Authorization.ADMIN);
   })
 })
