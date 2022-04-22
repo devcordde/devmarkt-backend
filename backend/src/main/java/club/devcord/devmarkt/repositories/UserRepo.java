@@ -18,7 +18,6 @@ package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
-import graphql.language.OperationDefinition.Operation;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Join.Type;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
@@ -44,6 +43,7 @@ public abstract class UserRepo implements CrudRepository<User, Integer> {
   }
 
   @Join(value = "roles", type = Type.LEFT_FETCH)
+  @Join(value = "roles.permissions", type = Type.LEFT_FETCH)
   public abstract Optional<User> findByUserId(UserId userId);
 
   public abstract boolean existsByUserId(UserId userId);
@@ -83,31 +83,6 @@ public abstract class UserRepo implements CrudRepository<User, Integer> {
       statement.setLong(2, id.id());
       statement.setArray(3, stringSqlArray(roleNames));
       return statement.executeUpdate();
-    });
-  }
-
-  @Transactional
-  public Set<String> checkPermissions(UserId userId, Collection<String> permissions, Operation operation) {
-    var sql = """
-        WITH user_roles_cte AS (
-            SELECT ur.role_id AS id FROM user_roles ur
-                JOIN users u ON u.id_type = ? AND u.user_id = ?
-            WHERE ur.user_id = u.id
-        ),
-        permissions_cte AS (
-            SELECT p.query AS query FROM permissions p
-                JOIN role_permissions rp on rp.role_id IN (SELECT id FROM user_roles_cte)
-            WHERE p.id = rp.permission_id AND p.operation = ?::operation
-        )
-        SELECT * FROM unnest(?) AS query WHERE query NOT IN (SELECT query FROM permissions_cte);
-               """;
-    return operations.prepareStatement(sql, statement -> {
-      statement.setString(1, userId.type());
-      statement.setLong(2, userId.id());
-      statement.setString(3, operation.toString());
-      statement.setArray(4, stringSqlArray(permissions));
-      var result = statement.executeQuery();
-      return setFromResultSet(result, "query");
     });
   }
 

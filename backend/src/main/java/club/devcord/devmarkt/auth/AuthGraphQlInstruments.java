@@ -17,6 +17,7 @@
 package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.QueryPermissionGenerator.UnknownTypeException;
+import club.devcord.devmarkt.auth.error.ForbiddenError;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.services.UserService;
@@ -31,7 +32,9 @@ import graphql.execution.instrumentation.parameters.InstrumentationExecuteOperat
 import graphql.validation.ValidationError;
 import graphql.validation.ValidationErrorType;
 import jakarta.inject.Singleton;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,13 +54,22 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       InstrumentationExecuteOperationParameters parameters) {
     var context = parameters.getExecutionContext();
     var userId = extractUserId(context.getExecutionInput());
+    var operation = context.getOperationDefinition().getOperation();
     var generator = new QueryPermissionGenerator(context.getFragmentsByName(), context.getGraphQLSchema(),
         context.getOperationDefinition());
     try {
       var permissions = generator.generate();
-      userService.checkPermissions(context.getOperationDefinition().getOperation(),
-          permissions, userId)
-          .forEach(System.out::println);
+      System.out.println(permissions);
+      var unauthorizedPermissions = userService.checkPermissions(operation,
+          permissions, userId);
+      var forbiddenErrors = unauthorizedPermissions
+          .stream()
+          .map(s -> new ForbiddenError(operation, s))
+          .map(forbiddenError -> (GraphQLError) forbiddenError)
+          .collect(Collectors.toSet());
+      if (!forbiddenErrors.isEmpty()) {
+        abort(forbiddenErrors);
+      }
     } catch (UnknownTypeException typeException) {
       var error = ValidationError.newValidationError()
           .validationErrorType(ValidationErrorType.UnknownType)
@@ -78,7 +90,11 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
     return userId;
   }
 
+  private void abort(Collection<GraphQLError> errors) {
+    throw new AbortExecutionException(errors);
+  }
+
   private void abort(GraphQLError error) {
-    throw new AbortExecutionException(Set.of(error));
+    abort(Set.of(error));
   }
 }

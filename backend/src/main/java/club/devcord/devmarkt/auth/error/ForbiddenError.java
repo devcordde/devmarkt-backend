@@ -17,23 +17,23 @@
 package club.devcord.devmarkt.auth.error;
 
 import graphql.ErrorClassification;
+import graphql.language.OperationDefinition.Operation;
 import graphql.language.SourceLocation;
 import java.util.List;
 
 public record ForbiddenError(
-    String operation,
-    String query,
-    SourceLocation location
+    Operation operation,
+    String query
 ) implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "You're forbidden to use '%s' @ '%s'.".formatted(query, operation);
+    return "You're forbidden to use %s: %s.".formatted(operation, query);
   }
 
   @Override
   public List<SourceLocation> getLocations() {
-    return List.of(location);
+    return null;
   }
 
   @Override

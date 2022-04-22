@@ -97,9 +97,6 @@ public class QueryPermissionGenerator {
 
   private Stream<String> generateLayer(Selection<?> node, String perm, boolean unionMember) {
     if (node instanceof Field field) {
-      if (field.getName().startsWith("__")) {
-        return Stream.of(); // ignore introspection queries
-      }
       var newPerm = node(perm, field.getName());
       if (field.getSelectionSet() == null) {
         return Stream.of(newPerm);
