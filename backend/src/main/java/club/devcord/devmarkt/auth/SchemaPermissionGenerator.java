@@ -57,7 +57,7 @@ public class SchemaPermissionGenerator {
     }
     return type.getFieldDefinitions()
         .stream()
-        .flatMap(element -> generateLayer(element.getChildren().get(0), element.getName(),
+        .flatMap(element -> generateLayer(element.getType(), element.getName(),
             type)) // first child is the return type, we always have one here
         .map(s -> new Permission(-1, operation, s))
         .collect(Collectors.toSet());
