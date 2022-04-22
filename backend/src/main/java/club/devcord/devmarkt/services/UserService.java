@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.services;
 
+import club.devcord.devmarkt.auth.SchemaPermissionGenerator;
 import club.devcord.devmarkt.entities.auth.Permission;
 import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
@@ -52,13 +53,11 @@ public class UserService {
         .map(Permission::query)
         .collect(Collectors.toSet());
 
-    System.out.println(userPermissions);
-
     return permissions
         .stream()
         .filter(s -> {
           if (isIntrospection(s)) {
-            return !containsBeginsWith(userPermissions, s.substring(0, s.lastIndexOf(".")));
+            return !containsBeginsWith(userPermissions, s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR)));
           }
           return !userPermissions.contains(s);
         })
@@ -66,7 +65,7 @@ public class UserService {
   }
 
   private boolean isIntrospection(String perm) {
-    return perm.startsWith("__", perm.lastIndexOf("."));
+    return perm.startsWith("__", perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
   }
 
   private boolean containsBeginsWith(Collection<String> set, String begin) {

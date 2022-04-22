@@ -59,7 +59,6 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
         context.getOperationDefinition());
     try {
       var permissions = generator.generate();
-      System.out.println(permissions);
       var unauthorizedPermissions = userService.checkPermissions(operation,
           permissions, userId);
       var forbiddenErrors = unauthorizedPermissions
