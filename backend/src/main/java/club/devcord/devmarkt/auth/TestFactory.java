@@ -25,13 +25,16 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.beans.BeanIntrospection;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration;
-import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // used to create a valid jwt for development purposes
 @Factory
 @Requires(beans = {SecretSignatureConfiguration.class, JwtTokenGenerator.class})
 public class TestFactory {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(TestFactory.class);
 
   @Context
   public String testLol(JwtTokenGenerator generator, BeanContext context, UserRepo repo) {
@@ -41,15 +44,13 @@ public class TestFactory {
         .getAnnotationNames()
         .forEach(System.out::println);
 
-    System.out.println(generator.generateToken(Map.of(
+    LOGGER.info("test:123 user: " + generator.generateToken(Map.of(
         "sub", "test:123",
-        "roles", List.of("USER"),
         "iat", 1516239022
     )).get());
 
-    System.out.println(generator.generateToken(Map.of(
+    LOGGER.info("internal:1 user: " + generator.generateToken(Map.of(
         "sub", "internal:1",
-        "roles", List.of("USER"),
         "iat", 1516239022
     )).get());
     return "";
