@@ -105,7 +105,8 @@ public class SchemaPermissionGenerator {
     throw new InternalServerException("You're an idiot :3");
   }
 
-  private boolean isParentInterfaceField(GraphQLSchemaElement element, GraphQLNamedSchemaElement type) {
+  private boolean isParentInterfaceField(GraphQLSchemaElement element,
+      GraphQLNamedSchemaElement type) {
     return type instanceof GraphQLImplementingType implementingType
         && element instanceof GraphQLFieldDefinition named
         && implementingType

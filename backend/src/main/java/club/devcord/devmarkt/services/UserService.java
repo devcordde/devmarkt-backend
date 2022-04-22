@@ -40,7 +40,8 @@ public class UserService {
     this.repo = repo;
   }
 
-  public Collection<String> checkPermissions(Operation operation, Collection<String> permissions, UserId userId) {
+  public Collection<String> checkPermissions(Operation operation, Collection<String> permissions,
+      UserId userId) {
     var userOpt = repo.findByUserId(userId);
     if (userOpt.isEmpty()) {
       return permissions;
@@ -57,7 +58,8 @@ public class UserService {
         .stream()
         .filter(s -> {
           if (isIntrospection(s)) {
-            return !containsBeginsWith(userPermissions, s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR)));
+            return !containsBeginsWith(userPermissions,
+                s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR)));
           }
           return !userPermissions.contains(s);
         })

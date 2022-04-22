@@ -118,7 +118,8 @@ public class QueryPermissionGenerator {
     throw new UnknownTypeException(node.getSourceLocation());
   }
 
-  private Stream<String> fragmentSelections(TypeName typeName, SelectionSetContainer<?> setContainer,
+  private Stream<String> fragmentSelections(TypeName typeName,
+      SelectionSetContainer<?> setContainer,
       boolean unionMember, String perm) {
     var name = typeName.getName();
     var union = isUnion(schema.getType(name));
@@ -168,6 +169,7 @@ public class QueryPermissionGenerator {
   }
 
   public static class UnknownTypeException extends RuntimeException {
+
     private final SourceLocation sourceLocation;
 
     public UnknownTypeException(SourceLocation sourceLocation) {

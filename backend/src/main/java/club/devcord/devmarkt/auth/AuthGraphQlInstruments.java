@@ -55,7 +55,8 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
     var context = parameters.getExecutionContext();
     var userId = extractUserId(context.getExecutionInput());
     var operation = context.getOperationDefinition().getOperation();
-    var generator = new QueryPermissionGenerator(context.getFragmentsByName(), context.getGraphQLSchema(),
+    var generator = new QueryPermissionGenerator(context.getFragmentsByName(),
+        context.getGraphQLSchema(),
         context.getOperationDefinition());
     try {
       var permissions = generator.generate();

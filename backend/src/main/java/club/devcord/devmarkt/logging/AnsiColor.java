@@ -19,16 +19,6 @@ public enum AnsiColor {
   }
 
   /**
-   * Formats a string with the given ansi escape sequence
-   *
-   * @param stringToColorize the String to be colorized
-   * @return the colorized String
-   */
-  public String colorize(String stringToColorize) {
-    return ansi + stringToColorize + RESET.ansi;
-  }
-
-  /**
    * Strips all Ansi Escape Codes supported by this enum from the string
    *
    * @param coloredString the string to strip
@@ -45,5 +35,15 @@ public enum AnsiColor {
       }
     }
     return null;
+  }
+
+  /**
+   * Formats a string with the given ansi escape sequence
+   *
+   * @param stringToColorize the String to be colorized
+   * @return the colorized String
+   */
+  public String colorize(String stringToColorize) {
+    return ansi + stringToColorize + RESET.ansi;
   }
 }
