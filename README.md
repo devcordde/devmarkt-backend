@@ -207,7 +207,7 @@ We recall that rootOperation has these permissions:
 - `QUERY: rootOperation.Success.field2.someField2`
 
 our interest is only: `QUERY: rootOperation.Fail.errorCode`.
-We see in the query there isn't a field errorCode here, so you maid aspect there's no permissions generated.
+We see in the query there isn't a field errorCode here, so you would except there's no permissions generated.
 But in reality there is: `rootOperation.Fail.__typename` and the backend now looks for a permission that starts with:
 `rootOperation.Fail` the introspection (`__typename`) is removed. If the user now have a permission that starts with
 `rootOperation.Fail` the query is executed. For this example the permission would be:
