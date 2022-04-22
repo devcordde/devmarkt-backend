@@ -23,6 +23,7 @@ import club.devcord.devmarkt.responses.role.RoleFailed;
 import club.devcord.devmarkt.responses.role.RoleFailed.RoleErrors;
 import club.devcord.devmarkt.responses.role.RoleResponse;
 import club.devcord.devmarkt.responses.role.RoleSuccess;
+import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
 import java.util.Set;
 
@@ -46,6 +47,10 @@ public class RoleService {
             RoleErrors.NOT_FOUND));
   }
 
+  public void createUnsafe(String name, Set<Permission> permissions) {
+    roleRepo.save(new Role(-1, name, permissions));
+  }
+
   public RoleResponse create(String name, Set<Permission> permissions) {
     if (roleRepo.existsByName(name)) {
       return new RoleFailed(name, "A role with the same name already exists.",
@@ -56,15 +61,31 @@ public class RoleService {
   }
 
   public boolean delete(String name) {
+    if (Admins.isAdminRole(name)) {
+      return false;
+    }
+
     return roleRepo.deleteByName(name) == 1;
   }
 
   public RoleResponse removePermissions(String roleName, Set<Permission> permissions) {
+    if (Admins.isAdminRole(roleName)) {
+      return RoleFailed.adminModify();
+    }
+
     roleRepo.removePermissions(roleName, permissions);
     return find(roleName);
   }
 
+  public void addPermissionsUnsafe(String name, Set<Permission> permissions) {
+    roleRepo.addPermissions(name, permissions);
+  }
+
   public RoleResponse addPermissions(String name, Set<Permission> permissions) {
+    if (Admins.isAdminRole(name)) {
+      return RoleFailed.adminModify();
+    }
+
     roleRepo.addPermissions(name, permissions);
     return find(name);
   }

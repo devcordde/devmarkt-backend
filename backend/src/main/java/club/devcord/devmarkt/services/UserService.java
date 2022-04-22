@@ -26,6 +26,7 @@ import club.devcord.devmarkt.responses.user.UserFailed;
 import club.devcord.devmarkt.responses.user.UserFailed.UserErrors;
 import club.devcord.devmarkt.responses.user.UserResponse;
 import club.devcord.devmarkt.responses.user.UserSuccess;
+import club.devcord.devmarkt.util.Admins;
 import graphql.language.OperationDefinition.Operation;
 import jakarta.inject.Singleton;
 import java.util.Collection;
@@ -87,6 +88,9 @@ public class UserService {
   }
 
   public boolean delete(UserId userId) {
+    if (Admins.isAdminUserId(userId)) {
+      return false;
+    }
     return repo.deleteByUserId(userId) >= 1;
   }
 
@@ -102,12 +106,22 @@ public class UserService {
     return addUserRoles(userId, roles);
   }
 
+  public void addUserRolesUnsafe(UserId userId, Collection<String> roles) {
+    repo.addRoles(userId, roles);
+  }
+
   public UserResponse addUserRoles(UserId userId, Collection<String> roles) {
+    if (Admins.isAdminUserId(userId)) {
+      return UserFailed.adminUserModify();
+    }
     repo.addRoles(userId, roles);
     return find(userId);
   }
 
   public UserResponse removeUserRoles(UserId userId, Collection<String> roles) {
+    if (Admins.isAdminUserId(userId)) {
+      return UserFailed.adminUserModify();
+    }
     repo.removeRoles(userId, roles);
     return find(userId);
   }

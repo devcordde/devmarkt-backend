@@ -25,10 +25,15 @@ public record UserFailed(
     String message
 ) implements UserResponse, Fail {
 
+  public static UserFailed adminUserModify() {
+    return new UserFailed(UserErrors.ADMIN_USER_CANT_BE_MODIFIED, "Admin user can't be modified");
+  }
+
   public static class UserErrors {
 
     public static final String NOT_FOUND = "NOT_FOUND";
     public static final String DUPLICATED = "DUPLICATED";
+    public static final String ADMIN_USER_CANT_BE_MODIFIED = "ADMIN_USER_CANT_BE_MODIFIED";
 
     private UserErrors() {
 
