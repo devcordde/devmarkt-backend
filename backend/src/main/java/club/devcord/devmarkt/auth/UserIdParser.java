@@ -18,59 +18,33 @@ package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
-import graphql.ExecutionResult;
-import io.micronaut.configuration.graphql.DefaultGraphQLInvocation;
-import io.micronaut.configuration.graphql.GraphQLInvocation;
-import io.micronaut.configuration.graphql.GraphQLInvocationData;
-import io.micronaut.context.annotation.Replaces;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
+import graphql.ExecutionInput;
+import graphql.execution.AbortExecutionException;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
-import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
 @Singleton
-@Replaces(DefaultGraphQLInvocation.class)
-public class AuthGraphQlInvocation implements GraphQLInvocation {
+public class UserIdParser {
 
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
 
   private final JwtTokenValidator validator;
-  private final DefaultGraphQLInvocation defaultGraphQLInvocation;
 
-  public AuthGraphQlInvocation(
-      JwtTokenValidator validator,
-      DefaultGraphQLInvocation defaultGraphQLInvocation) {
+  public UserIdParser(JwtTokenValidator validator) {
     this.validator = validator;
-    this.defaultGraphQLInvocation = defaultGraphQLInvocation;
   }
 
-  @Override
-  public Publisher<ExecutionResult> invoke(GraphQLInvocationData invocationData,
-      HttpRequest httpRequest, MutableHttpResponse<String> httpResponse) {
-
-    //System.out.println(invocationData.getQuery());
-
-    var token = extractToken(invocationData.getVariables());
-    return Mono.from(
-      token
-          .map(s -> Mono.from(validator.validateToken(s, httpRequest)).block())
-          .flatMap(this::validateAndParseUserId)
-          .map(userId -> {
-            var variables = new HashMap<>(invocationData.getVariables());
-            variables.put("Authorization", userId);
-            return new GraphQLInvocationData(invocationData.getQuery(),
-                invocationData.getOperationName(), variables);
-          })
-          .map(data -> defaultGraphQLInvocation.invoke(data, httpRequest, httpResponse))
-          .orElseGet(() -> Mono.just(new UnauthorizedError().toResult()))
-    );
+  public UserId parseAndValidate(ExecutionInput input) {
+    return extractToken(input.getVariables())
+        .map(s -> Mono.from(validator.validateToken(s, null)).block())
+        .flatMap(this::validateAndParseUserId)
+        .orElseThrow(() -> new AbortExecutionException(Set.of(new UnauthorizedError())));
   }
 
   private Optional<String> extractToken(Map<String, Object> vars) {

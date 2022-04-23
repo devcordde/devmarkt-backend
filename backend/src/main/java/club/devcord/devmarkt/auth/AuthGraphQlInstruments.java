@@ -18,10 +18,7 @@ package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.QueryPermissionGenerator.UnknownTypeException;
 import club.devcord.devmarkt.auth.error.ForbiddenError;
-import club.devcord.devmarkt.auth.error.UnauthorizedError;
-import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.services.UserService;
-import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQLError;
 import graphql.execution.AbortExecutionException;
@@ -44,24 +41,31 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthGraphQlInstruments.class);
 
   private final UserService userService;
+  private final UserIdParser userIdParser;
 
-  public AuthGraphQlInstruments(UserService userService) {
+  public AuthGraphQlInstruments(UserService userService, UserIdParser parser) {
     this.userService = userService;
+    this.userIdParser = parser;
   }
 
   @Override
   public InstrumentationContext<ExecutionResult> beginExecuteOperation(
       InstrumentationExecuteOperationParameters parameters) {
     var context = parameters.getExecutionContext();
-    var userId = extractUserId(context.getExecutionInput());
     var operation = context.getOperationDefinition().getOperation();
-    var generator = new QueryPermissionGenerator(context.getFragmentsByName(),
+    var permissions = new QueryPermissionGenerator(context.getFragmentsByName(),
         context.getGraphQLSchema(),
-        context.getNormalizedQueryTree().get());
+        context.getNormalizedQueryTree().get())
+        .generate()
+        .filter(s -> !s.startsWith("__")) // allow root introspections
+        .collect(Collectors.toSet());
 
+    if (permissions.isEmpty()) {
+      return SimpleInstrumentationContext.noOp();
+    }
+
+    var userId = userIdParser.parseAndValidate(context.getExecutionInput());
     try {
-      var permissions = generator.generate();
-      System.out.println(permissions);
       var unauthorizedPermissions = userService.checkPermissions(operation,
           permissions, userId);
       var forbiddenErrors = unauthorizedPermissions
@@ -81,15 +85,6 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       abort(error);
     }
     return SimpleInstrumentationContext.noOp();
-  }
-
-  private UserId extractUserId(ExecutionInput input) {
-    var value = input.getVariables().get("Authorization");
-    if (!(value instanceof UserId userId)) {
-      abort(new UnauthorizedError());
-      return null;
-    }
-    return userId;
   }
 
   private void abort(Collection<GraphQLError> errors) {

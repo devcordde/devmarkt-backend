@@ -24,10 +24,7 @@ import graphql.schema.GraphQLModifiedType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.GraphQLUnionType;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class QueryPermissionGenerator {
@@ -44,13 +41,10 @@ public class QueryPermissionGenerator {
     this.operation = operation;
   }
 
-  public Set<String> generate() {
-    var permissions = new HashSet<String>();
-    var fields = operation.getTopLevelFields();
-    for (var field : fields) {
-      permissions.addAll(generateLayer(field, "", false).collect(Collectors.toSet()));
-    }
-    return permissions;
+  public Stream<String> generate() {
+    return operation.getTopLevelFields()
+        .stream()
+        .flatMap(field -> generateLayer(field, "", false));
   }
 
   private Stream<String> generateLayer(ExecutableNormalizedField field, String perm, boolean union) {
