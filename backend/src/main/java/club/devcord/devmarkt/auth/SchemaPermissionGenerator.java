@@ -56,7 +56,7 @@ public class SchemaPermissionGenerator {
     return type.getFieldDefinitions()
         .stream()
         .flatMap(element -> generateLayer(element.getType(), element.getName(),
-            false)) // first child is the return type, we always have one here
+            false))
         .map(s -> new Permission(-1, operation, s))
         .collect(Collectors.toSet());
   }
@@ -73,7 +73,7 @@ public class SchemaPermissionGenerator {
       return Stream.of(perm); // finalize this permission
     }
     if (element instanceof GraphQLList
-        || element instanceof GraphQLUnionType) { // unwrap multiple union and list types
+        || element instanceof GraphQLUnionType) { // unwrap union and list types
       return element.getChildren()
           .stream()
           .flatMap(e -> generateLayer(e, perm, element instanceof GraphQLUnionType));
@@ -83,7 +83,7 @@ public class SchemaPermissionGenerator {
           .stream()
           .flatMap(e -> {
             var newPerm = union
-                ? addNode(perm, objectType.getName())
+                ? addNode(perm, objectType.getName()) // if union member include typename
                 : perm;
 
             return generateLayer(e, newPerm, false);

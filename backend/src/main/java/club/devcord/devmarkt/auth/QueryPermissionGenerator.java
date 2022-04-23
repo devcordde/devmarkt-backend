@@ -49,14 +49,12 @@ public class QueryPermissionGenerator {
         .getObjectTypeNames()
         .stream()
         .flatMap(s -> {
-          var newPerm = union
+          var newPerm = union // if union member include type name
               ? node(perm, node(s, field.getName()))
               : node(perm, field.getName());
-
           if (field.getChildren().isEmpty()) {
             return Stream.of(newPerm);
           }
-
           return field.getChildren()
               .stream()
               .flatMap(
