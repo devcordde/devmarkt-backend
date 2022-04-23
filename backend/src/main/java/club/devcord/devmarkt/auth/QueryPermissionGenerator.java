@@ -16,27 +16,20 @@
 
 package club.devcord.devmarkt.auth;
 
-import graphql.language.FragmentDefinition;
-import graphql.language.SourceLocation;
 import graphql.normalized.ExecutableNormalizedField;
 import graphql.normalized.ExecutableNormalizedOperation;
 import graphql.schema.GraphQLModifiedType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.GraphQLUnionType;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class QueryPermissionGenerator {
-
-  private final Map<String, FragmentDefinition> fragments;
-  private final GraphQLSchema schema;
+    private final GraphQLSchema schema;
   private final ExecutableNormalizedOperation operation;
 
-  public QueryPermissionGenerator(
-      Map<String, FragmentDefinition> fragments, GraphQLSchema schema,
+  public QueryPermissionGenerator(GraphQLSchema schema,
       ExecutableNormalizedOperation operation) {
-    this.fragments = fragments;
     this.schema = schema;
     this.operation = operation;
   }
@@ -79,19 +72,6 @@ public class QueryPermissionGenerator {
     return perm.isBlank()
         ? next
         : perm + SchemaPermissionGenerator.PERMISSION_SEPARATOR + next;
-  }
-
-  public static class UnknownTypeException extends RuntimeException {
-
-    private final SourceLocation sourceLocation;
-
-    public UnknownTypeException(SourceLocation sourceLocation) {
-      this.sourceLocation = sourceLocation;
-    }
-
-    public SourceLocation sourceLocation() {
-      return sourceLocation;
-    }
   }
 
 }

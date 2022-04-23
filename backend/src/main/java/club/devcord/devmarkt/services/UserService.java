@@ -30,6 +30,7 @@ import graphql.language.OperationDefinition.Operation;
 import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class UserService {
@@ -40,7 +41,7 @@ public class UserService {
     this.repo = repo;
   }
 
-  public Collection<String> checkPermissions(Operation operation, Collection<String> permissions,
+  public Stream<String> checkPermissions(Operation operation, Stream<String> permissions,
       UserId userId) {
     var userOpt = repo.findByUserId(userId);
     if (userOpt.isEmpty()) {
@@ -55,28 +56,23 @@ public class UserService {
         .collect(Collectors.toSet());
 
     return permissions
-        .stream()
         .filter(s -> {
-          if (isIntrospection(s)) {
-            return !containsBeginsWith(userPermissions,
-                s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR)));
+          if (isIntrospectionField(s)) {
+            var subPerm = s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
+            return userPermissions
+                .stream()
+                .noneMatch(perm -> perm.startsWith(subPerm));
           }
           return !userPermissions.contains(s);
-        })
-        .collect(Collectors.toSet());
+        });
   }
 
   public boolean exists(UserId userId) {
     return repo.existsByUserId(userId);
   }
 
-  private boolean isIntrospection(String perm) {
+  private boolean isIntrospectionField(String perm) {
     return perm.startsWith("__", perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR) + 1);
-  }
-
-  private boolean containsBeginsWith(Collection<String> set, String begin) {
-    return set.stream()
-        .anyMatch(s -> s.startsWith(begin));
   }
 
   public UserResponse find(UserId userId) {

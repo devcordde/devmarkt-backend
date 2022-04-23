@@ -24,7 +24,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import reactor.core.publisher.Mono;
@@ -33,6 +32,7 @@ import reactor.core.publisher.Mono;
 public class UserIdParser {
 
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
+  private final static String AUTHORIZATION_KEY = "Authorization";
 
   private final JwtTokenValidator validator;
 
@@ -41,16 +41,22 @@ public class UserIdParser {
   }
 
   public UserId parseAndValidate(ExecutionInput input) {
-    return extractToken(input.getVariables())
-        .map(s -> Mono.from(validator.validateToken(s, null)).block())
-        .flatMap(this::validateAndParseUserId)
-        .orElseThrow(() -> new AbortExecutionException(Set.of(new UnauthorizedError())));
+    return extractUserId(input.getVariables());
   }
 
-  private Optional<String> extractToken(Map<String, Object> vars) {
-    return Optional.ofNullable(vars.get("Authorization"))
-        .filter(o -> o instanceof String)
-        .map(o -> (String) o);
+  private UserId extractUserId(Map<String, Object> vars) {
+    if (vars.get(AUTHORIZATION_KEY) instanceof String token) {
+      return validateTokenAndParseUserId(token);
+    }
+    return abort();
+  }
+
+  private UserId validateTokenAndParseUserId(String token) {
+    var auth = Mono.from(validator.validateToken(token, null)).block();
+    if (auth != null) {
+      return validateAndParseUserId(auth);
+    }
+    return abort();
   }
 
   private UserId parseUserIdUnsafe(String token) {
@@ -60,13 +66,19 @@ public class UserIdParser {
       long id = Long.parseLong(array[1]);
       return new UserId(type, id);
     } catch (NumberFormatException e) {
-      return null;
+      return abort();
     }
   }
 
-  private Optional<UserId> validateAndParseUserId(Authentication authentication) {
-    return Optional.ofNullable(authentication.getName())
-        .filter(name -> USERID_REGEX.matcher(name).matches())
-        .map(this::parseUserIdUnsafe);
+  private UserId validateAndParseUserId(Authentication authentication) {
+    var token = authentication.getName();
+    if (USERID_REGEX.matcher(token).matches()) {
+      return parseUserIdUnsafe(token);
+    }
+    return abort();
+  }
+
+  private <T> T abort() {
+    throw new AbortExecutionException(Set.of(new UnauthorizedError()));
   }
 }
