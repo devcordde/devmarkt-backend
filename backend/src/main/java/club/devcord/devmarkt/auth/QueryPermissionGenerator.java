@@ -25,7 +25,8 @@ import graphql.schema.GraphQLUnionType;
 import java.util.stream.Stream;
 
 public class QueryPermissionGenerator {
-    private final GraphQLSchema schema;
+
+  private final GraphQLSchema schema;
   private final ExecutableNormalizedOperation operation;
 
   public QueryPermissionGenerator(GraphQLSchema schema,
@@ -40,7 +41,8 @@ public class QueryPermissionGenerator {
         .flatMap(field -> generateLayer(field, "", false));
   }
 
-  private Stream<String> generateLayer(ExecutableNormalizedField field, String perm, boolean union) {
+  private Stream<String> generateLayer(ExecutableNormalizedField field, String perm,
+      boolean union) {
     boolean isUnion = isUnion(field.getOneFieldDefinition(schema).getType());
 
     return field
@@ -57,7 +59,9 @@ public class QueryPermissionGenerator {
 
           return field.getChildren()
               .stream()
-              .flatMap(executableNormalizedField -> generateLayer(executableNormalizedField, newPerm, isUnion));
+              .flatMap(
+                  executableNormalizedField -> generateLayer(executableNormalizedField, newPerm,
+                      isUnion));
         });
   }
 

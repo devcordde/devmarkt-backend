@@ -60,7 +60,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
 
     var userId = userIdParser.parseAndValidate(context.getExecutionInput());
     var forbiddenErrors = userService.checkPermissions(operation,
-        permissions.stream(), userId)
+            permissions.stream(), userId)
         .map(s -> new ForbiddenError(operation, s))
         .map(forbiddenError -> (GraphQLError) forbiddenError)
         .collect(Collectors.toSet());

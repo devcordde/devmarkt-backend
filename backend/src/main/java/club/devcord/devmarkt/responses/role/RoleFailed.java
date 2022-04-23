@@ -28,7 +28,8 @@ public record RoleFailed(
 ) implements Fail, RoleResponse {
 
   public static RoleFailed adminModify() {
-    return new RoleFailed(Admins.ADMIN_ROLE_NAME, "Admin role can't be modified", RoleErrors.ADMIN_ROLE_CANT_BE_MODIFIED);
+    return new RoleFailed(Admins.ADMIN_ROLE_NAME, "Admin role can't be modified",
+        RoleErrors.ADMIN_ROLE_CANT_BE_MODIFIED);
   }
 
   public static class RoleErrors {

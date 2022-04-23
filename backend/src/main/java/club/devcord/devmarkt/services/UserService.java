@@ -58,7 +58,8 @@ public class UserService {
     return permissions
         .filter(s -> {
           if (isIntrospectionField(s)) {
-            var subPerm = s.substring(0, s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
+            var subPerm = s.substring(0,
+                s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
             return userPermissions
                 .stream()
                 .noneMatch(perm -> perm.startsWith(subPerm));
@@ -72,7 +73,8 @@ public class UserService {
   }
 
   private boolean isIntrospectionField(String perm) {
-    return perm.startsWith("__", perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR) + 1);
+    return perm.startsWith("__",
+        perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR) + 1);
   }
 
   public UserResponse find(UserId userId) {
