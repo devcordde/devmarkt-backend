@@ -20,10 +20,8 @@ import club.devcord.devmarkt.entities.auth.Permission;
 import graphql.language.OperationDefinition.Operation;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLImplementingType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLNamedSchemaElement;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLScalarType;
@@ -58,15 +56,18 @@ public class SchemaPermissionGenerator {
     return type.getFieldDefinitions()
         .stream()
         .flatMap(element -> generateLayer(element.getType(), element.getName(),
-            type)) // first child is the return type, we always have one here
+            false)) // first child is the return type, we always have one here
         .map(s -> new Permission(-1, operation, s))
         .collect(Collectors.toSet());
   }
 
   private Stream<String> generateLayer(GraphQLSchemaElement element, String perm,
-      GraphQLSchemaElement parent) {
+      boolean union) {
+    if (element instanceof GraphQLInterfaceType) {
+      return Stream.of(); // ignore interfaces
+    }
     if (element instanceof GraphQLNonNull nonNull) {
-      return generateLayer(nonNull.getWrappedType(), perm, nonNull); // unwrap single type
+      return generateLayer(nonNull.getWrappedType(), perm, false); // unwrap single type
     }
     if (element instanceof GraphQLScalarType || element instanceof GraphQLEnumType) {
       return Stream.of(perm); // finalize this permission
@@ -75,45 +76,23 @@ public class SchemaPermissionGenerator {
         || element instanceof GraphQLUnionType) { // unwrap multiple union and list types
       return element.getChildren()
           .stream()
-          .flatMap(e -> generateLayer(e, perm, element));
+          .flatMap(e -> generateLayer(e, perm, element instanceof GraphQLUnionType));
     }
     if (element instanceof GraphQLObjectType objectType) {
       return element.getChildren()
           .stream()
           .flatMap(e -> {
-            // Skip interface fields, they will be added as part of the interface type later
-            if (isParentInterfaceField(e, objectType)) {
-              return Stream.of();
-            }
-
-            // object type children include implemented interface
-            // they will be passed to the addLayer method later, but we want the interface name and not the
-            // object type name in the permission, so we need to exclude them
-            var newPerm = parent instanceof GraphQLUnionType && !(e instanceof GraphQLInterfaceType)
+            var newPerm = union
                 ? addNode(perm, objectType.getName())
                 : perm;
 
-            return generateLayer(e, newPerm, objectType);
+            return generateLayer(e, newPerm, false);
           });
     }
-    if (element instanceof GraphQLNamedSchemaElement namedElement) { // add named schema elements e.g. fields or interface with its name to the permission
-      return namedElement
-          .getChildren()
-          .stream()
-          .flatMap(e -> generateLayer(e, addNode(perm, namedElement.getName()), namedElement));
+    if (element instanceof GraphQLFieldDefinition namedElement) {
+      return generateLayer(namedElement.getType(), addNode(perm, namedElement.getName()), false);
     }
     throw new InternalServerException("You're an idiot :3");
-  }
-
-  private boolean isParentInterfaceField(GraphQLSchemaElement element,
-      GraphQLNamedSchemaElement type) {
-    return type instanceof GraphQLImplementingType implementingType
-        && element instanceof GraphQLFieldDefinition named
-        && implementingType
-        .getInterfaces()
-        .stream()
-        .map(o -> (GraphQLInterfaceType) o)
-        .anyMatch(i -> i.getFieldDefinition(named.getName()) != null);
   }
 
   private String addNode(String perm, String node) {

@@ -55,6 +55,8 @@ public class AuthGraphQlInvocation implements GraphQLInvocation {
   public Publisher<ExecutionResult> invoke(GraphQLInvocationData invocationData,
       HttpRequest httpRequest, MutableHttpResponse<String> httpResponse) {
 
+    //System.out.println(invocationData.getQuery());
+
     var token = extractToken(invocationData.getVariables());
     return Mono.from(
       token
