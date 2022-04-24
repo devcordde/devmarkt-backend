@@ -1,22 +1,22 @@
 {
   "errors": [
     {
-      "message": "You're forbidden to use QUERY: templates.questions.number.",
       "extensions": {
         "classification": "FORBIDDEN"
-      }
+      },
+      "message": "You're forbidden to use QUERY: templates.questions.question."
     },
     {
-      "message": "You're forbidden to use QUERY: templates.questions.question.",
       "extensions": {
         "classification": "FORBIDDEN"
-      }
+      },
+      "message": "You're forbidden to use QUERY: templates.questions.number."
     },
     {
-      "message": "You're forbidden to use QUERY: templates.name.",
       "extensions": {
         "classification": "FORBIDDEN"
-      }
+      },
+      "message": "You're forbidden to use QUERY: templates.name."
     }
   ]
 }

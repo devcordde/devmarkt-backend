@@ -23,7 +23,7 @@ import test, {
 const load = prefixedLoad("template");
 const testNamed = prefixedTestNamed("template");
 
-describe("Template Query", () => {
+xdescribe("Template Query", () => {
   it("Lists all template names", async () => {
     await testNamed("template-names.graphql", "template-names.json", {}, Authorization.ADMIN);
   })
@@ -38,7 +38,7 @@ describe("Template Query", () => {
   })
 })
 
-describe("Template Mutation", () => {
+xdescribe("Template Mutation", () => {
   const templateCreateVars = (name) => ({
     name,
     questions: [

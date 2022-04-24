@@ -18,7 +18,7 @@ import test, {Authorization, execute, load, prefixedLoad} from "../executor.js";
 
 const loadTemplate = prefixedLoad("template");
 
-describe("Template Permissions", () => {
+xdescribe("Template Permissions", () => {
   const templateCreateVars = (name) => ({
     name,
     questions: [
@@ -62,7 +62,7 @@ describe("Template Permissions", () => {
 
   describe("Delete Template", () => {
     beforeEach(async () => {
-      const query = loadTemplate("create-template.graphql");
+      const query = await loadTemplate("create-template.graphql");
       await execute(query, templateCreateVars("PermissionTemplate"), Authorization.ADMIN);
     })
 

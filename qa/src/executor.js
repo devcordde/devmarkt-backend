@@ -23,8 +23,17 @@ const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 export const Authorization = {
   NONE: "",
   TEST: readFile(resolve("./src/fixtures/test.key")),
-  ADMIN: readFile(resolve("./src/fixtures/admin.key"))
+  ADMIN: readFile(resolve("./src/fixtures/admin.key")),
 };
+
+Authorization.nameFor = token => {
+  for(const key of Object.keys(Authorization)) {
+    if(Authorization[key] === token) {
+      return key;
+    }
+  }
+  return "";
+}
 
 export function execute(graphql, variables = {}, authorization = Authorization.NONE) {
   if(authorization) {
