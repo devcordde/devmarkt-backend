@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Application QA Template" type="MicronautRunConfigurationType" factoryName="Micronaut">
+    <module name="devmarkt-backend.backend.main" />
+    <option name="alternativeJrePath" />
+    <option name="alternativeJrePathEnabled" value="false" />
+    <option name="includeProvidedScope" value="true" />
+    <option name="mainClass" value="club.devcord.devmarkt.Application" />
+    <option name="passParentEnvs" value="true" />
+    <option name="programParameters" value="" />
+    <option name="shortenCommandLine" value="NONE" />
+    <option name="vmParameters" value="-Dmicronaut.environments=qa" />
+    <option name="workingDirectory" value="" />
+    <envs>
+      <env name="DEVMARKT_POSTGRES_DATABASE" value="CHANGE_THIS" />
+      <env name="DEVMARKT_POSTGRES_PASSWORD" value="CHANGE_THIS" />
+      <env name="DEVMARKT_POSTGRES_USER" value="CHANGE_THIS" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="QA Tests" type="JavaScriptTestRunnerJest">
+    <config-file value="$PROJECT_DIR$/qa/package.json" />
+    <node-interpreter value="project" />
+    <node-options value="--experimental-vm-modules" />
+    <jest-package value="$PROJECT_DIR$/qa/node_modules/jest" />
+    <working-dir value="$PROJECT_DIR$/qa" />
+    <envs>
+      <env name="BACKEND_HOST" value="http://localhost:8080" />
+    </envs>
+    <scope-kind value="ALL" />
+    <method v="2" />
+  </configuration>
+</component>
