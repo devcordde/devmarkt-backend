@@ -6,6 +6,10 @@ micronaut:
     port: ${random.port}
     host: "localhost"
 
+devmarkt:
+  auth:
+    jwtsecret: uYT8nqFcJlWplhTpi5mlS2xI8oTibByifOLNJd0eF7uqpdNJaZI0ukDlsugPGFL
+
 flyway:
   datasources:
     default:
