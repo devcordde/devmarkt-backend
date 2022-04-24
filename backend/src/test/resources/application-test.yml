@@ -8,7 +8,7 @@ micronaut:
 
 devmarkt:
   auth:
-    jwtsecret: uYT8nqFcJlWplhTpi5mlS2xI8oTibByifOLNJd0eF7uqpdNJaZI0ukDlsugPGFL
+    jwtsecret: uYT8nqFcJlWplhTpi5mlS2xI8oTibByifOLNJd0eF7uqpdNJaZI0ukDlsugPGFL # some random key
 
 flyway:
   datasources:
