@@ -94,4 +94,4 @@ const tests = [
   }
 ];
 
-executeTests("Template Permissions 2", tests);
+executeTests("Template", tests);
