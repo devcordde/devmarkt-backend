@@ -26,7 +26,6 @@ import graphql.execution.instrumentation.SimpleInstrumentation;
 import graphql.execution.instrumentation.SimpleInstrumentationContext;
 import graphql.execution.instrumentation.parameters.InstrumentationExecuteOperationParameters;
 import jakarta.inject.Singleton;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
         context.getNormalizedQueryTree().get())
         .generate()
         .filter(s -> !s.startsWith("__"))  // allow root introspections
-        .collect(Collectors.toSet());
+        .toList();
 
     if (permissions.isEmpty()) {
       return SimpleInstrumentationContext.noOp();
@@ -63,7 +62,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
             permissions.stream(), userId)
         .map(s -> new ForbiddenError(operation, s))
         .map(forbiddenError -> (GraphQLError) forbiddenError)
-        .collect(Collectors.toSet());
+        .toList();
     if (!forbiddenErrors.isEmpty()) {
       throw new AbortExecutionException(forbiddenErrors);
     }
