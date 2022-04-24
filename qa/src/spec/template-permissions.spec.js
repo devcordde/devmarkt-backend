@@ -74,7 +74,7 @@ describe("Template Permissions", () => {
     `("Denies access if permission is not granted", async ({autorization, expected}) => {
       const query = loadTemplate("delete-template.graphql");
       const expectedResponse = load(expected);
-      await test(query, expectedResponse, {}, autorization);
+      await test(query, expectedResponse, {name: "PermissionTemplate"}, autorization);
     })
   })
 })
