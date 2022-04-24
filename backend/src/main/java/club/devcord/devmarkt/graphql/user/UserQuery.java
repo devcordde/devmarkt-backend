@@ -17,12 +17,17 @@
 package club.devcord.devmarkt.graphql.user;
 
 import club.devcord.devmarkt.entities.auth.UserId;
+import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class UserQuery implements GraphQLQueryResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserQuery.class);
 
   public final UserService service;
 
@@ -31,7 +36,10 @@ public class UserQuery implements GraphQLQueryResolver {
   }
 
   public Object user(UserId userId) {
-    return service.find(userId).graphQlUnion();
+    var response = service.find(userId);
+    LOGGER.info("User fetch, Response: {}, UserId: {}", LoggingUtil.responseStatus(response),
+        userId.merged());
+    return response.graphQlUnion();
   }
 
 }

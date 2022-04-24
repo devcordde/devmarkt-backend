@@ -25,9 +25,13 @@ import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import jakarta.inject.Singleton;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class AuthSetup implements ApplicationEventListener<StartupEvent> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthSetup.class);
 
   private final PermissionService permissionService;
   private final UserService userService;
@@ -56,6 +60,7 @@ public class AuthSetup implements ApplicationEventListener<StartupEvent> {
   private void updatePermissions() {
     var permission = schemaPermissionGenerator.generate(graphQL.getGraphQLSchema());
     permissionService.updatePermissions(permission);
+    LOGGER.info("Permission updated");
   }
 
   private void setupAdminRole() {
@@ -63,8 +68,10 @@ public class AuthSetup implements ApplicationEventListener<StartupEvent> {
     boolean exists = roleService.exist(Admins.ADMIN_ROLE_NAME);
     if (exists) {
       roleService.addPermissionsUnsafe(Admins.ADMIN_ROLE_NAME, permissions);
+      LOGGER.info("Admin role exists, role permissions updated");
     } else {
       roleService.createUnsafe(Admins.ADMIN_ROLE_NAME, permissions);
+      LOGGER.info("Admin role created");
     }
   }
 
@@ -72,8 +79,10 @@ public class AuthSetup implements ApplicationEventListener<StartupEvent> {
     boolean exists = userService.exists(Admins.ADMIN_USERID);
     if (exists) {
       userService.addUserRolesUnsafe(Admins.ADMIN_USERID, Set.of(Admins.ADMIN_ROLE_NAME));
+      LOGGER.info("Admin user exists, user permissions updated");
     } else {
       userService.saveUnsafe(Admins.ADMIN_USERID, Set.of(Admins.ADMIN_ROLE_NAME));
+      LOGGER.info("Admin user created");
     }
   }
 }

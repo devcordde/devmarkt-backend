@@ -16,12 +16,17 @@
 
 package club.devcord.devmarkt.graphql.role;
 
+import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.RoleService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class RoleQuery implements GraphQLQueryResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RoleQuery.class);
 
   private final RoleService service;
 
@@ -30,6 +35,8 @@ public class RoleQuery implements GraphQLQueryResolver {
   }
 
   public Object role(String name) {
-    return service.find(name).graphQlUnion();
+    var response = service.find(name);
+    LOGGER.info("Role fetch, Response: {}, Name: {}", LoggingUtil.responseStatus(response), name);
+    return response.graphQlUnion();
   }
 }

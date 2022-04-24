@@ -28,4 +28,7 @@ public record UserId(
     @MappedProperty("user_id")
     long id) {
 
+    public String merged() {
+        return type + ":" + id;
+    }
 }

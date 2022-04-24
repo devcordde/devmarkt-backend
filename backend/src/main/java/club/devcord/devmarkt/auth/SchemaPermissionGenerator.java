@@ -35,9 +35,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SchemaPermissionGenerator {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SchemaPermissionGenerator.class);
 
   public static final String PERMISSION_SEPARATOR = ".";
 
@@ -46,6 +50,7 @@ public class SchemaPermissionGenerator {
     permissionSet.addAll(generateOperation(schema.getQueryType(), Operation.QUERY));
     permissionSet.addAll(generateOperation(schema.getMutationType(), Operation.MUTATION));
     permissionSet.addAll(generateOperation(schema.getSubscriptionType(), Operation.QUERY));
+    LOGGER.info("{} permission generated from schema", permissionSet.size());
     return permissionSet;
   }
 

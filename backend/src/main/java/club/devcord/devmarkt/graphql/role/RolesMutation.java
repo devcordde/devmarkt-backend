@@ -17,13 +17,18 @@
 package club.devcord.devmarkt.graphql.role;
 
 import club.devcord.devmarkt.entities.auth.Permission;
+import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.RoleService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class RolesMutation implements GraphQLMutationResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RolesMutation.class);
 
   private final RoleService roleService;
 
@@ -32,10 +37,15 @@ public class RolesMutation implements GraphQLMutationResolver {
   }
 
   public Object createRole(String name, Set<Permission> permissions) {
-    return roleService.create(name, permissions).graphQlUnion();
+    var response = roleService.create(name, permissions);
+    LOGGER.info("Role creation. Response: {}, Name: {}, Permissions: {}",
+        LoggingUtil.responseStatus(response), name, permissions);
+    return response.graphQlUnion();
   }
 
   public boolean deleteRole(String name) {
-    return roleService.delete(name);
+    var response = roleService.delete(name);
+    LOGGER.info("Role deletion. Successful: {}, Name: {}", response, name);
+    return response;
   }
 }
