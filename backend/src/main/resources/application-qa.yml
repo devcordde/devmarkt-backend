@@ -1,6 +1,13 @@
 micronaut:
   server:
     host: '0.0.0.0'
+  security:
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: "5F33s5tKIk3Mi517CbHdaY31yWh3AVk3515M4Tfz522R8A36d6"
 flyway:
   datasources:
     default:

@@ -20,7 +20,26 @@ import {resolve} from "path";
 
 const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 
-export function execute(graphql, variables = {}) {
+export const Authorization = {
+  NONE: "",
+  TEST: readFile(resolve("./src/fixtures/test.key")),
+  ADMIN: readFile(resolve("./src/fixtures/admin.key")),
+};
+
+Authorization.nameFor = token => {
+  for(const key of Object.keys(Authorization)) {
+    if(Authorization[key] === token) {
+      return key;
+    }
+  }
+  return "";
+}
+
+export function execute(graphql, variables = {}, authorization = Authorization.NONE) {
+  if(authorization) {
+    variables.Authorization = authorization;
+  }
+
   return fetch(endpoint, {
     method: "post",
     headers: {
@@ -33,20 +52,20 @@ export function execute(graphql, variables = {}) {
   }).then(response => response.json());
 }
 
-export default async function test(graphql, expectedResponse, variables = {}) {
+export default async function test(graphql, expectedResponse, variables = {}, authorization = Authorization.NONE) {
   const loadedGraphql = await Promise.resolve(graphql);
   const loadedExpectedResponse = await Promise.resolve(expectedResponse);
-  const actualResponse = await execute(loadedGraphql, variables);
+  const actualResponse = await execute(loadedGraphql, variables, authorization);
   expect(actualResponse).toEqual(loadedExpectedResponse);
 }
 
-export function testNamed(graphql, response, variables = {}) {
-  return test(load(graphql), load(response), variables);
+export function testNamed(graphql, response, variables = {}, authorization = Authorization.NONE) {
+  return test(load(graphql), load(response), variables, authorization);
 }
 
-export function curryTestNamed(prefix) {
-  return (graphql, response, variables = {}) => testNamed(
-      `${prefix}/${graphql}`, `${prefix}/${response}`, variables);
+export function prefixedTestNamed(prefix) {
+  return (graphql, response, variables = {}, authorization = Authorization.NONE) => testNamed(
+      `${prefix}/${graphql}`, `${prefix}/${response}`, variables, authorization);
 }
 
 export async function load(file) {
@@ -59,7 +78,7 @@ export async function load(file) {
   return Promise.reject("Unknown File Type");
 }
 
-export function curryLoad(prefix) {
+export function prefixedLoad(prefix) {
   return (name) => load(`${prefix}/${name}`);
 }
 

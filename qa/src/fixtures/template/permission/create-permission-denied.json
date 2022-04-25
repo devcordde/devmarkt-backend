@@ -1,0 +1,40 @@
+{
+  "errors": [
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateSuccess.__typename."
+    },
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateFailed.__typename."
+    },
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateSuccess.questions.number."
+    },
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateSuccess.questions.question."
+    },
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateFailed.errorCode."
+    },
+    {
+      "extensions": {
+        "classification": "FORBIDDEN"
+      },
+      "message": "You're forbidden to use MUTATION: createTemplate.TemplateFailed.message."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "message": "You're forbidden to use MUTATION: deleteTemplate.",
+      "extensions": {
+        "classification": "FORBIDDEN"
+      }
+    }
+  ]
+}
