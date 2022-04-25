@@ -54,6 +54,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
         .toList();
 
     if (permissions.isEmpty()) {
+      LOGGER.info("Only introspection query executed");
       return SimpleInstrumentationContext.noOp();
     }
 
@@ -64,8 +65,10 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
         .map(forbiddenError -> (GraphQLError) forbiddenError)
         .toList();
     if (!forbiddenErrors.isEmpty()) {
+      LOGGER.info("Query execution aborted: forbidden. UserId: {}", userId.merged());
       throw new AbortExecutionException(forbiddenErrors);
     }
+    LOGGER.info("Query authorized. UserId: {}", userId.merged());
     return SimpleInstrumentationContext.noOp();
   }
 }

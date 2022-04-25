@@ -21,9 +21,13 @@ import club.devcord.devmarkt.services.PermissionService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class PermissionQuery implements GraphQLQueryResolver {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PermissionQuery.class);
 
   private final PermissionService service;
 
@@ -32,6 +36,8 @@ public class PermissionQuery implements GraphQLQueryResolver {
   }
 
   public Set<Permission> permissions() {
-    return service.permissions();
+    var response = service.permissions();
+    LOGGER.info("All permission fetch");
+    return response;
   }
 }

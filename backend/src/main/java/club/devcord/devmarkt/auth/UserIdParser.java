@@ -26,11 +26,14 @@ import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 @Singleton
 public class UserIdParser {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserIdParser.class);
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
   private final static String AUTHORIZATION_KEY = "Authorization";
 
@@ -79,6 +82,7 @@ public class UserIdParser {
   }
 
   private <T> T abort() {
+    LOGGER.info("Query execution aborted: unauthorized");
     throw new AbortExecutionException(Set.of(new UnauthorizedError()));
   }
 }
