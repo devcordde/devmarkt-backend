@@ -36,14 +36,11 @@ Authorization.nameFor = token => {
 }
 
 export function execute(graphql, variables = {}, authorization = Authorization.NONE) {
-  if(authorization) {
-    variables.Authorization = authorization;
-  }
-
   return fetch(endpoint, {
     method: "post",
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': authorization
     },
     body: JSON.stringify({
       query: graphql,

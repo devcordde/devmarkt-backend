@@ -13,7 +13,7 @@ micronaut:
             generator:
               secret: ${devmarkt.auth.jwtsecret}
               jws-algorithm: HS256
-              base64: true
+              base64: false
         generator:
           access-token:
             expiration: 43200
