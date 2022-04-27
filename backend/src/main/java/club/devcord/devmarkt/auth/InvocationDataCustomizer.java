@@ -25,7 +25,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
 @Singleton
-public class InvocationDataDecorator implements GraphQLExecutionInputCustomizer {
+public class InvocationDataCustomizer implements GraphQLExecutionInputCustomizer {
 
   @Override
   public Publisher<ExecutionInput> customize(ExecutionInput executionInput, HttpRequest httpRequest,
