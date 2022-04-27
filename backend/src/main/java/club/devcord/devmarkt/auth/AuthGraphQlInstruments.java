@@ -35,9 +35,9 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthGraphQlInstruments.class);
 
   private final UserService userService;
-  private final UserIdParser userIdParser;
+  private final UserIdValidator userIdParser;
 
-  public AuthGraphQlInstruments(UserService userService, UserIdParser parser) {
+  public AuthGraphQlInstruments(UserService userService, UserIdValidator parser) {
     this.userService = userService;
     this.userIdParser = parser;
   }
@@ -58,7 +58,7 @@ public class AuthGraphQlInstruments extends SimpleInstrumentation {
       return SimpleInstrumentationContext.noOp();
     }
 
-    var userId = userIdParser.parseAndValidate(context.getExecutionInput());
+    var userId = userIdParser.parseAndValidate(context.getGraphQLContext());
     var forbiddenErrors = userService.checkPermissions(operation,
             permissions.stream(), userId)
         .map(s -> new ForbiddenError(operation, s))

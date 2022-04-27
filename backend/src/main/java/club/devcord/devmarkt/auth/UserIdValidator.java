@@ -18,12 +18,11 @@ package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
-import graphql.ExecutionInput;
+import graphql.GraphQLContext;
 import graphql.execution.AbortExecutionException;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -31,24 +30,24 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 @Singleton
-public class UserIdParser {
+public class UserIdValidator {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserIdParser.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserIdValidator.class);
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
   private final static String AUTHORIZATION_KEY = "Authorization";
 
   private final JwtTokenValidator validator;
 
-  public UserIdParser(JwtTokenValidator validator) {
+  public UserIdValidator(JwtTokenValidator validator) {
     this.validator = validator;
   }
 
-  public UserId parseAndValidate(ExecutionInput input) {
-    return extractUserId(input.getVariables());
+  public UserId parseAndValidate(GraphQLContext input) {
+    return extractUserId(input);
   }
 
-  private UserId extractUserId(Map<String, Object> vars) {
-    if (vars.get(AUTHORIZATION_KEY) instanceof String token) {
+  private UserId extractUserId(GraphQLContext context) {
+    if (context.get(AUTHORIZATION_KEY) instanceof String token) {
       return validateTokenAndParseUserId(token);
     }
     return abort();
