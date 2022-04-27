@@ -5,7 +5,6 @@ micronaut:
     port: ${devmarkt.server.port:8080}
     host: ${devmarkt.server.host:`localhost`}
   security:
-    reject-not-found: false
     token:
       jwt:
         signatures:
@@ -13,19 +12,11 @@ micronaut:
             generator:
               secret: ${devmarkt.auth.jwtsecret}
               jws-algorithm: HS256
-              base64: false
         generator:
           access-token:
             expiration: 43200
-        bearer:
-          enabled: false
-        cookie:
-          enabled: false
     intercept-url-map:
-      - pattern: /graphql
-        access:
-          - isAnonymous()
-      - pattern: /graphiql
+      - pattern: /*
         access:
           - isAnonymous()
 
