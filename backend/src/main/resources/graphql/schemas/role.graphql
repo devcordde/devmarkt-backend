@@ -2,7 +2,6 @@ union RoleResponse = RoleSuccess | RoleFailed
 
 type RoleSuccess {
     name: String!
-    permissions: [Permission!]!
 }
 
 type RoleFailed implements Error {

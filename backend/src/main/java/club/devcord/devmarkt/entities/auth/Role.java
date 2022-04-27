@@ -20,20 +20,13 @@ import club.devcord.devmarkt.graphql.GraphQLType;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
-import io.micronaut.data.jdbc.annotation.JoinTable;
-import java.util.Set;
 
-@MappedEntity("roles")
 @GraphQLType("RoleSuccess")
+@MappedEntity("roles")
 public record Role(
-    @GeneratedValue @Id
-    Integer id,
-    String name,
-    @Relation(value = Kind.MANY_TO_MANY)
-    @JoinTable(name = "role_permissions")
-    Set<Permission> permissions
+    @Id @GeneratedValue
+    int id,
+    String name
 ) {
 
 }

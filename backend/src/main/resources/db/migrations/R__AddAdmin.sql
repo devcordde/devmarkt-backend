@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.repositories;
-
-import club.devcord.devmarkt.entities.auth.Permission;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.model.query.builder.sql.Dialect;
-import io.micronaut.data.repository.CrudRepository;
-import java.util.Set;
-import org.jetbrains.annotations.NotNull;
-
-@JdbcRepository(dialect = Dialect.POSTGRES)
-public interface PermissionRepo extends CrudRepository<Permission, Integer> {
-
-  @NotNull
-  @Override
-  Set<Permission> findAll();
-}
+INSERT INTO roles (name) VALUES ('admin') ON CONFLICT DO NOTHING;
+INSERT INTO users (id_type, user_id) VALUES ('internal', 1) ON CONFLICT DO NOTHING;
+INSERT INTO user_roles (user_id, role_id)
+    SELECT r.id, u.id FROM roles r
+        JOIN users u ON u.id_type = 'internal' AND u.user_id = 1
+    WHERE r.name = 'admin'
+ON CONFLICT DO NOTHING;

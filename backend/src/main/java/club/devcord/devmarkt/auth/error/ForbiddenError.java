@@ -17,18 +17,17 @@
 package club.devcord.devmarkt.auth.error;
 
 import graphql.ErrorClassification;
-import graphql.language.OperationDefinition.Operation;
 import graphql.language.SourceLocation;
 import java.util.List;
 
 public record ForbiddenError(
-    Operation operation,
-    String query
+    String type,
+    String field
 ) implements GraphQlErrorResult {
 
   @Override
   public String getMessage() {
-    return "You're forbidden to use %s: %s.".formatted(operation, query);
+    return "You're forbidden to use '%s' @ '%s'.".formatted(type, field);
   }
 
   @Override

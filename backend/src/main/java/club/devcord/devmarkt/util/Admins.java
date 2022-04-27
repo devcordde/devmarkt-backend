@@ -31,8 +31,4 @@ public class Admins {
     return ADMIN_USERID.equals(userId);
   }
 
-  public static boolean isAdminRole(String roleName) {
-    return ADMIN_ROLE_NAME.equals(roleName);
-  }
-
 }

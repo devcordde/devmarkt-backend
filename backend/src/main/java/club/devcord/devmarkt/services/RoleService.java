@@ -16,16 +16,12 @@
 
 package club.devcord.devmarkt.services;
 
-import club.devcord.devmarkt.entities.auth.Permission;
-import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.repositories.RoleRepo;
 import club.devcord.devmarkt.responses.role.RoleFailed;
 import club.devcord.devmarkt.responses.role.RoleFailed.RoleErrors;
 import club.devcord.devmarkt.responses.role.RoleResponse;
 import club.devcord.devmarkt.responses.role.RoleSuccess;
-import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
-import java.util.Set;
 
 @Singleton
 public class RoleService {
@@ -36,57 +32,10 @@ public class RoleService {
     this.roleRepo = roleRepo;
   }
 
-  public boolean exist(String name) {
-    return roleRepo.existsByName(name);
-  }
-
   public RoleResponse find(String name) {
     return roleRepo.findByName(name)
         .map(role -> (RoleResponse) new RoleSuccess(role))
         .orElseGet(() -> new RoleFailed(name, "No role with name %s found".formatted(name),
             RoleErrors.NOT_FOUND));
-  }
-
-  public void createUnsafe(String name, Set<Permission> permissions) {
-    roleRepo.save(new Role(-1, name, permissions));
-  }
-
-  public RoleResponse create(String name, Set<Permission> permissions) {
-    if (roleRepo.existsByName(name)) {
-      return new RoleFailed(name, "A role with the same name already exists.",
-          RoleErrors.DUPLICATED);
-    }
-    var saved = roleRepo.save(new Role(-1, name, permissions));
-    return new RoleSuccess(saved);
-  }
-
-  public boolean delete(String name) {
-    if (Admins.isAdminRole(name)) {
-      return false;
-    }
-
-    return roleRepo.deleteByName(name) == 1;
-  }
-
-  public RoleResponse removePermissions(String roleName, Set<Permission> permissions) {
-    if (Admins.isAdminRole(roleName)) {
-      return RoleFailed.adminModify();
-    }
-
-    roleRepo.removePermissions(roleName, permissions);
-    return find(roleName);
-  }
-
-  public void addPermissionsUnsafe(String name, Set<Permission> permissions) {
-    roleRepo.addPermissions(name, permissions);
-  }
-
-  public RoleResponse addPermissions(String name, Set<Permission> permissions) {
-    if (Admins.isAdminRole(name)) {
-      return RoleFailed.adminModify();
-    }
-
-    roleRepo.addPermissions(name, permissions);
-    return find(name);
   }
 }

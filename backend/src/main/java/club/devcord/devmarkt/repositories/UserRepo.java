@@ -25,12 +25,9 @@ import io.micronaut.data.jdbc.runtime.JdbcOperations;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
 import java.sql.Array;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import javax.transaction.Transactional;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
@@ -43,7 +40,6 @@ public abstract class UserRepo implements CrudRepository<User, Integer> {
   }
 
   @Join(value = "roles", type = Type.LEFT_FETCH)
-  @Join(value = "roles.permissions", type = Type.LEFT_FETCH)
   public abstract Optional<User> findByUserId(UserId userId);
 
   public abstract boolean existsByUserId(UserId userId);
@@ -85,15 +81,6 @@ public abstract class UserRepo implements CrudRepository<User, Integer> {
       statement.setArray(3, stringSqlArray(roleNames));
       return statement.executeUpdate();
     });
-  }
-
-  private Set<String> setFromResultSet(ResultSet set, String column) throws SQLException {
-    var stringSet = new HashSet<String>(set.getMetaData().getColumnCount());
-    while (set.next()) {
-      var value = set.getString(column);
-      stringSet.add(value);
-    }
-    return stringSet;
   }
 
   private Array stringSqlArray(Collection<String> values) throws SQLException {

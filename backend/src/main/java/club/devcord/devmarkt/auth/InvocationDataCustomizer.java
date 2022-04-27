@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.auth;
 
+import club.devcord.devmarkt.services.UserService;
 import graphql.ExecutionInput;
 import io.micronaut.configuration.graphql.GraphQLExecutionInputCustomizer;
 import io.micronaut.http.HttpRequest;
@@ -27,11 +28,22 @@ import reactor.core.publisher.Mono;
 @Singleton
 public class InvocationDataCustomizer implements GraphQLExecutionInputCustomizer {
 
+  private final UserService userService;
+  private final UserIdValidator validator;
+
+  public InvocationDataCustomizer(UserService userService,
+      UserIdValidator validator) {
+    this.userService = userService;
+    this.validator = validator;
+  }
+
   @Override
   public Publisher<ExecutionInput> customize(ExecutionInput executionInput, HttpRequest httpRequest,
       MutableHttpResponse<String> httpResponse) {
     httpRequest.getHeaders().getAuthorization()
-        .ifPresent(s -> executionInput.getGraphQLContext().put("Authorization", s));
+            .map(validator::parseAndValidate)
+            .flatMap(userService::findDirect)
+            .ifPresent(user -> executionInput.getGraphQLContext().put("user", user));
     return Mono.just(executionInput);
   }
 }

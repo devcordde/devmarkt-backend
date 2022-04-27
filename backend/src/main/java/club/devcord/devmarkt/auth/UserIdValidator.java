@@ -16,14 +16,10 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.UserId;
-import graphql.GraphQLContext;
-import graphql.execution.AbortExecutionException;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
-import java.util.Set;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +30,6 @@ public class UserIdValidator {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserIdValidator.class);
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
-  private final static String AUTHORIZATION_KEY = "Authorization";
 
   private final JwtTokenValidator validator;
 
@@ -42,23 +37,16 @@ public class UserIdValidator {
     this.validator = validator;
   }
 
-  public UserId parseAndValidate(GraphQLContext input) {
-    return extractUserId(input);
-  }
-
-  private UserId extractUserId(GraphQLContext context) {
-    if (context.get(AUTHORIZATION_KEY) instanceof String token) {
-      return validateTokenAndParseUserId(token);
-    }
-    return abort();
+  public UserId parseAndValidate(String token) {
+    return validateTokenAndParseUserId(token);
   }
 
   private UserId validateTokenAndParseUserId(String token) {
-    var auth = Mono.from(validator.validateToken(token, null)).block();
-    if (auth != null) {
-      return validateAndParseUserId(auth);
-    }
-    return abort();
+    return Mono.from(validator.validateToken(token, null))
+        .map(Authentication::getName)
+        .filter(id -> USERID_REGEX.matcher(id).matches())
+        .mapNotNull(this::parseUserIdUnsafe)
+        .block();
   }
 
   private UserId parseUserIdUnsafe(String token) {
@@ -68,20 +56,7 @@ public class UserIdValidator {
       long id = Long.parseLong(array[1]);
       return new UserId(type, id);
     } catch (NumberFormatException e) {
-      return abort();
+      return null;
     }
-  }
-
-  private UserId validateAndParseUserId(Authentication authentication) {
-    var token = authentication.getName();
-    if (USERID_REGEX.matcher(token).matches()) {
-      return parseUserIdUnsafe(token);
-    }
-    return abort();
-  }
-
-  private <T> T abort() {
-    LOGGER.info("Query execution aborted: unauthorized");
-    throw new AbortExecutionException(Set.of(new UnauthorizedError()));
   }
 }

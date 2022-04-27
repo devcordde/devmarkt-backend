@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.graphql;
 
-import club.devcord.devmarkt.auth.AuthGraphQlInstruments;
+import club.devcord.devmarkt.auth.RoleDirective;
 import graphql.GraphQL;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;
@@ -51,7 +51,7 @@ public class GraphQLFactory {
       GraphQLResolver<?>[] resolver,
       ResourceResolver resourceResolver,
       BeanContext context,
-      AuthGraphQlInstruments instruments) {
+      RoleDirective roleDirective) {
     var builder = new SchemaParserBuilder();
 
     readSchemas(builder, location, resourceResolver);
@@ -60,12 +60,12 @@ public class GraphQLFactory {
     initValidation(builder);
 
     builder.scalars(JavaPrimitives.GraphQLLong);
+    builder.directive("Auth", roleDirective);
 
     var schema = builder.build()
         .makeExecutableSchema();
 
     return GraphQL.newGraphQL(schema)
-        .instrumentation(instruments)
         .build();
   }
 

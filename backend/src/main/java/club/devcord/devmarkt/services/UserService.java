@@ -16,8 +16,6 @@
 
 package club.devcord.devmarkt.services;
 
-import club.devcord.devmarkt.auth.SchemaPermissionGenerator;
-import club.devcord.devmarkt.entities.auth.Permission;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
@@ -26,11 +24,9 @@ import club.devcord.devmarkt.responses.user.UserFailed.UserErrors;
 import club.devcord.devmarkt.responses.user.UserResponse;
 import club.devcord.devmarkt.responses.user.UserSuccess;
 import club.devcord.devmarkt.util.Admins;
-import graphql.language.OperationDefinition.Operation;
 import jakarta.inject.Singleton;
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Singleton
 public class UserService {
@@ -41,40 +37,9 @@ public class UserService {
     this.repo = repo;
   }
 
-  public Stream<String> checkPermissions(Operation operation, Stream<String> permissions,
-      UserId userId) {
-    var userOpt = repo.findByUserId(userId);
-    if (userOpt.isEmpty()) {
-      return permissions;
-    }
-    var user = userOpt.get();
-    var userPermissions = user.roles()
-        .stream()
-        .flatMap(role -> role.permissions().stream())
-        .filter(permission -> permission.operation() == operation)
-        .map(Permission::query)
-        .collect(Collectors.toSet());
-
-    return permissions
-        .filter(s -> {
-          if (isIntrospectionField(s)) {
-            var subPerm = s.substring(0,
-                s.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR));
-            return userPermissions
-                .stream()
-                .noneMatch(perm -> perm.startsWith(subPerm));
-          }
-          return !userPermissions.contains(s);
-        });
-  }
-
-  public boolean exists(UserId userId) {
-    return repo.existsByUserId(userId);
-  }
-
-  private boolean isIntrospectionField(String perm) {
-    return perm.startsWith("__",
-        perm.lastIndexOf(SchemaPermissionGenerator.PERMISSION_SEPARATOR) + 1);
+  public Optional<User> findDirect(UserId userId) {
+    System.out.println(userId);
+    return repo.findByUserId(userId);
   }
 
   public UserResponse find(UserId userId) {
