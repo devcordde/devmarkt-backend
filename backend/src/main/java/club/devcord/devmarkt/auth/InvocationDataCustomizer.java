@@ -41,9 +41,9 @@ public class InvocationDataCustomizer implements GraphQLExecutionInputCustomizer
   public Publisher<ExecutionInput> customize(ExecutionInput executionInput, HttpRequest httpRequest,
       MutableHttpResponse<String> httpResponse) {
     httpRequest.getHeaders().getAuthorization()
-            .map(validator::parseAndValidate)
-            .flatMap(userService::findDirect)
-            .ifPresent(user -> executionInput.getGraphQLContext().put("user", user));
+        .map(validator::parseAndValidate)
+        .flatMap(userService::findDirect)
+        .ifPresent(user -> executionInput.getGraphQLContext().put("user", user));
     return Mono.just(executionInput);
   }
 }

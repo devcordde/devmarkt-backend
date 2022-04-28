@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-INSERT INTO roles (name) VALUES ('admin'), ('user') ON CONFLICT DO NOTHING;
 
-
-INSERT INTO users (id_type, user_id) VALUES ('internal', 1) ON CONFLICT DO NOTHING;
+INSERT INTO roles (name)
+VALUES ('admin'),
+       ('user')
+ON CONFLICT DO NOTHING;
+INSERT INTO users (id_type, user_id)
+VALUES ('internal', 1)
+ON CONFLICT DO NOTHING;
 INSERT INTO user_roles (user_id, role_id)
-    SELECT r.id, u.id FROM roles r
-        JOIN users u ON u.id_type = 'internal' AND u.user_id = 1
-    WHERE r.name = 'admin'
+SELECT r.id, u.id
+FROM roles r
+         JOIN users u ON u.id_type = 'internal' AND u.user_id = 1
+WHERE r.name = 'admin'
 ON CONFLICT DO NOTHING;
