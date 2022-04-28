@@ -38,7 +38,6 @@ public class UserService {
   }
 
   public Optional<User> findDirect(UserId userId) {
-    System.out.println(userId);
     return repo.findByUserId(userId);
   }
 
@@ -56,21 +55,12 @@ public class UserService {
     return repo.deleteByUserId(userId) >= 1;
   }
 
-  public void saveUnsafe(UserId userId, Collection<String> roles) {
-    repo.save(new User(-1, userId, null));
-    addUserRolesUnsafe(userId, roles);
-  }
-
   public UserResponse save(UserId userId, Collection<String> roles) {
     if (repo.existsByUserId(userId)) {
       return new UserFailed(UserErrors.DUPLICATED, "A user with the same id already exists");
     }
     repo.save(new User(-1, userId, null));
     return addUserRoles(userId, roles);
-  }
-
-  public void addUserRolesUnsafe(UserId userId, Collection<String> roles) {
-    repo.addRoles(userId, roles);
   }
 
   public UserResponse addUserRoles(UserId userId, Collection<String> roles) {

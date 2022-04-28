@@ -3,7 +3,7 @@ type Query {
 
     template(
         name: String! @NotBlank
-    ): TemplateResponse @Auth(role: "user")
+    ): TemplateResponse! @Auth(role: "user")
 
     question(
         templateName: String! @NotBlank,
@@ -57,7 +57,7 @@ type Mutation {
     ): UserResponse! @Auth(role: "admin")
 
     deleteUser(
-        id: UserIdInput!
+        userId: UserIdInput!
     ): Boolean! @Auth(role: "admin")
 
     addUserRoles(

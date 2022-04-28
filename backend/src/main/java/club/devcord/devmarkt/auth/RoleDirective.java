@@ -27,9 +27,13 @@ import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class RoleDirective implements SchemaDirectiveWiring {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RoleDirective.class);
 
   @Override
   public GraphQLFieldDefinition onField(
@@ -37,17 +41,18 @@ public class RoleDirective implements SchemaDirectiveWiring {
     var field = environment.getFieldDefinition();
     var roleName = (StringValue) environment.getDirective().getArgument("role")
         .getArgumentValue().getValue();
+    assert roleName != null;
     var originalDataFetcher = environment.getFieldDataFetcher();
     DataFetcher<?> authDataFetcher = env -> {
       var user = (User) env.getGraphQlContext().get("user");
 
       if (user == null) {
+        LOGGER.info("Unauthenticated");
         return DataFetcherResult.newResult()
             .error(new UnauthorizedError())
             .build();
       }
 
-      assert roleName != null;
       if (hasRole(user, roleName.getValue()) || hasRole(user, Admins.ADMIN_ROLE_NAME)) {
         return originalDataFetcher.get(env);
       }

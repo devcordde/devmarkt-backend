@@ -21,14 +21,11 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 @Singleton
 public class UserIdValidator {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserIdValidator.class);
   private final static Pattern USERID_REGEX = Pattern.compile("[a-zA-Z]+:[0-9]+");
 
   private final JwtTokenValidator validator;
