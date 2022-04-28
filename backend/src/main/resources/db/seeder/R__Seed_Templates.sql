@@ -35,6 +35,3 @@ VALUES ((SELECT id FROM templateId), 0, 'Who am I?'),
 
 INSERT INTO templates(name)
 VALUES ('Empty template');
-
-
-
