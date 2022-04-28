@@ -1,33 +1,33 @@
 type Query {
-    templates: [TemplateSuccess!]! @Auth(role: "user")
+    templates: [TemplateSuccess!] @Auth(role: "user")
 
     template(
         name: String! @NotBlank
-    ): TemplateResponse! @Auth(role: "user")
+    ): TemplateResponse @Auth(role: "user")
 
     question(
         templateName: String! @NotBlank,
         number: Int! @Min(value: 0)
-    ): QuestionResponse! @Auth(role: "user")
+    ): QuestionResponse @Auth(role: "user")
 
     role(
         name: String! @NotBlank,
-    ): RoleResponse! @Auth(role: "admin")
+    ): RoleResponse @Auth(role: "admin")
 
     user(
         id: UserIdInput!
-    ): UserResponse! @Auth(role: "admin")
+    ): UserResponse @Auth(role: "admin")
 }
 
 type Mutation {
     createTemplate(
         name: String! @NotBlank,
         questions: [QuestionInput!]!
-    ): TemplateResponse! @Auth(role: "admin")
+    ): TemplateResponse @Auth(role: "admin")
 
     deleteTemplate(
         name: String! @NotBlank
-    ): Boolean! @Auth(role: "admin")
+    ): Boolean @Auth(role: "admin")
 
     updateTemplateName(
         oldName: String! @NotBlank,
@@ -38,23 +38,23 @@ type Mutation {
         templateName: String! @NotBlank,
         question: String! @NotBlank,
         number: Int = -1 @Min(value: -1)
-    ): QuestionResponse! @Auth(role: "admin")
+    ): QuestionResponse @Auth(role: "admin")
 
     updateQuestion(
         templateName: String! @NotBlank,
         number: Int! @Min(value: -1),
         question: String! @NotBlank
-    ): QuestionResponse! @Auth(role: "admin")
+    ): QuestionResponse @Auth(role: "admin")
 
     deleteQuestion(
         templateName: String! @NotBlank,
         number: Int! @Min(value: -1)
-    ): Boolean! @Auth(role: "admin")
+    ): Boolean @Auth(role: "admin")
 
     createUser(
         userId: UserIdInput!
         roles: [String!]!
-    ): UserResponse! @Auth(role: "admin")
+    ): UserResponse @Auth(role: "admin")
 
     deleteUser(
         userId: UserIdInput!
@@ -63,12 +63,12 @@ type Mutation {
     addUserRoles(
         userId: UserIdInput!
         roles: [String!]!
-    ): UserResponse! @Auth(role: "admin")
+    ): UserResponse @Auth(role: "admin")
 
     removeUserRoles(
         userId: UserIdInput!
         roles: [String!]!
-    ): UserResponse! @Auth(role: "admin")
+    ): UserResponse @Auth(role: "admin")
 }
 
 # common
