@@ -6,5 +6,8 @@
         "classification": "UNAUTHORIZED"
       }
     }
-  ]
+  ],
+  "data": {
+    "createTemplate": null
+  }
 }

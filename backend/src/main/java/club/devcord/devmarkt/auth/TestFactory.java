@@ -37,13 +37,18 @@ public class TestFactory {
   @Context
   public String testLol(JwtTokenGenerator generator, BeanContext context, UserRepo repo) {
 
-    LOGGER.info("test:123 user: " + generator.generateToken(Map.of(
-        "sub", "test:123",
+    LOGGER.info("testuser:2 user: " + generator.generateToken(Map.of(
+        "sub", "testuser:2",
         "iat", 1516239022
     )).get());
 
     LOGGER.info("internal:1 user: " + generator.generateToken(Map.of(
         "sub", "internal:1",
+        "iat", 1516239022
+    )).get());
+
+    LOGGER.info("testuser:1 user: " + generator.generateToken(Map.of(
+        "sub", "testuser:1",
         "iat", 1516239022
     )).get());
     return "";

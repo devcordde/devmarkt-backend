@@ -35,15 +35,19 @@ const tests = [
     matrix: [
       {
         auth: Authorization.NONE,
-        response: "errors/unauthorized.json"
+        response: "template/unauthorized/create.json"
       },
       {
-        auth: Authorization.TEST,
-        response: "template/permission/create-permission-denied.json"
+        auth: Authorization.NO_ROLES,
+        response: "template/permission/create.json"
+      },
+      {
+        auth: Authorization.USER,
+        response: "template/permission/create.json"
       },
       {
         auth: Authorization.ADMIN,
-        response: "template/create-template-success.json",
+        response: "template/create.json",
         after: {
           query: "template/delete-template.graphql",
           variables: {name: "PermissionTemplate"}
@@ -57,11 +61,15 @@ const tests = [
     matrix: [
       {
         auth: Authorization.NONE,
-        response: "errors/unauthorized.json"
+        response: "template/unauthorized/templates.json"
       },
       {
-        auth: Authorization.TEST,
-        response: "template/permission/list-permission-denied.json"
+        auth: Authorization.NO_ROLES,
+        response: "template/permission/templates.json"
+      },
+      {
+        auth: Authorization.USER,
+        response: "template/templates.json"
       },
       {
         auth: Authorization.ADMIN,
@@ -76,11 +84,15 @@ const tests = [
     matrix: [
       {
         auth: Authorization.NONE,
-        response: "errors/unauthorized.json"
+        response: "template/unauthorized/delete.json"
       },
       {
-        auth: Authorization.TEST,
-        response: "template/permission/delete-permission-denied.json"
+        auth: Authorization.NO_ROLES,
+        response: "template/permission/delete.json"
+      },
+      {
+        auth: Authorization.USER,
+        response: "template/permission/delete.json"
       },
       {
         before: {
@@ -88,7 +100,7 @@ const tests = [
           variables: templateCreateVars("PermissionTemplate")
         },
         auth: Authorization.ADMIN,
-        response: "template/delete-template.json"
+        response: "template/delete.json"
       }
     ]
   }

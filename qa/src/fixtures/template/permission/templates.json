@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "message": "You're forbidden to use 'Query' @ 'templates'.",
+      "extensions": {
+        "classification": "FORBIDDEN"
+      }
+    }
+  ],
+  "data": {
+    "templates": null
+  }
+}
