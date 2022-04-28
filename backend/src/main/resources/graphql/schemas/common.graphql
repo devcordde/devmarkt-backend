@@ -10,9 +10,7 @@ type Query {
         number: Int! @Min(value: 0)
     ): QuestionResponse @Auth(role: "user")
 
-    role(
-        name: String! @NotBlank,
-    ): RoleResponse @Auth(role: "admin")
+    roles: [String!] @Auth(role: "admin")
 
     user(
         id: UserIdInput!

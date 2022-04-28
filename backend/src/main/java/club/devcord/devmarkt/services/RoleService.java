@@ -16,12 +16,10 @@
 
 package club.devcord.devmarkt.services;
 
+import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.repositories.RoleRepo;
-import club.devcord.devmarkt.responses.role.RoleFailed;
-import club.devcord.devmarkt.responses.role.RoleFailed.RoleErrors;
-import club.devcord.devmarkt.responses.role.RoleResponse;
-import club.devcord.devmarkt.responses.role.RoleSuccess;
 import jakarta.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class RoleService {
@@ -32,10 +30,10 @@ public class RoleService {
     this.roleRepo = roleRepo;
   }
 
-  public RoleResponse find(String name) {
-    return roleRepo.findByName(name)
-        .map(role -> (RoleResponse) new RoleSuccess(role))
-        .orElseGet(() -> new RoleFailed(name, "No role with name %s found".formatted(name),
-            RoleErrors.NOT_FOUND));
+  public List<String> roles() {
+    return roleRepo.findAllOrderByName()
+        .stream()
+        .map(Role::name)
+        .toList();
   }
 }
