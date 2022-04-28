@@ -23,12 +23,17 @@ const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 export const Authorization = {
   NONE: "",
   // testuser:1
-  NO_ROLES: readFile(resolve("./src/fixtures/no_roles.key")),
+  NO_ROLES: readToken("no_roles"),
   // internal:1
-  ADMIN: readFile(resolve("./src/fixtures/admin.key")),
+  ADMIN: readToken("admin"),
   // testuser:2
-  USER: readFile(resolve("./src/fixtures/user.key")),
+  USER: readToken("user"),
 };
+
+function readToken(name) {
+  let token = readFile(resolve(`./src/fixtures/${name}.key`))
+  return token.toString().trim()
+}
 
 Authorization.nameFor = token => {
   for(const key of Object.keys(Authorization)) {
