@@ -34,20 +34,22 @@ public class UserIdValidator {
     this.validator = validator;
   }
 
-  public UserId parseAndValidate(String token) {
-    return validateTokenAndParseUserId(token);
-  }
-
-  private UserId validateTokenAndParseUserId(String token) {
+  public UserId validateUserIdFromToken(String token) {
     return Mono.from(validator.validateToken(token, null))
         .map(Authentication::getName)
-        .filter(id -> USERID_REGEX.matcher(id).matches())
-        .mapNotNull(this::parseUserIdUnsafe)
+        .mapNotNull(this::validateUserId)
         .block();
   }
 
-  private UserId parseUserIdUnsafe(String token) {
-    var array = token.split(":", 2);
+  public UserId validateUserId(String id) {
+    if(USERID_REGEX.matcher(id).matches()) {
+      return parseUserIdUnsafe(id);
+    }
+    return null;
+  }
+
+  private UserId parseUserIdUnsafe(String rawId) {
+    var array = rawId.split(":", 2);
     var type = array[0];
     try {
       long id = Long.parseLong(array[1]);

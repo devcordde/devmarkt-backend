@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth.error;
+package club.devcord.devmarkt;
 
-import graphql.ErrorClassification;
-import graphql.language.SourceLocation;
-import java.util.List;
-
-public class UnauthorizedError implements GraphQlErrorResult {
+public enum Roles {
+  ADMIN,
+  USER;
 
   @Override
-  public String getMessage() {
-    return "No or invalid authentication found.";
+  public String toString() {
+    return name().toLowerCase();
   }
-
-  @Override
-  public List<SourceLocation> getLocations() {
-    return null;
-  }
-
-  @Override
-  public ErrorClassification getErrorType() {
-    return Error.UNAUTHORIZED;
-  }
-
-  private enum Error implements ErrorClassification {
-    UNAUTHORIZED
-  }
-
 }

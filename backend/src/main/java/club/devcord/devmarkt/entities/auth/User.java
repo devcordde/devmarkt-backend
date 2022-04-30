@@ -37,4 +37,13 @@ public record User(
     Collection<Role> roles
 ) {
 
+    public boolean hasRole(String name) {
+        for (var role : roles) {
+            if (role.name().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
