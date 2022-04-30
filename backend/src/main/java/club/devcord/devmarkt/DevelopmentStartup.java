@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.auth;
+package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.repositories.UserRepo;
-import io.micronaut.context.BeanContext;
-import io.micronaut.context.annotation.Context;
-import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.event.ApplicationEventListener;
+import io.micronaut.context.event.StartupEvent;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
-import io.micronaut.security.token.jwt.signature.secret.SecretSignatureConfiguration;
+import jakarta.inject.Singleton;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// used to create a valid jwt for development purposes
-@Factory
-@Requires(beans = {SecretSignatureConfiguration.class, JwtTokenGenerator.class},
-property = "ENABLE_DEVELOPMENT_FEATURES")
-public class TestFactory {
+// this file contains development oriented code and is not intended for production use
+@Singleton
+@Requires(property = "ENABLE_DEVELOPMENT_FEATURES")
+public class DevelopmentStartup implements ApplicationEventListener<StartupEvent> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TestFactory.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DevelopmentStartup.class);
 
-  @Context
-  public String testLol(JwtTokenGenerator generator, BeanContext context, UserRepo repo) {
+  private final JwtTokenGenerator generator;
 
+  public DevelopmentStartup(
+      JwtTokenGenerator jwtTokenGenerator) {
+    this.generator = jwtTokenGenerator;
+  }
+
+  @Override
+  public void onApplicationEvent(StartupEvent event) {
     LOGGER.info("testuser:2 user: " + generator.generateToken(Map.of(
         "sub", "testuser:2",
         "iat", 1516239022
@@ -60,7 +63,5 @@ public class TestFactory {
         "sub", "notKnown:1",
         "iat", 1516239022
     )).get());
-    return "";
   }
-
 }
