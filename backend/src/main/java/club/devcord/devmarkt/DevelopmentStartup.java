@@ -41,25 +41,25 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
 
   @Override
   public void onApplicationEvent(StartupEvent event) {
-    LOGGER.info("testuser:2 user: " + generator.generateToken(Map.of(
+    LOGGER.info("testuser:2 user: {}",generator.generateToken(Map.of(
         "sub", "testuser:2",
         "iat", 1516239022
     )).get());
 
-    LOGGER.info("internal:1 user: " + generator.generateToken(Map.of(
+    LOGGER.info("internal:1 user: {}",generator.generateToken(Map.of(
         "sub", "internal:1",
         "iat", 1516239022
     )).get());
 
-    LOGGER.info("testuser:1 user: " + generator.generateToken(Map.of(
+    LOGGER.info("testuser:1 user: {}", generator.generateToken(Map.of(
         "sub", "testuser:1",
         "iat", 1516239022
     )).get());
-    LOGGER.info("wrong_format userid: " + generator.generateToken(Map.of(
+    LOGGER.info("wrong_format userid: {}", generator.generateToken(Map.of(
         "sub", "wrong_format",
         "iat", 1516239022
     )).get());
-    LOGGER.info("notKnown_user 'not_known:1' userid: " + generator.generateToken(Map.of(
+    LOGGER.info("notKnown_user 'not_known:1' userid: {}", generator.generateToken(Map.of(
         "sub", "notKnown:1",
         "iat", 1516239022
     )).get());

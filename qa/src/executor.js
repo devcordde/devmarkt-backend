@@ -35,7 +35,8 @@ export const Authorization = {
   FOREIGN_NOT_KNOWN_USER: readToken('foreign_not_known_user'),
   NOT_KNOWN_USER: readToken('foreign_not_known_user'),
   FOREIGN_UNAUTHORIZED_SUDOER: readToken('foreign_unauthorized_sudoer'),
-  FOREIGN_ADMIN: readToken('foreign_admin')
+  FOREIGN_ADMIN: readToken('foreign_admin'),
+  FOREIGN_WRONG_TOKEN_USERID_FORMAT: readToken('wrong_foreign_token_userid_format')
 };
 
 function readToken(name) {

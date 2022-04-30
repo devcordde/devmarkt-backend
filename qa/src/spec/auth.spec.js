@@ -52,6 +52,10 @@ const tests = [
         response: 'auth/unauthorized/roles.json'
       },
       {
+        auth: Authorization.FOREIGN_WRONG_TOKEN_USERID_FORMAT,
+        response: 'auth/unauthorized/roles.json'
+      },
+      {
         auth: Authorization.USER,
         response: 'auth/permission/roles.json'
       },
@@ -107,6 +111,10 @@ const tests = [
       },
       {
         auth: Authorization.FOREIGN_UNAUTHORIZED_SUDOER,
+        response: 'auth/unauthorized/templates.json'
+      },
+      {
+        auth: Authorization.FOREIGN_WRONG_TOKEN_USERID_FORMAT,
         response: 'auth/unauthorized/templates.json'
       },
       {

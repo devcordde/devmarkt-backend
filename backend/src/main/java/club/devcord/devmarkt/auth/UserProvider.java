@@ -66,6 +66,9 @@ public class UserProvider {
     }
 
     var sudoer = userIdValidator.validateUserIdFromToken(split[0]);
+    if (sudoer == null) {
+      return Optional.empty();
+    }
     var isAdmin = userService.findDirect(sudoer)
         .filter(user -> user.hasRole(Roles.ADMIN)).isPresent();
     if (isAdmin) {
