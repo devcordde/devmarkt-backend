@@ -51,6 +51,14 @@ public class TestFactory {
         "sub", "testuser:1",
         "iat", 1516239022
     )).get());
+    LOGGER.info("wrong_format userid: " + generator.generateToken(Map.of(
+        "sub", "wrong_format",
+        "iat", 1516239022
+    )).get());
+    LOGGER.info("notKnown_user 'not_known:1' userid: " + generator.generateToken(Map.of(
+        "sub", "notKnown:1",
+        "iat", 1516239022
+    )).get());
     return "";
   }
 

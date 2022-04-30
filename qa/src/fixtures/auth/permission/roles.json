@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "message": "You're forbidden to use 'Query' @ 'roles'.",
+      "extensions": {
+        "classification": "FORBIDDEN"
+      }
+    }
+  ],
+  "data": {
+    "roles": null
+  }
+}

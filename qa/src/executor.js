@@ -22,12 +22,20 @@ const endpoint = `${process.env.BACKEND_HOST}/graphql`;
 
 export const Authorization = {
   NONE: "",
-  // testuser:1
   NO_ROLES: readToken("no_roles"),
-  // internal:1
   ADMIN: readToken("admin"),
-  // testuser:2
   USER: readToken("user"),
+  NO_METHOD: readToken('no_method'),
+  INVALID_METHOD: readToken('invalid_method'),
+  WRONG_FORMAT_FOREIGN: readToken('wrong_format_foreign'),
+  WRONG_FORMAT_SELF: readToken('wrong_format_self'),
+  WRONG_FORMAT_USERID: readToken('wrong_format_userid'),
+  FOREIGN_USER_ROLE: readToken('foreign_user_role'),
+  FOREIGN_NO_ROLE: readToken('foreign_no_role'),
+  FOREIGN_NOT_KNOWN_USER: readToken('foreign_not_known_user'),
+  NOT_KNOWN_USER: readToken('foreign_not_known_user'),
+  FOREIGN_UNAUTHORIZED_SUDOER: readToken('foreign_unauthorized_sudoer'),
+  FOREIGN_ADMIN: readToken('foreign_admin')
 };
 
 function readToken(name) {

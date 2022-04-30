@@ -32,77 +32,29 @@ const tests = [
     name: "Create Template",
     variables: templateCreateVars("PermissionTemplate"),
     query: "template/create-template.graphql",
-    matrix: [
-      {
-        auth: Authorization.NONE,
-        response: "template/unauthorized/create.json"
-      },
-      {
-        auth: Authorization.NO_ROLES,
-        response: "template/permission/create.json"
-      },
-      {
-        auth: Authorization.USER,
-        response: "template/permission/create.json"
-      },
-      {
-        auth: Authorization.ADMIN,
-        response: "template/create.json",
-        after: {
-          query: "template/delete-template.graphql",
-          variables: {name: "PermissionTemplate"}
-        }
-      }
-    ]
+    auth: Authorization.ADMIN,
+    response: "template/create.json",
+    after: {
+      query: "template/delete-template.graphql",
+      variables: {name: "PermissionTemplate"}
+    }
   },
   {
     name: "List Templates",
     query: "template/templates.graphql",
-    matrix: [
-      {
-        auth: Authorization.NONE,
-        response: "template/unauthorized/templates.json"
-      },
-      {
-        auth: Authorization.NO_ROLES,
-        response: "template/permission/templates.json"
-      },
-      {
-        auth: Authorization.USER,
-        response: "template/templates.json"
-      },
-      {
-        auth: Authorization.ADMIN,
-        response: "template/templates.json"
-      }
-    ]
+    auth: Authorization.ADMIN,
+    response: "template/templates.json"
   },
   {
     name: "Delete Template",
     query: "template/delete-template.graphql",
     variables: templateCreateVars("PermissionTemplate"),
-    matrix: [
-      {
-        auth: Authorization.NONE,
-        response: "template/unauthorized/delete.json"
-      },
-      {
-        auth: Authorization.NO_ROLES,
-        response: "template/permission/delete.json"
-      },
-      {
-        auth: Authorization.USER,
-        response: "template/permission/delete.json"
-      },
-      {
-        before: {
-          query: "template/create-template.graphql",
-          variables: templateCreateVars("PermissionTemplate")
-        },
-        auth: Authorization.ADMIN,
-        response: "template/delete.json"
-      }
-    ]
+    before: {
+      query: "template/create-template.graphql",
+      variables: templateCreateVars("PermissionTemplate")
+    },
+    auth: Authorization.ADMIN,
+    response: "template/delete.json"
   }
 ];
 

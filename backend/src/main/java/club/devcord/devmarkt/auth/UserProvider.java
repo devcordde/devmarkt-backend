@@ -62,6 +62,11 @@ public class UserProvider {
 
   private Optional<User> validateForeign(String value) {
     var split = value.split(" ", 2);
+
+    if (split.length != 2) {
+      return Optional.empty();
+    }
+
     var sudoer = userIdValidator.validateUserIdFromToken(split[0]);
     var isAdmin = userService.findDirect(sudoer)
         .filter(user -> user.hasRole(Admins.ADMIN_ROLE_NAME)).isPresent();
