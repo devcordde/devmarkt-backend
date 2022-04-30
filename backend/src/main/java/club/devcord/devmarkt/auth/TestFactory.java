@@ -29,7 +29,8 @@ import org.slf4j.LoggerFactory;
 
 // used to create a valid jwt for development purposes
 @Factory
-@Requires(beans = {SecretSignatureConfiguration.class, JwtTokenGenerator.class})
+@Requires(beans = {SecretSignatureConfiguration.class, JwtTokenGenerator.class},
+property = "ENABLE_DEVELOPMENT_FEATURES")
 public class TestFactory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestFactory.class);
