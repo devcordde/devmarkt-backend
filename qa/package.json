@@ -8,9 +8,9 @@
   "license": "Apache-2.0",
   "private": true,
   "devDependencies": {
-    "jest": "^27.5.1",
+    "jest": "^28.0.3",
     "jest-junit": "^13.2.0",
-    "node-fetch": "^3.2.3"
+    "node-fetch": "^3.2.4"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
