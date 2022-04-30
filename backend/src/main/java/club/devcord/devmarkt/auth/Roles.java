@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.auth;
 
 public enum Roles {
   ADMIN,

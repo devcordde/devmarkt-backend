@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.entities.auth;
 
+import club.devcord.devmarkt.auth.Roles;
 import club.devcord.devmarkt.graphql.GraphQLType;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -37,9 +38,9 @@ public record User(
     Collection<Role> roles
 ) {
 
-    public boolean hasRole(String name) {
-        for (var role : roles) {
-            if (role.name().equals(name)) {
+    public boolean hasRole(Roles role) {
+        for (var c : roles) {
+            if (c.name().equals(role.toString())) {
                 return true;
             }
         }

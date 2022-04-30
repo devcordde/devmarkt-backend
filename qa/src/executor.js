@@ -39,7 +39,7 @@ export const Authorization = {
 };
 
 function readToken(name) {
-  let token = readFile(resolve(`./src/fixtures/${name}.key`))
+  let token = readFile(resolve(`./src/fixtures/keys/${name}.key`))
   return token.toString().trim()
 }
 

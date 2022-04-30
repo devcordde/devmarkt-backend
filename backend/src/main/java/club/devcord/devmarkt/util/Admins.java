@@ -20,7 +20,6 @@ import club.devcord.devmarkt.entities.auth.UserId;
 
 public class Admins {
 
-  public static final String ADMIN_ROLE_NAME = "admin";
   public static final UserId ADMIN_USERID = new UserId("internal", 1);
 
   private Admins() {

@@ -16,11 +16,9 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.Roles;
 import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.services.UserService;
-import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.Set;
@@ -69,7 +67,7 @@ public class UserProvider {
 
     var sudoer = userIdValidator.validateUserIdFromToken(split[0]);
     var isAdmin = userService.findDirect(sudoer)
-        .filter(user -> user.hasRole(Admins.ADMIN_ROLE_NAME)).isPresent();
+        .filter(user -> user.hasRole(Roles.ADMIN)).isPresent();
     if (isAdmin) {
       var userId = userIdValidator.validateUserId(split[1]);
       if (userId == null) {

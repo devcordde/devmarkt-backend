@@ -16,9 +16,9 @@
 
 package club.devcord.devmarkt.responses.role;
 
+import club.devcord.devmarkt.auth.Roles;
 import club.devcord.devmarkt.graphql.GraphQLType;
 import club.devcord.devmarkt.responses.Fail;
-import club.devcord.devmarkt.util.Admins;
 
 @GraphQLType("RoleFailed")
 public record RoleFailed(
@@ -28,7 +28,7 @@ public record RoleFailed(
 ) implements Fail, RoleResponse {
 
   public static RoleFailed adminModify() {
-    return new RoleFailed(Admins.ADMIN_ROLE_NAME, "Admin role can't be modified",
+    return new RoleFailed(Roles.ADMIN.toString(), "Admin role can't be modified",
         RoleErrors.ADMIN_ROLE_CANT_BE_MODIFIED);
   }
 

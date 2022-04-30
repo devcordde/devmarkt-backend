@@ -19,7 +19,6 @@ package club.devcord.devmarkt.auth;
 import club.devcord.devmarkt.auth.error.ForbiddenError;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.User;
-import club.devcord.devmarkt.util.Admins;
 import graphql.execution.DataFetcherResult;
 import graphql.language.StringValue;
 import graphql.schema.DataFetcher;
@@ -53,7 +52,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
             .build();
       }
 
-      if (hasRole(user, roleName.getValue()) || hasRole(user, Admins.ADMIN_ROLE_NAME)) {
+      if (hasRole(user, roleName.getValue()) || hasRole(user, Roles.ADMIN.toString())) {
         return originalDataFetcher.get(env);
       }
       return DataFetcherResult.newResult()
