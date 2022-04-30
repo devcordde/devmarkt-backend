@@ -6,8 +6,8 @@ import ch.qos.logback.core.CoreConstants;
 
 public class ThrowableSpacer extends ExtendedThrowableProxyConverter {
 
-    @Override
-    protected String throwableProxyToString(IThrowableProxy tp) {
-        return super.throwableProxyToString(tp) + CoreConstants.LINE_SEPARATOR;
-    }
+  @Override
+  protected String throwableProxyToString(IThrowableProxy tp) {
+    return super.throwableProxyToString(tp) + CoreConstants.LINE_SEPARATOR;
+  }
 }

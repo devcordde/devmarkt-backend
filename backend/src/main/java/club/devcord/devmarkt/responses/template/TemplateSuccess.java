@@ -17,8 +17,10 @@
 package club.devcord.devmarkt.responses.template;
 
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.graphql.GraphQLType;
 import club.devcord.devmarkt.responses.Success;
 
+@GraphQLType("TemplateSuccess")
 public record TemplateSuccess(
     Template template
 ) implements TemplateResponse, Success {

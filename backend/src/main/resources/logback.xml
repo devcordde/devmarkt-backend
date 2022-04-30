@@ -8,14 +8,14 @@
 
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %color(%5p) %color(${PID:- }){purple} --- [%15.15t] %color(%-40.40logger{39}){cyan} : %m%n%ts</pattern>
-      <charset>default</charset>
+      <charset>utf-8</charset>
     </encoder>
   </appender>
 
   <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n</pattern>
-      <charset>default</charset>
+      <charset>utf-8</charset>
     </encoder>
     <file>${LOG_FILE:-application.log}</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">

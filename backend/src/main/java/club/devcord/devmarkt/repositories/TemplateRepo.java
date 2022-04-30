@@ -30,7 +30,6 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
 
   boolean existsByName(String name);
 
-  @Join("questions")
   @Join(value = "questions", type = Type.LEFT_FETCH)
   Optional<Template> findByName(String name);
 

@@ -20,7 +20,8 @@ import club.devcord.devmarkt.responses.Response;
 
 public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
 
-  default Object graphqlUnion() {
+  @Override
+  default Object graphQlUnion() {
     if (this instanceof QuestionSuccess success) {
       return success.question();
     }

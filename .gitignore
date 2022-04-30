@@ -31,6 +31,7 @@ build
 .idea
 !/.idea/copyright
 !/.idea/codeStyles
+!/.idea/runConfigurations
 **/build
 **/.gradle
 
@@ -38,3 +39,5 @@ build
 
 # Ignore node_modules
 node_modules/
+
+.graphqlconfig

@@ -31,7 +31,8 @@ public class SchemaResolver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SchemaResolver.class);
 
-  public Set<String> resolveSchemas(String location, ResourceResolver resolver) throws IOException, URISyntaxException {
+  public Set<String> resolveSchemas(String location, ResourceResolver resolver)
+      throws IOException, URISyntaxException {
     var url = resolver.getResources(location)
         .findFirst();
     if (url.isPresent()) {

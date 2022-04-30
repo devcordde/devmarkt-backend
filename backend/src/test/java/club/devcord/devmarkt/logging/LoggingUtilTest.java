@@ -27,7 +27,7 @@ public class LoggingUtilTest {
 
   @Test
   void testResponseStatus_fail() {
-    var response = new FailResponse("SOME_FANCY_ERROR_CODE");
+    var response = new FailResponse("SOME_FANCY_ERROR_CODE", "some message");
     var status = LoggingUtil.responseStatus(response);
     assertEquals("SOME_FANCY_ERROR_CODE", status);
   }
@@ -48,14 +48,26 @@ public class LoggingUtilTest {
 
   private record UnexpectedResponse() implements Response {
 
+    @Override
+    public Object graphQlUnion() {
+      return null;
+    }
   }
 
-  private record FailResponse(String errorCode) implements Response, Fail {
+  private record FailResponse(String errorCode, String message) implements Response, Fail {
 
+    @Override
+    public Object graphQlUnion() {
+      return null;
+    }
   }
 
   private record SuccessResponse() implements Response, Success {
 
+    @Override
+    public Object graphQlUnion() {
+      return null;
+    }
   }
 
 }

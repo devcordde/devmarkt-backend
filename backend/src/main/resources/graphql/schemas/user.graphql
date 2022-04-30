@@ -1,0 +1,21 @@
+union UserResponse = UserSuccess | UserFailed
+
+input UserIdInput {
+    type: String! @NotBlank
+    id: Long
+}
+
+type UserId {
+    type: String!
+    id: Long
+}
+
+type UserSuccess {
+    userId: UserId!
+    roles: [RoleSuccess!]!
+}
+
+type UserFailed implements Error {
+    errorCode: String!
+    message: String!
+}

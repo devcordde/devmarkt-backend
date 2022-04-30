@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "message": "You're forbidden to use 'Mutation' @ 'createTemplate'.",
+      "extensions": {
+        "classification": "FORBIDDEN"
+      }
+    }
+  ],
+  "data": {
+    "createTemplate": null
+  }
+}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql.question;
+package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.services.QuestionService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -34,7 +34,7 @@ public class QuestionQuery implements GraphQLQueryResolver {
   }
 
   public Object question(String templateName, int number) {
-    var response = service.question(templateName, number).graphqlUnion();
+    var response = service.question(templateName, number).graphQlUnion();
     LOGGER.info("Question fetch. TemplateName: {}, Number: {}", templateName, number);
     return response;
   }

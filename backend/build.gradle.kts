@@ -20,11 +20,14 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-inject-java")
     // When.MAYBE warning fix
     annotationProcessor("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.flyway:micronaut-flyway")

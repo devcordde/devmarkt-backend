@@ -42,7 +42,7 @@ public class TemplateQuery implements GraphQLQueryResolver {
     var response = service.find(name);
     LOGGER.info("Template fetching. Response: {}, Name: {}", LoggingUtil.responseStatus(response),
         name);
-    return response.graphqlUnion();
+    return response.graphQlUnion();
   }
 
   public List<Template> templates(DataFetchingEnvironment environment) {

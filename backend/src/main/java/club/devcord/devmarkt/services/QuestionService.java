@@ -115,9 +115,7 @@ public class QuestionService {
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
 
-      var num = i + from;
-
-      int rightNum = num + offset;
+      int rightNum = i + offset + from;
       if (question.number() != rightNum) {
         updatedQuestions.add(
             new RawQuestion(question.id(), templateId, rightNum, question.question()));

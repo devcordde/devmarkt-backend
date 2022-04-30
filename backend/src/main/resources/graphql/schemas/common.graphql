@@ -1,47 +1,72 @@
 type Query {
-    templates: [TemplateSuccess!]!
+    templates: [TemplateSuccess!] @Auth(role: "user")
 
     template(
         name: String! @NotBlank
-    ):TemplateResponse!
+    ): TemplateResponse @Auth(role: "user")
 
     question(
         templateName: String! @NotBlank,
         number: Int! @Min(value: 0)
-    ): QuestionResponse!
+    ): QuestionResponse @Auth(role: "user")
+
+    roles: [String!] @Auth(role: "admin")
+
+    user(
+        id: UserIdInput!
+    ): UserResponse @Auth(role: "admin")
 }
 
 type Mutation {
     createTemplate(
         name: String! @NotBlank,
         questions: [QuestionInput!]!
-    ): TemplateResponse!
+    ): TemplateResponse @Auth(role: "admin")
 
     deleteTemplate(
         name: String! @NotBlank
-    ): Boolean!
+    ): Boolean @Auth(role: "admin")
 
     updateTemplateName(
         oldName: String! @NotBlank,
         newName: String! @NotBlank
-    ): Boolean
+    ): Boolean @Auth(role: "admin")
 
     addQuestion(
         templateName: String! @NotBlank,
         question: String! @NotBlank,
         number: Int = -1 @Min(value: -1)
-    ): QuestionResponse!
+    ): QuestionResponse @Auth(role: "admin")
 
     updateQuestion(
         templateName: String! @NotBlank,
         number: Int! @Min(value: -1),
         question: String! @NotBlank
-    ): QuestionResponse!
+    ): QuestionResponse @Auth(role: "admin")
 
     deleteQuestion(
         templateName: String! @NotBlank,
         number: Int! @Min(value: -1)
-    ): Boolean!
+    ): Boolean @Auth(role: "admin")
+
+    createUser(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse @Auth(role: "admin")
+
+    deleteUser(
+        userId: UserIdInput!
+    ): Boolean! @Auth(role: "admin")
+
+    addUserRoles(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse @Auth(role: "admin")
+
+    removeUserRoles(
+        userId: UserIdInput!
+        roles: [String!]!
+    ): UserResponse @Auth(role: "admin")
 }
 
 # common

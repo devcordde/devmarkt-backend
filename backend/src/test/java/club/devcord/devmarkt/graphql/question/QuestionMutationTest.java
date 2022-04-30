@@ -25,6 +25,8 @@ import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.graphql.template.QuestionMutation;
+import club.devcord.devmarkt.graphql.template.QuestionQuery;
 import club.devcord.devmarkt.graphql.template.TemplateMutation;
 import club.devcord.devmarkt.graphql.template.TemplateQuery;
 import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;

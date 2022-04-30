@@ -16,9 +16,11 @@
 
 package club.devcord.devmarkt.graphql;
 
+import club.devcord.devmarkt.auth.RoleDirective;
 import graphql.GraphQL;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;
+import graphql.scalars.java.JavaPrimitives;
 import graphql.validation.rules.OnValidationErrorStrategy;
 import graphql.validation.rules.ValidationRules;
 import graphql.validation.schemawiring.ValidationSchemaWiring;
@@ -48,7 +50,8 @@ public class GraphQLFactory {
       @Value("${graphql.schemas}") String location,
       GraphQLResolver<?>[] resolver,
       ResourceResolver resourceResolver,
-      BeanContext context) {
+      BeanContext context,
+      RoleDirective roleDirective) {
     var builder = new SchemaParserBuilder();
 
     readSchemas(builder, location, resourceResolver);
@@ -56,8 +59,12 @@ public class GraphQLFactory {
     registerTypes(builder, context);
     initValidation(builder);
 
+    builder.scalars(JavaPrimitives.GraphQLLong);
+    builder.directive("Auth", roleDirective);
+
     var schema = builder.build()
         .makeExecutableSchema();
+
     return GraphQL.newGraphQL(schema)
         .build();
   }
@@ -69,7 +76,8 @@ public class GraphQLFactory {
     }
   }
 
-  private void readSchemas(SchemaParserBuilder builder, String location, ResourceResolver resolver) {
+  private void readSchemas(SchemaParserBuilder builder, String location,
+      ResourceResolver resolver) {
     var reader = new SchemaResolver();
     try {
       reader.resolveSchemas(location, resolver)

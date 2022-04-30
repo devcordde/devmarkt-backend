@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql.question;
+package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.QuestionService;
@@ -38,14 +38,14 @@ public class QuestionMutation implements GraphQLMutationResolver {
     var response = service.addQuestion(templateName, question, number);
     LOGGER.info("Question addition. Response: {}, TemplateName: {}, Number: {}, Question: {}",
         LoggingUtil.responseStatus(response), templateName, number, question);
-    return response.graphqlUnion();
+    return response.graphQlUnion();
   }
 
   public Object updateQuestion(String templateName, int number, String question) {
     var response = service.updateQuestion(templateName, number, question);
     LOGGER.info("Question update, Response: {}, TemplateName: {}, Number: {}, Question: {}",
         LoggingUtil.responseStatus(response), templateName, number, question);
-    return response.graphqlUnion();
+    return response.graphQlUnion();
   }
 
   public boolean deleteQuestion(String templateName, int number) {

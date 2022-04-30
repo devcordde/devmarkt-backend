@@ -4,17 +4,32 @@ micronaut:
   server:
     port: ${devmarkt.server.port:8080}
     host: ${devmarkt.server.host:`localhost`}
+  security:
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${devmarkt.auth.jwtsecret}
+              jws-algorithm: HS256
+    intercept-url-map:
+      - pattern: /*
+        access:
+          - isAnonymous()
+
 datasources:
   default:
     url: jdbc:postgresql://${devmarkt.postgres.host:localhost}:${devmarkt.postgres.port:5432}/${devmarkt.postgres.database}
     username: ${devmarkt.postgres.user}
     password: ${devmarkt.postgres.password}
+
 flyway:
   datasources:
     default:
       enabled: true
       locations:
         - classpath:db/migrations
+
 graphql:
   enabled: true
   path: "/graphql"
