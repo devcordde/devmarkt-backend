@@ -46,7 +46,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
       var user = (User) env.getGraphQlContext().get("user");
 
       if (user == null) {
-        LOGGER.info("Unauthenticated");
+        LOGGER.debug("Rejecting unauthorized request");
         return DataFetcherResult.newResult()
             .error(new UnauthorizedError())
             .build();

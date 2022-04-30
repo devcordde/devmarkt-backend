@@ -18,9 +18,11 @@ INSERT INTO roles (name)
 VALUES ('admin'),
        ('user')
 ON CONFLICT DO NOTHING;
+
 INSERT INTO users (id_type, user_id)
 VALUES ('internal', 1)
 ON CONFLICT DO NOTHING;
+
 INSERT INTO user_roles (user_id, role_id)
 SELECT r.id, u.id
 FROM roles r
