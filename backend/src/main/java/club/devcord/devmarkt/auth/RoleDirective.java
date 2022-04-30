@@ -55,6 +55,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
       if (hasRole(user, roleName.getValue()) || hasRole(user, Roles.ADMIN.toString())) {
         return originalDataFetcher.get(env);
       }
+      LOGGER.debug("Rejecting forbidden request for user {}", user.userId().merged());
       return DataFetcherResult.newResult()
           .error(new ForbiddenError(environment.getFieldsContainer().getName(), field.getName()))
           .build();
