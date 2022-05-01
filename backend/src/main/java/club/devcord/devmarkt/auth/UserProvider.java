@@ -75,8 +75,7 @@ public class UserProvider {
         return Optional.empty();
       }
       return userService.findDirect(userId)
-          .or(() -> Optional.of(userService.createDefaultUserUnsafe(userId))
-          );
+          .or(() -> Optional.of(userService.createDefaultUserUnsafe(userId)));
     }
     return Optional.empty();
   }
