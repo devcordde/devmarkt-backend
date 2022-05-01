@@ -2,11 +2,11 @@ type Query {
     templates: [TemplateSuccess!] @Auth(role: "user")
 
     template(
-        name: String! @NotBlank
+        name: TemplateName
     ): TemplateResponse @Auth(role: "user")
 
     question(
-        templateName: String! @NotBlank,
+        templateName: TemplateName!
         number: Int! @Min(value: 0)
     ): QuestionResponse @Auth(role: "user")
 
@@ -19,33 +19,31 @@ type Query {
 
 type Mutation {
     createTemplate(
-        name: String! @NotBlank,
+        name: TemplateName!
         questions: [QuestionInput!]!
     ): TemplateResponse @Auth(role: "admin")
 
     deleteTemplate(
-        name: String! @NotBlank
+        name: TemplateName!
     ): Boolean @Auth(role: "admin")
 
     updateTemplateName(
-        oldName: String! @NotBlank,
-        newName: String! @NotBlank
+        oldName: TemplateName!
+        newName: TemplateName!
     ): Boolean @Auth(role: "admin")
 
     addQuestion(
-        templateName: String! @NotBlank,
-        question: String! @NotBlank,
-        number: Int = -1 @Min(value: -1)
+        templateName: TemplateName!
+        question: QuestionInput!
     ): QuestionResponse @Auth(role: "admin")
 
     updateQuestion(
-        templateName: String! @NotBlank,
-        number: Int! @Min(value: -1),
-        question: String! @NotBlank
+        templateName: TemplateName!
+        question: QuestionInput!
     ): QuestionResponse @Auth(role: "admin")
 
     deleteQuestion(
-        templateName: String! @NotBlank,
+        templateName: TemplateName!
         number: Int! @Min(value: -1)
     ): Boolean @Auth(role: "admin")
 

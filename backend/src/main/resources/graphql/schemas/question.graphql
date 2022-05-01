@@ -1,6 +1,8 @@
 input QuestionInput {
-    question: String! @NotBlank
+    question: String! @NotBlank @Size(max: 200)
     number: Int! @Min(value: 0)
+    multiline: Boolean!
+    minAnswerLength: Int! @Range(max: 1024)
 }
 
 union QuestionResponse = QuestionSuccess | QuestionFailed
@@ -8,6 +10,8 @@ union QuestionResponse = QuestionSuccess | QuestionFailed
 type QuestionSuccess {
     question: String!
     number: Int!
+    multiline: Boolean!
+    minAnswerLength: Int!
 }
 
 type QuestionFailed implements Error {
