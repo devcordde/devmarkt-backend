@@ -80,7 +80,8 @@ We see a GraphQL error as an identifier that something went wrong during the exe
 of a query. In general if any error occurs, the data field will be "null".
 The api provide following graphql errors:
 
-- UnauthorizedError (Classification: "UNAUTHORIZED") - if an invalid or no jwt token was found
+- UnauthorizedError (Classification: "UNAUTHORIZED") - if an invalid "Authorization" header was found,
+including invalid jwt tokens
 
 - Forbidden Error (Classification: "FORBIDDEN") - if the user is unauthorized to do something, 
 the error messages contain the missing permissions
@@ -91,128 +92,42 @@ to validate user input. The validation will return a validation error and null v
 
 ## Authorization and Authentication
 
-Since we use GraphQL we cannot handle them like normal http auth. 
-So we decided to build our own system here.
+To make authorization simple and comfortable, we decided to use the http "Authorization" header and a
+jwt token based authorization. We provide 2 authorization methods: Self and Foreign, more about this later.
 
-### Authentication
+### The token
 
-For the authentication part we decided to use a jwt, with a "sub" and "iat" claim.
-The "sub" claim contains a user id in the following format: "type:id". The id is passed in a decimal
-string representation.
-The "exp" claim is not always needed, in case of missing claim the jwt token
-has no expiration date.
-The token must be passed by a variable called "Authorization" in a string format.
+Each jwt token belongs to a user, that's id is stored in the "sub" jwt claim in a "type:id" format.
+The id is represented as a decimal number and the type as a simple string.
+In addition, the token can hold an "exp" claim, which marks the expiration date of this token.
 
-### Authorization
+### Roles
 
-For the authorization we decided to use a permission system based on roles.
-Permissions belong to roles and roles to users, so users actually don't have permission directly.
-The api contains endpoints for user roles and role permissions.
-So a user with the given permissions are able to control permissions.
-This permission should only be granted to known and trusted users, since this allows
-users to grant themselves permissions and roles.
-The backend also provide a default admin user and role, the permissions of the admin role 
-and the admin users roles can't be modified.
-The admin user has the id "internal:1", the jwt token must be generated manually.
+We use a simple role system for authorization. The backend provides a user and an admin role.
+The admin role is allowed to use every query and a standard admin user is created,
+that can't be modified in any way.
 
-If a user hasn't all permission to execute a query, then nothing of this query is executed
-and the "error" section of the response contains unauthorized permissions.
+To roles required to use a field are indicated by an "@Auth" directive in the GraphQL schema.
 
-### Permission Generation
+### Authorization header and methods
 
-Permission are generated from the GraphQL schema and query.
-Permissions are grouped in 3 types, called operation, which are based on graphql operations:
-QUERY, MUTATION, SUBSCRIPTION
+The header format is oriented on the http "Authorization" format.
+We provide 2 authorization methods: Self and Foreign.
 
-They're simple dot separated strings and each node (dot separated value) is either a field
-or union member. Fields always began with a lower case letter 
-and union members always with an upper letter. Union member are (object) types, so the permission contains
-the name of this type followed by its fields. If a field in a type is member of a parent interface,
-then the name of this interface is used.
+#### Self authorization
 
-Let's image following schema:
-```graphql
-type Query {
-    rootOperation: Response!
-}
+The "Self" method takes only the jwt token as an argument, this token is used
+to identify the current user. If the user isn't found, then the api respond with a "UNAUTHORIZED".
 
-union Response = Fail | Success
+#### Foreign authorization
 
-type Fail {
-    errorCode: String!
-}
+The "Foreign" method takes 2 argument, a sudoer jwt token and a user id (in the "type:id" format).
+The user id is separated by a space.
+Example: `Foreign eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnRlcm5hbDoxIiwiaWF0IjoxNTE2MjM5MDIyfQ.CroFo1WLY0i5T_HpS0jIuVQCbO46Pie8jID93b2COk4 internal:1`
 
-type Success {
-    field1: String!
-    field2: SomeType!
-}
-
-type SomeType {
-    someField1: Int!
-    someField2: Boolean
-}
-```
-
-The generated permissions are now:
-- `QUERY: rootOperation.Fail.errorCode`
-- `QUERY: rootOperation.Success.field1`
-- `QUERY: rootOperation.Success.field2.someField1`
-- `QUERY: rootOperation.Success.field2.someField2`
-
-This allows to control what users are allowed to on a field level.
-Let's take a look on a query:
-```graphql
-query {
-    rootOperation {
-        ... on Fail {
-            errorCode
-        }
-        ... on Success {
-            field2 {
-                someField1
-            }
-        }
-    }
-}
-```
-The generated permissions are:
-- `QUERY: rootOperation.Fail.errorCode`
-- `QUERY: rootOperation.Success.field2.someField1`
-
-We note that this are exact the permissions, which we generated before from the schema.
-Please note that the "operation: permission" format is not the actual permission format.
-In the graphql api, permission are a type that consists of "operation" and "query" fields.
-"operation" is here our dot separated permission (eg. `rootOperation.Fail.errorCode`) and "operation"
-our "QUERY", which is member of an enum type "Operation".
-
-#### Introspections
-
-Introspections haven't real permissions, root level introspections such as `__schema` are allowed to all users.
-When it comes to type introspections e.g. `__typename` then the user need at least one parent permission.
-
-Let's look at an example query:
-```graphql
-query {
-    rootOperation {
-        ... on Fail {
-            __typename
-        }
-    }
-}
-```
-
-We recall that rootOperation has these permissions:
-- `QUERY: rootOperation.Fail.errorCode`
-- `QUERY: rootOperation.Success.field1`
-- `QUERY: rootOperation.Success.field2.someField1`
-- `QUERY: rootOperation.Success.field2.someField2`
-
-our interest is only: `QUERY: rootOperation.Fail.errorCode`.
-We see in the query there isn't a field errorCode here, so you would expect there's no permissions generated.
-But in reality there is: `rootOperation.Fail.__typename` and the backend now looks for a permission that starts with:
-`rootOperation.Fail` the introspection (`__typename`) is removed. If the user now have a permission that starts with
-`rootOperation.Fail` the query is executed. For this example the permission would be:
-`rootOperation.Fail.errorCode` because there's only one.
+The sudoer must have the "admin" role and the passed user id is used to authorize and authenticate this query.
+If the passed user isn't found, then the backend creates a new user, that has the "user" role by default.
+If the sudoer isn't found or don't have the admin role, then the api responds with a "UNAUTHORIZED".
 
 ## Contributing
 
