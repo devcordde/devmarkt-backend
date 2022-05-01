@@ -16,6 +16,8 @@
 
 package club.devcord.devmarkt.services;
 
+import club.devcord.devmarkt.auth.Roles;
+import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
@@ -27,6 +29,7 @@ import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @Singleton
 public class UserService {
@@ -53,6 +56,13 @@ public class UserService {
       return false;
     }
     return repo.deleteByUserId(userId) >= 1;
+  }
+
+  public User createDefaultUserUnsafe(UserId userId) {
+    var user = new User(-1, userId, Set.of(new Role(-1, Roles.USER.toString())));
+    repo.save(user);
+    repo.addRoles(userId, Set.of(Roles.USER.toString()));
+    return user;
   }
 
   public UserResponse save(UserId userId, Collection<String> roles) {

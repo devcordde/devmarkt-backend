@@ -16,12 +16,10 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.services.UserService;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 @Singleton
@@ -77,9 +75,8 @@ public class UserProvider {
         return Optional.empty();
       }
       return userService.findDirect(userId)
-          .or(() -> Optional.of(new User(-1, userId, Set.of(
-              new Role(-1, Roles.USER.toString())
-          ))));
+          .or(() -> Optional.of(userService.createDefaultUserUnsafe(userId))
+          );
     }
     return Optional.empty();
   }
