@@ -93,11 +93,11 @@ to validate user input. The validation will return a validation error and null v
 ## Authorization and Authentication
 
 To make authorization simple and comfortable, we decided to use the http "Authorization" header and a
-jwt token based authorization. We provide 2 authorization method: Self and Foreign, more about this later.
+jwt token based authorization. We provide 2 authorization methods: Self and Foreign, more about this later.
 
 ### The token
 
-Each jwt token belongs to a user, that's id is stores in the "sub" jwt claim in a "type:id" format.
+Each jwt token belongs to a user, that's id is stored in the "sub" jwt claim in a "type:id" format.
 The id is represented as a decimal number and the type as a simple string.
 In addition, the token can hold an "exp" claim, which marks the expiration date of this token.
 
@@ -127,7 +127,7 @@ Example: `Foreign eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnRlcm5hbDoxIiwiaWF0IjoxNTE2M
 
 The sudoer must have the "admin" role and the passed user id is used to authorize and authenticate this query.
 If the passed user isn't found, then the backend creates a new user, that has the "user" role by default.
-// TODO: implement this| If the sudoer isn't found or don't have the admin role, then the api responds with a "UNAUTHORIZED".
+If the sudoer isn't found or don't have the admin role, then the api responds with a "UNAUTHORIZED".
 
 ## Contributing
 
