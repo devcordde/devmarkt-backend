@@ -124,7 +124,6 @@ public class QuestionService {
 
       int rightNum = i + offset + from;
       if (question.number() != rightNum) {
-        System.out.println(question);
         var updatedQuestion = new Question(
             question.internalId(), new QuestionId(templateId, rightNum),
             question.question(), question.multiline(), question.minAnswerLength()

@@ -52,7 +52,6 @@ public class QuestionMutation implements GraphQLMutationResolver {
     var response = service.updateQuestion(templateName, question);
     LOGGER.info("Question update, Response: {}, TemplateName: {}, Number: {}, Question: {}",
         LoggingUtil.responseStatus(response), templateName, question.number(), question.question());
-    System.out.println(mapper.writeValueAsString(response));
     return response.graphQlUnion();
   }
 

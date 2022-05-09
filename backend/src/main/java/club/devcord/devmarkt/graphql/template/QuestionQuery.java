@@ -36,7 +36,6 @@ public class QuestionQuery implements GraphQLQueryResolver {
   public Object question(String templateName, int number) {
     var response = service.question(templateName, number).graphQlUnion();
     LOGGER.info("Question fetch. TemplateName: {}, Number: {}", templateName, number);
-    System.out.println(response);
     return response;
   }
 }
