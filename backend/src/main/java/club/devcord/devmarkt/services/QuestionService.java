@@ -16,14 +16,16 @@
 
 package club.devcord.devmarkt.services;
 
-import club.devcord.devmarkt.entities.template.RawQuestion;
+import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.QuestionId;
 import club.devcord.devmarkt.repositories.QuestionRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.question.QuestionFailed;
 import club.devcord.devmarkt.responses.question.QuestionResponse;
 import club.devcord.devmarkt.responses.question.QuestionSuccess;
 import jakarta.inject.Singleton;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class QuestionService {
@@ -38,13 +40,13 @@ public class QuestionService {
 
 
   public QuestionResponse question(String templateName, int number) {
-    var templateIdOpt = templateRepo.getIdByName(templateName);
+    var templateIdOpt = templateRepo.findByName(templateName);
     if (templateIdOpt.isEmpty()) {
       return QuestionFailed.templateNotFound(templateName, number);
     }
 
-    return questionRepo.findByTemplateIdAndNumber(templateIdOpt.get(), number)
-        .map(rawQuestion -> (QuestionResponse) new QuestionSuccess(rawQuestion))
+    return questionRepo.findById(new QuestionId(templateIdOpt.get(), number))
+        .map(question -> (QuestionResponse) new QuestionSuccess(question))
         .orElseGet(() -> QuestionFailed.questionNotFound(templateName, number));
   }
 
@@ -57,47 +59,52 @@ public class QuestionService {
   addQuestion(..., ..., -1): old, old, old -> old, old, old, new
   assQuestion(..., ..., 2) old, old, old -> old, old, new, old
    */
-  public QuestionResponse addQuestion(String templateName, String question, int number) {
-    var templateIdOpt = templateRepo.getIdByName(templateName);
+  public QuestionResponse addQuestion(String templateName, Question question) {
+    var templateIdOpt = templateRepo.findIdByName(templateName);
+    var number = question.number();
     if (templateIdOpt.isEmpty()) {
-      return QuestionFailed.templateNotFound(templateName, number);
+      return QuestionFailed.templateNotFound(templateName, question.number());
     }
 
     int templateId = templateIdOpt.get();
-    if (number == -1) {
-      number = questionRepo.getMaxNumberByTemplateId(templateId)
-          .map(i -> i.intValue() + 1)
+    if (number < 0) {
+      number = questionRepo.findMaxIdNumberByIdTemplateId(templateId)
+          .map(i -> i + 1)
           .orElse(0);
     } else {
       reorderQuestions(templateId, number, 1);
     }
 
-    var questionObj = new RawQuestion(-1, templateId, number, question);
+    var questionObj = new Question(templateId, number,
+        question.question(), question.multiline(), question.minAnswerLength());
     var questionSaved = questionRepo.save(questionObj);
     return new QuestionSuccess(questionSaved);
   }
 
-  public QuestionResponse updateQuestion(String templateName, int number, String question) {
-    var templateIdOpt = templateRepo.getIdByName(templateName);
+  public QuestionResponse updateQuestion(String templateName, Question question) {
+    var templateIdOpt = templateRepo.findIdByName(templateName);
+    var number = question.number();
     if (templateIdOpt.isEmpty()) {
       return QuestionFailed.templateNotFound(templateName, number);
     }
 
-    var updated = questionRepo.updateByTemplateIdAndNumber(templateIdOpt.get(), number, question);
-    return updated != 0
-        ? new QuestionSuccess(new RawQuestion(-1, -1, number, question))
+    var newQuestion = new Question(templateIdOpt.get(), question.number(),
+        question.question(), question.multiline(), question.minAnswerLength());
+    var updated = questionRepo.updateOne(newQuestion);
+    return updated == 1
+        ? new QuestionSuccess(newQuestion)
         : QuestionFailed.questionNotFound(templateName, number);
   }
 
   public boolean deleteQuestion(String templateName, int number) {
-    var templateIdOpt = templateRepo.getIdByName(templateName);
+    var templateIdOpt = templateRepo.findIdByName(templateName);
     if (templateIdOpt.isEmpty()) {
       return false;
     }
 
     int templateId = templateIdOpt.get();
-    var deleted = questionRepo.deleteByTemplateIdAndNumber(templateId, number);
-    reorderQuestions(templateId, number, 0);
+    var deleted = questionRepo.delete(new QuestionId(templateId, number));
+    reorderQuestions(templateId, number + 1, 0);
     return deleted != 0;
   }
 
@@ -108,24 +115,30 @@ public class QuestionService {
       1, 2, 4 -> 1, 2, 5 (offset 2)
    */
   public void reorderQuestions(int templateId, int from, int offset) {
-    var questions = questionRepo.findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(templateId,
+    var questions = questionRepo.findByIdTemplateIdAndIdNumberGreaterThanEquals(templateId,
         from);
 
-    var updatedQuestions = new HashSet<RawQuestion>(questions.size());
+    List<Question> updatedQuestions = new ArrayList<>(questions.size());
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
 
       int rightNum = i + offset + from;
       if (question.number() != rightNum) {
-        updatedQuestions.add(
-            new RawQuestion(question.id(), templateId, rightNum, question.question()));
+        System.out.println(question);
+        var updatedQuestion = new Question(
+            question.internalId(), new QuestionId(templateId, rightNum),
+            question.question(), question.multiline(), question.minAnswerLength()
+        );
+        updatedQuestions.add(updatedQuestion);
       }
     }
 
-    if (updatedQuestions.size() > 0) {
-      questionRepo.deleteAll(updatedQuestions);
-      questionRepo.saveAll(updatedQuestions);
+    if (!updatedQuestions.isEmpty()) {
+      updatedQuestions = updatedQuestions.
+          stream()
+          .sorted((o1, o2) -> Integer.compare(o2.number(), o1.number()))
+          .toList();
+      questionRepo.updateNumbers(updatedQuestions);
     }
   }
-
 }

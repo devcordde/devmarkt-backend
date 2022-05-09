@@ -16,8 +16,11 @@
 
 package club.devcord.devmarkt.graphql.template;
 
+import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.QuestionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -28,23 +31,28 @@ public class QuestionMutation implements GraphQLMutationResolver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(QuestionMutation.class);
 
+  private final ObjectMapper mapper;
   private final QuestionService service;
 
-  public QuestionMutation(QuestionService service) {
+  public QuestionMutation(ObjectMapper mapper,
+      QuestionService service) {
+    this.mapper = mapper;
     this.service = service;
   }
 
-  public Object addQuestion(String templateName, String question, int number) {
-    var response = service.addQuestion(templateName, question, number);
+  public Object addQuestion(String templateName, Question question) {
+    var response = service.addQuestion(templateName, question);
     LOGGER.info("Question addition. Response: {}, TemplateName: {}, Number: {}, Question: {}",
-        LoggingUtil.responseStatus(response), templateName, number, question);
+        LoggingUtil.responseStatus(response), templateName, question.number(), question.question());
     return response.graphQlUnion();
   }
 
-  public Object updateQuestion(String templateName, int number, String question) {
-    var response = service.updateQuestion(templateName, number, question);
+  public Object updateQuestion(String templateName, Question question)
+      throws JsonProcessingException {
+    var response = service.updateQuestion(templateName, question);
     LOGGER.info("Question update, Response: {}, TemplateName: {}, Number: {}, Question: {}",
-        LoggingUtil.responseStatus(response), templateName, number, question);
+        LoggingUtil.responseStatus(response), templateName, question.number(), question.question());
+    System.out.println(mapper.writeValueAsString(response));
     return response.graphQlUnion();
   }
 

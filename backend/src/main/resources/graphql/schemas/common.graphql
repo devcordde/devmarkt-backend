@@ -34,7 +34,7 @@ type Mutation {
 
     addQuestion(
         templateName: TemplateName!
-        question: QuestionInput!
+        question: QuestionAddInput!
     ): QuestionResponse @Auth(role: "admin")
 
     updateQuestion(

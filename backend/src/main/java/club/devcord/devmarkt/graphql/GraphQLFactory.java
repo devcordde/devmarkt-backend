@@ -52,15 +52,14 @@ public class GraphQLFactory {
       ResourceResolver resourceResolver,
       BeanContext context,
       RoleDirective roleDirective) {
-    var builder = new SchemaParserBuilder();
+    var builder = new SchemaParserBuilder()
+        .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME)
+        .directive("Auth", roleDirective);
 
     readSchemas(builder, location, resourceResolver);
     addResolvers(resolver, builder);
     registerTypes(builder, context);
     initValidation(builder);
-
-    builder.scalars(JavaPrimitives.GraphQLLong);
-    builder.directive("Auth", roleDirective);
 
     var schema = builder.build()
         .makeExecutableSchema();

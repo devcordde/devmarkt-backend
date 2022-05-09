@@ -16,32 +16,43 @@
 
 package club.devcord.devmarkt.entities.template;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.micronaut.core.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Creator;
+import io.micronaut.data.annotation.EmbeddedId;
 import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import io.micronaut.data.annotation.MappedProperty;
 
 @MappedEntity("questions")
 public record Question(
 
-    @JsonIgnore
-    @Id @GeneratedValue
-    Integer id,
+    @GeneratedValue
+    @MappedProperty("id")
+    int internalId,
 
-    @JsonIgnore
-    @Nullable
-    @Relation(Kind.MANY_TO_ONE)
-    Template template,
-
-    @Min(0)
-    int number,
-    @NotBlank
-    String question
+    @EmbeddedId
+    QuestionId id,
+    String question,
+    boolean multiline,
+    int minAnswerLength
 ) {
+
+    @Creator
+    public Question {}
+
+    @JsonCreator
+    public Question(
+        @JsonProperty("templateId") int templateId,
+        @JsonProperty("number") int number,
+        @JsonProperty("question" )String question,
+        @JsonProperty("multiline") boolean multiline,
+        @JsonProperty("minAnswerLength") int minAnswerLength) {
+        this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength);
+    }
+
+    public int number() {
+        return id.number();
+    }
 
 }

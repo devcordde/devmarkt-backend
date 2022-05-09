@@ -87,13 +87,13 @@ public class TemplateRepoTest extends DevmarktTest {
 
   @Test
   void getIdByName__noVerify_success() {
-    var opt = repo.getIdByName("Dev offered");
+    var opt = repo.findInternalIdByName("Dev offered");
     assertPresent(opt);
   }
 
   @Test
   void getIdByName__noVerify_fail() {
-    var opt = repo.getIdByName("White house sale contract");
+    var opt = repo.findInternalIdByName("White house sale contract");
     assertEmpty(opt);
   }
 

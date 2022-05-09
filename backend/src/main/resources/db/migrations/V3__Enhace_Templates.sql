@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
-
-import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.responses.Success;
-
-public record QuestionSuccess(
-    Question question
-) implements QuestionResponse, Success {
-
-}
+ALTER TABLE questions
+ADD COLUMN multiline BOOLEAN,
+ADD COLUMN min_answer_length INTEGER;

@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.question.QuestionFailed;
 import club.devcord.devmarkt.responses.question.QuestionFailed.QuestionErrors;
@@ -111,7 +110,7 @@ public class QuestionServiceTest extends DevmarktTest {
         .map(question -> new Question(-1, null, question.number() + 1, question.question()))
         .toList();
 
-    service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 0, 1);
+    service.reorderQuestions(templateRepo.findInternalIdByName("Dev offered").orElseThrow(), 0, 1);
 
     var actual = templateRepo.findByName("Dev offered")
         .orElseThrow()
@@ -134,7 +133,7 @@ public class QuestionServiceTest extends DevmarktTest {
         })
         .toList();
 
-    service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 2, 3);
+    service.reorderQuestions(templateRepo.findInternalIdByName("Dev offered").orElseThrow(), 2, 3);
 
     var actual = templateRepo.findByName("Dev offered")
         .orElseThrow()
@@ -149,7 +148,7 @@ public class QuestionServiceTest extends DevmarktTest {
     questions.add(new Question(-1, null, 3, "Outlined question"));
 
     service.addQuestion("Dev offered", "Outlined question", 6);
-    service.reorderQuestions(templateRepo.getIdByName("Dev offered").orElseThrow(), 0, 0);
+    service.reorderQuestions(templateRepo.findInternalIdByName("Dev offered").orElseThrow(), 0, 0);
     verify(questions, templateRepo.findByName("Dev offered").orElseThrow().questions());
   }
 

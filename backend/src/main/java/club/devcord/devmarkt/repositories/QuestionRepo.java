@@ -16,23 +16,41 @@
 
 package club.devcord.devmarkt.repositories;
 
-import club.devcord.devmarkt.entities.template.RawQuestion;
+import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.QuestionId;
+import io.micronaut.data.annotation.Join;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JdbcRepository
-public interface QuestionRepo extends CrudRepository<RawQuestion, Integer> {
+public interface QuestionRepo extends CrudRepository<Question, QuestionId> {
 
-  Optional<Number> getMaxNumberByTemplateId(int templateId);
+  @Query("SELECT MAX (number) FROM questions WHERE template_id = :templateId")
+  Optional<Integer> findMaxIdNumberByIdTemplateId(int templateId);
 
-  int updateByTemplateIdAndNumber(int templateId, int number, String question);
-
-  int deleteByTemplateIdAndNumber(int templateId, int number);
-
-  List<RawQuestion> findByTemplateIdAndNumberGreaterThanEqualsOrderByNumber(int templateId,
+  @Join("id.template")
+  List<Question> findByIdTemplateIdAndIdNumberGreaterThanEquals(int internalId,
       int number);
 
-  Optional<RawQuestion> findByTemplateIdAndNumber(int templateId, int number);
+  @NotNull
+  @Join("id.template")
+  Optional<Question> findById(@NotNull QuestionId id);
+
+  @Query("UPDATE questions SET number = :number WHERE id = :internalId")
+  void updateNumbers(Iterable<Question> questions);
+
+  int updateOne(Question question);
+
+  int delete(QuestionId id);
+
+  @MappedEntity
+  record UpdateData(
+      int internalId,
+      int number
+  ) {}
 }

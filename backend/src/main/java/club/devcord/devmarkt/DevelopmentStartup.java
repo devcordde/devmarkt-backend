@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt;
 
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
@@ -33,10 +34,12 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
   private static final Logger LOGGER = LoggerFactory.getLogger(DevelopmentStartup.class);
 
   private final JwtTokenGenerator generator;
+  private final BeanContext context;
 
   public DevelopmentStartup(
-      JwtTokenGenerator jwtTokenGenerator) {
+      JwtTokenGenerator jwtTokenGenerator, BeanContext context) {
     this.generator = jwtTokenGenerator;
+    this.context = context;
   }
 
   @Override

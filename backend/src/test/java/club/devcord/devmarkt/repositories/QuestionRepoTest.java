@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import club.devcord.devmarkt.DevmarktTest;
-import club.devcord.devmarkt.entities.template.RawQuestion;
 import jakarta.inject.Inject;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ public class QuestionRepoTest extends DevmarktTest {
   TemplateRepo templateRepo;
 
   private int templateId(String name) {
-    var opt = templateRepo.getIdByName(name);
+    var opt = templateRepo.findInternalIdByName(name);
     assertPresent(opt);
     return opt.get();
   }

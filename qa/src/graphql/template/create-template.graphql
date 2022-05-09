@@ -1,10 +1,12 @@
-mutation($questions: [QuestionInput!]!, $name: String!) {
+mutation($questions: [QuestionInput!]!, $name: TemplateName!) {
     createTemplate(questions: $questions, name: $name) {
         __typename
         ...on TemplateSuccess {
             questions {
                 number
                 question
+                minAnswerLength
+                multiline
             }
         }
         ...on TemplateFailed {

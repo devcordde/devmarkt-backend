@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import club.devcord.devmarkt.DevmarktTest;
 import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.entities.template.RawQuestion;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.graphql.template.QuestionMutation;
 import club.devcord.devmarkt.graphql.template.QuestionQuery;
