@@ -20,7 +20,6 @@ import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.QuestionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -31,12 +30,9 @@ public class QuestionMutation implements GraphQLMutationResolver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(QuestionMutation.class);
 
-  private final ObjectMapper mapper;
   private final QuestionService service;
 
-  public QuestionMutation(ObjectMapper mapper,
-      QuestionService service) {
-    this.mapper = mapper;
+  public QuestionMutation(QuestionService service) {
     this.service = service;
   }
 
