@@ -29,12 +29,12 @@ public class TemplateNameScalar {
   public static final GraphQLScalarType TEMPLATE_NAME = GraphQLScalarType.newScalar()
       .name("TemplateName")
       .description("The name of a template, represented by a string")
-      .coercing(new Coercing() {
+      .coercing(new Coercing<String, String>() {
         @Override
-        public Object serialize(@NotNull Object dataFetcherResult)
+        public String serialize(@NotNull Object dataFetcherResult)
             throws CoercingSerializeException {
           if (dataFetcherResult instanceof String name && isValid(name)) {
-            return dataFetcherResult;
+            return name;
           }
           throw new CoercingSerializeException("Unable to serialize %s as an TemplateName aka String"
               .formatted(dataFetcherResult));
@@ -42,17 +42,13 @@ public class TemplateNameScalar {
 
         @NotNull
         @Override
-        public Object parseValue(@NotNull Object input) throws CoercingParseValueException {
-          if (input instanceof String name && isValid(name)) {
-            return name;
-          }
-          throw new CoercingParseValueException("Unable to parser %s as an TemplateName aka String"
-              .formatted(input));
+        public String parseValue(@NotNull Object input) throws CoercingParseValueException {
+          return serialize(input);
         }
 
         @NotNull
         @Override
-        public Object parseLiteral(@NotNull Object input) throws CoercingParseLiteralException {
+        public String parseLiteral(@NotNull Object input) throws CoercingParseLiteralException {
           if (input instanceof StringValue stringValue) {
             var name = stringValue.getValue();
             if (isValid(name)) {

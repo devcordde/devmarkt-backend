@@ -21,16 +21,16 @@ WHERE name IN ('Dev searched', 'Dev offered', 'Empty template');
 WITH templateId AS (INSERT INTO templates (name) VALUES ('Dev searched') RETURNING id)
 INSERT
 INTO questions(template_id, number, question, multiline, min_answer_length)
-VALUES ((SELECT id FROM templateId), 0, 'Who are we?', false, 0),
+VALUES ((SELECT id FROM templateId), 0, 'Who are we?', false, 1),
        ((SELECT id FROM templateId), 1, 'Why should you join us?', true, 100),
-       ((SELECT id FROM templateId), 2, 'What programming languages should you know?', false, 0),
+       ((SELECT id FROM templateId), 2, 'What programming languages should you know?', false, 1),
        ((SELECT id FROM templateId), 3, 'Custom text:', true, 30);
 
 WITH templateId AS (INSERT INTO templates (name) VALUES ('Dev offered') RETURNING id)
 INSERT
 INTO questions(template_id, number, question, multiline, min_answer_length)
-VALUES ((SELECT id FROM templateId), 0, 'Who am I?', false, 0),
-       ((SELECT id FROM templateId), 1, 'What programming language do I know?', false, 0),
+VALUES ((SELECT id FROM templateId), 0, 'Who am I?', false, 1),
+       ((SELECT id FROM templateId), 1, 'What programming language do I know?', false, 1),
        ((SELECT id FROM templateId), 2, 'Why should you choose me?', true, 500);
 
 INSERT INTO templates(name)

@@ -20,6 +20,7 @@ import club.devcord.devmarkt.auth.RoleDirective;
 import graphql.GraphQL;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;
+import graphql.scalars.ExtendedScalars;
 import graphql.scalars.java.JavaPrimitives;
 import graphql.validation.rules.OnValidationErrorStrategy;
 import graphql.validation.rules.ValidationRules;
@@ -53,7 +54,8 @@ public class GraphQLFactory {
       BeanContext context,
       RoleDirective roleDirective) {
     var builder = new SchemaParserBuilder()
-        .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME)
+        .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME,
+            ExtendedScalars.NonNegativeInt, ExtendedScalars.PositiveInt)
         .directive("Auth", roleDirective);
 
     readSchemas(builder, location, resourceResolver);

@@ -13,5 +13,7 @@ on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 directive @Auth(role: String!)
 on FIELD_DEFINITION
 
+scalar PositiveInt
+scalar NonNegativeInt
 scalar Long
 scalar TemplateName

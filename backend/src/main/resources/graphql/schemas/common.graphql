@@ -7,7 +7,7 @@ type Query {
 
     question(
         templateName: TemplateName!
-        number: Int! @Min(value: 0)
+        number: NonNegativeInt!
     ): QuestionResponse @Auth(role: "user")
 
     roles: [String!] @Auth(role: "admin")
@@ -44,7 +44,7 @@ type Mutation {
 
     deleteQuestion(
         templateName: TemplateName!
-        number: Int! @Min(value: -1)
+        number: PositiveInt!
     ): Boolean @Auth(role: "admin")
 
     createUser(
