@@ -44,7 +44,13 @@ const modifiedFiles = danger.git.created_files
 .concat(danger.git.deleted_files)
 .concat(danger.git.modified_files);
 
-const notAddedFiles = danger.git.deleted_files.concat(danger.git.modified_files);
+const notAddedFiles = danger.git.deleted_files.concat(
+    danger.git.modified_files);
+
+const failed = danger.github.pr?.labels.some(
+    label => label.name === 'danger-ignore-fail')
+    ? warn
+    : fail;
 
 // PR checks (assignee, labels, milestone)
 if (danger.github) {
@@ -90,13 +96,14 @@ if (modifiedFiles.some(file => file.includes("src/main/resources/db/seeder"))
   warn("The `Seed` class needs to be checked if it is up to date");
 }
 
-if(notAddedFiles.some(file => file.includes("src/main/resources/db/migrations"))
+if (notAddedFiles.some(
+        file => file.includes("src/main/resources/db/migrations"))
     && danger.github?.pr?.base?.ref === 'main'
 ) {
-  fail(`Migrations can't be changed (\`${
-    notAddedFiles
-    .filter(file => file.includes("src/main/resources/db/migrations"))
-    .join('`, `')
+  failed(`Migrations can't be changed (\`${
+      notAddedFiles
+      .filter(file => file.includes("src/main/resources/db/migrations"))
+      .join('`, `')
   }\`)`);
 }
 
@@ -149,21 +156,21 @@ readDirectoryRecursive(".", LINTER_EXCLUDED)
 
 function lintFile(file) {
   if (!file.content.endsWith("\n")) {
-    fail(`\`${file.filename}\` is missing a new line at the end`);
+    failed(`\`${file.filename}\` is missing a new line at the end`);
   }
 
   if (/import [^*]+\.\*;/.test(file.content)) {
-    fail(`\`${file.filename}\` is using a wildcard import`);
+    failed(`\`${file.filename}\` is using a wildcard import`);
   }
 
   if ((/System\.out/.test(file.content) || /System\.err/.test(file.content))
       && file.filename !== 'dangerfile.js') {
-    fail(
+    failed(
         `\`${file.filename}\` is using the \`System.out\` or \`System.err\` print stream`);
   }
 
   if (!/^[a-z0-9-_/.]+\.[a-z0-9]+$/i.test(file.filename)) {
-    fail(
+    failed(
         `\`${file.filename}\` does not follow the file naming convention`);
   }
 }
