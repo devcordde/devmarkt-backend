@@ -2,14 +2,14 @@ input QuestionInput {
     question: String! @NotBlank @Size(min: 1, max: 200)
     number: NonNegativeInt!
     multiline: Boolean!
-    minAnswerLength: PositiveInt! = 1 @Range(min: 1, max: 1024)
+    minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
 }
 
 input QuestionAddInput {
     question: String! @NotBlank @Size(min: 1, max: 200)
     number: Int! = -1 @Min(value: -1)
     multiline: Boolean!
-    minAnswerLength: PositiveInt! = 1 @Range(min: 1, max: 1024)
+    minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
 }
 
 union QuestionResponse = QuestionSuccess | QuestionFailed
