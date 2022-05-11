@@ -31,7 +31,8 @@ export function executeTests(suiteName, tests = []) {
       if(matrix.length) {
         matrix.forEach(entry =>
             runTest({
-              name,
+              itName: entry.name ?? '',
+              name: name,
               auth: entry.auth ?? auth,
               variables: entry.variables ?? variables,
               query: entry.query ?? query,
@@ -55,12 +56,12 @@ export function executeTests(suiteName, tests = []) {
   })
 }
 
-function runTest({name, auth, variables, query, response, before, after}) {
+function runTest({itName, name, auth, variables, query, response, before, after}) {
   describe(name, () => {
     beforeEach(wrapHookIfNeeded(before));
     afterEach(wrapHookIfNeeded(after));
 
-    it(`As ${Authorization.nameFor(auth)}`, async () => {
+    it(`${itName} As ${Authorization.nameFor(auth)}`, async () => {
       const graphQl = load(query);
       const expectedResponse = load(response);
 
