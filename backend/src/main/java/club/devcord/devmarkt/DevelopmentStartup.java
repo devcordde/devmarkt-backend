@@ -16,7 +16,6 @@
 
 package club.devcord.devmarkt;
 
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
