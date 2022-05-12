@@ -16,11 +16,11 @@
 
 package club.devcord.devmarkt.responses.question;
 
-import club.devcord.devmarkt.entities.template.RawQuestion;
+import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.responses.Success;
 
 public record QuestionSuccess(
-    RawQuestion question
+    Question question
 ) implements QuestionResponse, Success {
 
 }

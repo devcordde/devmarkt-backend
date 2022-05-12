@@ -12,7 +12,7 @@ type UserId {
 
 type UserSuccess {
     userId: UserId!
-    roles: [RoleSuccess!]!
+    roles: [String!]!
 }
 
 type UserFailed implements Error {

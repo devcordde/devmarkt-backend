@@ -5,19 +5,27 @@
         "questions": [
           {
             "number": 0,
-            "question": "Who are we?"
+            "question": "Who are we?",
+            "multiline": false,
+            "minAnswerLength": 0
           },
           {
             "number": 1,
-            "question": "Why should you join us?"
+            "question": "Why should you join us?",
+            "multiline": true,
+            "minAnswerLength": 100
           },
           {
             "number": 2,
-            "question": "What programming languages should you know?"
+            "question": "What programming languages should you know?",
+            "multiline": false,
+            "minAnswerLength": 0
           },
           {
             "number": 3,
-            "question": "Custom text:"
+            "question": "Custom text:",
+            "multiline": true,
+            "minAnswerLength": 30
           }
         ]
       },
@@ -25,15 +33,21 @@
         "questions": [
           {
             "number": 0,
-            "question": "Who am I?"
+            "question": "Who am I?",
+            "multiline": false,
+            "minAnswerLength": 0
           },
           {
             "number": 1,
-            "question": "What programming language do I know?"
+            "question": "What programming language do I know?",
+            "multiline": false,
+            "minAnswerLength": 0
           },
           {
             "number": 2,
-            "question": "Why should you choose me?"
+            "question": "Why should you choose me?",
+            "multiline": true,
+            "minAnswerLength": 500
           }
         ]
       },

@@ -35,6 +35,7 @@ public class RoleQuery implements GraphQLQueryResolver {
   }
 
   public List<String> roles() {
+    LOGGER.info("All roles fetched.");
     return service.roles();
   }
 }

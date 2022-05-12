@@ -3,6 +3,8 @@ query {
         questions {
             number
             question
+            minAnswerLength
+            multiline
         }
     }
 }

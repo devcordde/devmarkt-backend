@@ -37,7 +37,7 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
 
   int updateByName(String oldName, String name);
 
-  Optional<Integer> getIdByName(String name);
+  Optional<Integer> findIdByName(String name);
 
   @NotNull
   @Join(value = "questions", type = Type.LEFT_FETCH)

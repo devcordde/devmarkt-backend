@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.role;
-
-import club.devcord.devmarkt.entities.auth.Role;
-import club.devcord.devmarkt.responses.Success;
-
-public record RoleSuccess(
-    Role role
-) implements Success, RoleResponse {
-
-}
+ALTER TABLE questions
+    ADD COLUMN multiline BOOLEAN,
+    ADD COLUMN min_answer_length INTEGER;

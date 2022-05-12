@@ -16,12 +16,10 @@
 
 package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.graphql.GraphQLType;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 
-@GraphQLType("RoleSuccess")
 @MappedEntity("roles")
 public record Role(
     @Id @GeneratedValue

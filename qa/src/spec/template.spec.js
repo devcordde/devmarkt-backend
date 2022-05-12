@@ -22,7 +22,9 @@ const templateCreateVars = (name) => ({
   questions: [
     {
       number: 1,
-      question: "Question"
+      question: "Question",
+      multiline: false,
+      minAnswerLength: 10
     }
   ]
 });

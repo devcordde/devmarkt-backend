@@ -48,7 +48,7 @@ public class UserService {
     return repo.findByUserId(userId)
         .map(user -> (UserResponse) new UserSuccess(user))
         .orElseGet(
-            () -> new UserFailed(UserErrors.NOT_FOUND, "No user with the given id was found"));
+            () -> new UserFailed(UserErrors.NOT_FOUND, "No user with the given internalId was found"));
   }
 
   public boolean delete(UserId userId) {
@@ -67,7 +67,7 @@ public class UserService {
 
   public UserResponse save(UserId userId, Collection<String> roles) {
     if (repo.existsByUserId(userId)) {
-      return new UserFailed(UserErrors.DUPLICATED, "A user with the same id already exists");
+      return new UserFailed(UserErrors.DUPLICATED, "A user with the same internalId already exists");
     }
     repo.save(new User(-1, userId, null));
     return addUserRoles(userId, roles);
