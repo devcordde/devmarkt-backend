@@ -25,7 +25,8 @@ export function executeTests(suiteName, tests = []) {
         response,
         before = () => {},
         after = () => {},
-        matrix = []
+        verify,
+        matrix = [],
       }) => {
     describe(suiteName, () => {
       if(matrix.length) {
@@ -38,7 +39,13 @@ export function executeTests(suiteName, tests = []) {
               query: entry.query ?? query,
               response: entry.response ?? response,
               before: entry.before ?? before,
-              after: entry.after ?? after
+              after: entry.after ?? after,
+              verify: entry.verify != null
+                  ? {
+                      query: entry.verify.query ?? verify?.query,
+                      variables: entry.verify.variables ?? verify?.variables,
+                      response: entry.verify.response
+                    } : verify
             }));
         return;
       }
@@ -50,22 +57,27 @@ export function executeTests(suiteName, tests = []) {
         query,
         response,
         before,
-        after
+        after,
+        verify
       });
     })
   })
 }
 
-function runTest({itName, name, auth, variables, query, response, before, after}) {
+function runTest({name, auth, variables, query, response, before, after, verify}) {
   describe(name, () => {
     beforeEach(wrapHookIfNeeded(before));
     afterEach(wrapHookIfNeeded(after));
 
-    it(`${itName} As ${Authorization.nameFor(auth)}`, async () => {
+    it(`As ${Authorization.nameFor(auth)}`, async () => {
       const graphQl = load(query);
       const expectedResponse = load(response);
 
       await test(graphQl, expectedResponse, variables, auth);
+
+      if (verify != null) {
+        await test(load(verify.query), load(verify.response), verify.variables, Authorization.ADMIN)
+      }
     })
   })
 }

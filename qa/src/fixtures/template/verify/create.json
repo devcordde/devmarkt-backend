@@ -1,0 +1,15 @@
+{
+  "data": {
+    "template": {
+      "name": "PermissionTemplate",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Question",
+          "multiline": false,
+          "minAnswerLength": 10
+        }
+      ]
+    }
+  }
+}

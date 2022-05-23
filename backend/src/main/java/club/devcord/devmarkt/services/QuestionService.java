@@ -24,8 +24,7 @@ import club.devcord.devmarkt.responses.question.QuestionFailed;
 import club.devcord.devmarkt.responses.question.QuestionResponse;
 import club.devcord.devmarkt.responses.question.QuestionSuccess;
 import jakarta.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 
 @Singleton
 public class QuestionService {
@@ -72,7 +71,7 @@ public class QuestionService {
           .map(i -> i + 1)
           .orElse(0);
     } else {
-      reorderQuestions(templateId, number, 1);
+      reorderQuestions(templateId, number, 1, true);
     }
 
     var questionObj = new Question(templateId, number,
@@ -88,7 +87,7 @@ public class QuestionService {
       return QuestionFailed.templateNotFound(templateName, number);
     }
 
-    var newQuestion = new Question(templateIdOpt.get(), question.number(),
+    var newQuestion = new Question(templateIdOpt.get(), number,
         question.question(), question.multiline(), question.minAnswerLength());
     var updated = questionRepo.updateOne(newQuestion);
     return updated == 1
@@ -104,7 +103,7 @@ public class QuestionService {
 
     int templateId = templateIdOpt.get();
     var deleted = questionRepo.delete(new QuestionId(templateId, number));
-    reorderQuestions(templateId, number + 1, 0);
+    reorderQuestions(templateId, number + 1, -1, false);
     return deleted != 0;
   }
 
@@ -114,11 +113,11 @@ public class QuestionService {
   Eg. 1, 2, 4 -> 1, 2, 3 (offset 0)
       1, 2, 4 -> 1, 2, 5 (offset 2)
    */
-  public void reorderQuestions(int templateId, int from, int offset) {
+  public void reorderQuestions(int templateId, int from, int offset, boolean order) {
     var questions = questionRepo.findByIdTemplateIdAndIdNumberGreaterThanEquals(templateId,
         from);
+    questions.sort(Comparator.comparingInt(Question::number));
 
-    List<Question> updatedQuestions = new ArrayList<>(questions.size());
     for (int i = 0; i < questions.size(); i++) {
       var question = questions.get(i);
 
@@ -128,16 +127,15 @@ public class QuestionService {
             question.internalId(), new QuestionId(templateId, rightNum),
             question.question(), question.multiline(), question.minAnswerLength()
         );
-        updatedQuestions.add(updatedQuestion);
+        questions.set(i, updatedQuestion);
       }
     }
 
-    if (!updatedQuestions.isEmpty()) {
-      updatedQuestions = updatedQuestions.
-          stream()
-          .sorted((o1, o2) -> Integer.compare(o2.number(), o1.number()))
-          .toList();
-      questionRepo.updateNumbers(updatedQuestions);
+    if (!questions.isEmpty()) {
+      if (order) {
+        questions.sort((o1, o2) -> Integer.compare(o2.number(), o1.number()));
+      }
+      questionRepo.updateNumbers(questions);
     }
   }
 }

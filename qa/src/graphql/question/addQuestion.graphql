@@ -1,0 +1,15 @@
+mutation($templateName: TemplateName!, $input: QuestionAddInput!) {
+    addQuestion(templateName: $templateName, question: $input) {
+        ... on QuestionSuccess {
+            question
+            number
+            multiline
+            minAnswerLength
+        }
+
+        ... on QuestionFailed {
+            message
+            errorCode
+        }
+    }
+}

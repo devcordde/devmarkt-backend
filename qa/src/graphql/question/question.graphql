@@ -1,0 +1,15 @@
+query($templateName: TemplateName!, $number: NonNegativeInt!) {
+    question(templateName: $templateName, number: $number) {
+        ... on QuestionSuccess {
+            question
+            number
+            multiline
+            minAnswerLength
+        }
+
+        ... on QuestionFailed {
+            message
+            errorCode
+        }
+    }
+}

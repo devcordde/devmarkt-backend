@@ -1,0 +1,10 @@
+{
+  "data": {
+    "addQuestion": {
+      "question": "Interesting question, isn't it?",
+      "number": 2,
+      "multiline": true,
+      "minAnswerLength": 10
+    }
+  }
+}

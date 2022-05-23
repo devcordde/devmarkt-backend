@@ -1,0 +1,18 @@
+query($name: TemplateName!){
+    template(name: $name) {
+        ... on TemplateFailed {
+            errorCode
+            message
+            name
+        }
+        ... on TemplateSuccess {
+            name
+            questions {
+                multiline
+                minAnswerLength
+                number
+                question
+            }
+        }
+    }
+}

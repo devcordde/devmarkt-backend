@@ -1,0 +1,3 @@
+mutation($templateName: TemplateName!, $number: PositiveInt!) {
+    deleteQuestion(templateName: $templateName, number: $number)
+}
