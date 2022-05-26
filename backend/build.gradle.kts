@@ -39,9 +39,6 @@ dependencies {
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
 
     implementation("ch.qos.logback:logback-classic")
-
-    testImplementation("org.testcontainers:testcontainers:1.17.1")
-    testImplementation("org.testcontainers:postgresql:1.17.1")
 }
 
 
