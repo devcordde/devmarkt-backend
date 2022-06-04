@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.4.0"
+    id("io.micronaut.application") version "3.4.1"
 }
 
 version = "0.1"
@@ -32,16 +32,13 @@ dependencies {
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.graphql:micronaut-graphql")
-    implementation("com.graphql-java-kickstart:graphql-java-tools:12.0.2")
-    implementation("com.graphql-java:graphql-java-extended-validation:17.0-hibernate-validator-6.2.0.Final")
+    implementation("com.graphql-java-kickstart:graphql-java-tools:12.1.0")
+    implementation("com.graphql-java:graphql-java-extended-validation:18.1")
     implementation("io.micronaut:micronaut-validation")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
 
     implementation("ch.qos.logback:logback-classic")
-
-    testImplementation("org.testcontainers:testcontainers:1.17.1")
-    testImplementation("org.testcontainers:postgresql:1.17.1")
 }
 
 

@@ -90,12 +90,6 @@ if (modifiedFiles.some(file => file.includes(".idea"))) {
   fn("This PR modifies the IntelliJ IDEA setting files");
 }
 
-if (modifiedFiles.some(file => file.includes("src/main/resources/db/seeder"))
-    !== modifiedFiles.some(file => file.includes(
-        "src/test/java/club/devcord/devmarkt/Seed.java"))) {
-  warn("The `Seed` class needs to be checked if it is up to date");
-}
-
 if (notAddedFiles.some(
         file => file.includes("src/main/resources/db/migrations"))
     && danger.github?.pr?.base?.ref === 'main'
