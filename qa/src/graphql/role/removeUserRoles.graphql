@@ -1,0 +1,15 @@
+mutation($userId: UserIdInput!, $roles: [String!]!) {
+    removeUserRoles(userId: $userId, roles: $roles) {
+        ... on UserSuccess {
+            userId {
+                type
+                id
+            }
+            roles
+        }
+        ... on UserFailed {
+            errorCode
+            message
+        }
+    }
+}
