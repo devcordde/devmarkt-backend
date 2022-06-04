@@ -33,8 +33,8 @@ const tests = [
         variables: {
           userId: {type: "testuser", id: 1},
           roles: [
-              "user",
-              "admin"
+            "user",
+            "admin"
           ]
         },
         response: "role/addUserRoles-success.json",
@@ -68,10 +68,10 @@ const tests = [
       {
         name: "role not found",
         variables: {
-            userId: {type: "testuser", id: 1},
-            roles: [
-              "Tabellenschubser"
-            ]
+          userId: {type: "testuser", id: 1},
+          roles: [
+            "Tabellenschubser"
+          ]
         },
         response: "role/addUserRoles-rolenotfound.json"
       }

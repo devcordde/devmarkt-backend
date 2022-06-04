@@ -18,18 +18,20 @@ import test, {Authorization, execute, load} from "./executor.js";
 
 export function executeTests(suiteName, tests = []) {
   tests.forEach(({
-        name,
-        auth = Authorization.NONE,
-        variables = {},
-        query,
-        response,
-        before = () => {},
-        after = () => {},
-        verify,
-        matrix = [],
-      }) => {
+    name,
+    auth = Authorization.NONE,
+    variables = {},
+    query,
+    response,
+    before = () => {
+    },
+    after = () => {
+    },
+    verify,
+    matrix = [],
+  }) => {
     describe(suiteName, () => {
-      if(matrix.length) {
+      if (matrix.length) {
         matrix.forEach(entry =>
             runTest({
               itName: entry.name ?? "default",
@@ -42,10 +44,11 @@ export function executeTests(suiteName, tests = []) {
               after: entry.after ?? after,
               verify: entry.verify != null
                   ? {
-                      query: entry.verify.query ?? verify?.query,
-                      variables: entry.verify.variables ?? verify?.variables ?? entry.variables ?? variables,
-                      response: entry.verify.response
-                    } : verify
+                    query: entry.verify.query ?? verify?.query,
+                    variables: entry.verify.variables ?? verify?.variables
+                        ?? entry.variables ?? variables,
+                    response: entry.verify.response
+                  } : verify
             }));
         return;
       }
@@ -65,7 +68,17 @@ export function executeTests(suiteName, tests = []) {
   })
 }
 
-function runTest({name, auth, variables, query, response, before, after, verify, itName}) {
+function runTest({
+  name,
+  auth,
+  variables,
+  query,
+  response,
+  before,
+  after,
+  verify,
+  itName
+}) {
   describe(name, () => {
     describe(itName, () => {
       beforeAll(wrapHookIfNeeded(before));
@@ -80,7 +93,8 @@ function runTest({name, auth, variables, query, response, before, after, verify,
         })
         if (verify != null && verify.response != null) {
           it("Verify", async () => {
-            await test(load(verify.query), load(verify.response), verify.variables, Authorization.ADMIN)
+            await test(load(verify.query), load(verify.response),
+                verify.variables, Authorization.ADMIN)
           })
         }
       })
@@ -90,11 +104,11 @@ function runTest({name, auth, variables, query, response, before, after, verify,
 }
 
 function wrapHookIfNeeded(data) {
-  if(typeof data === 'function') {
+  if (typeof data === 'function') {
     return data;
   }
 
-  if(Array.isArray(data)) {
+  if (Array.isArray(data)) {
     return async () => await Promise.all(data.map(convertToJestHook));
   }
 

@@ -65,7 +65,7 @@ const tests = [
         variables: {
           id: {type: "testuser", id: 1},
           roles: [
-              "user"
+            "user"
           ]
         },
         response: "user/create-duplicated.json"

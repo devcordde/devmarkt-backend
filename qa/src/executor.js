@@ -36,7 +36,8 @@ export const Authorization = {
   NOT_KNOWN_USER: readToken('foreign_not_known_user'),
   FOREIGN_UNAUTHORIZED_SUDOER: readToken('foreign_unauthorized_sudoer'),
   FOREIGN_ADMIN: readToken('foreign_admin'),
-  FOREIGN_WRONG_TOKEN_USERID_FORMAT: readToken('wrong_foreign_token_userid_format')
+  FOREIGN_WRONG_TOKEN_USERID_FORMAT: readToken(
+      'wrong_foreign_token_userid_format')
 };
 
 function readToken(name) {
@@ -45,15 +46,16 @@ function readToken(name) {
 }
 
 Authorization.nameFor = token => {
-  for(const key of Object.keys(Authorization)) {
-    if(Authorization[key] === token) {
+  for (const key of Object.keys(Authorization)) {
+    if (Authorization[key] === token) {
       return key;
     }
   }
   return "";
 }
 
-export function execute(graphql, variables = {}, authorization = Authorization.NONE) {
+export function execute(graphql, variables = {},
+    authorization = Authorization.NONE) {
   return fetch(endpoint, {
     method: "post",
     headers: {
@@ -67,20 +69,24 @@ export function execute(graphql, variables = {}, authorization = Authorization.N
   }).then(response => response.json());
 }
 
-export default async function test(graphql, expectedResponse, variables = {}, authorization = Authorization.NONE) {
+export default async function test(graphql, expectedResponse, variables = {},
+    authorization = Authorization.NONE) {
   const loadedGraphql = await Promise.resolve(graphql);
   const loadedExpectedResponse = await Promise.resolve(expectedResponse);
   const actualResponse = await execute(loadedGraphql, variables, authorization);
   expect(actualResponse).toEqual(loadedExpectedResponse);
 }
 
-export function testNamed(graphql, response, variables = {}, authorization = Authorization.NONE) {
+export function testNamed(graphql, response, variables = {},
+    authorization = Authorization.NONE) {
   return test(load(graphql), load(response), variables, authorization);
 }
 
 export function prefixedTestNamed(prefix) {
-  return (graphql, response, variables = {}, authorization = Authorization.NONE) => testNamed(
-      `${prefix}/${graphql}`, `${prefix}/${response}`, variables, authorization);
+  return (graphql, response, variables = {},
+      authorization = Authorization.NONE) => testNamed(
+      `${prefix}/${graphql}`, `${prefix}/${response}`, variables,
+      authorization);
 }
 
 export async function load(file) {
