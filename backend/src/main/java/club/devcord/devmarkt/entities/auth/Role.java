@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.entities.auth;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
@@ -27,4 +28,15 @@ public record Role(
     String name
 ) {
 
+    @JsonValue
+    @Override
+    public String name() {
+        return name;
+    }
+
+    // dirty fix of jackson/graphql serialization error
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -1,0 +1,13 @@
+{
+  "data": {
+    "user": {
+      "roles": [
+        "user"
+      ],
+      "userId": {
+        "type": "the_answer_of_all",
+        "id": 49
+      }
+    }
+  }
+}

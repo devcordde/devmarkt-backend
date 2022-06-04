@@ -1,0 +1,8 @@
+{
+  "data": {
+    "user": {
+      "errorCode": "NOT_FOUND",
+      "message": "No user with the given internalId was found"
+    }
+  }
+}

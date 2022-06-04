@@ -69,7 +69,7 @@ const tests = [
           response: "question/verify/addQuestion.json"
         },
         after: {
-          query: 'question/deleteQuestion.graphql',
+          query: "question/deleteQuestion.graphql",
           variables: {templateName: 'Dev searched', number: 4}
         }
       },
@@ -107,7 +107,7 @@ const tests = [
         variables: addQuestionVars({number: 2}),
         after: {
           query: 'question/deleteQuestion.graphql',
-          variables: {templateName: 'Dev searched', number: 2}
+          variables: {templateName: "Dev searched", number: 2}
         },
         verify: {
           response: "question/verify/insertQuestion.json"

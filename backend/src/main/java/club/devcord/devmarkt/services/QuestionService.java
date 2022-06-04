@@ -73,7 +73,6 @@ public class QuestionService {
     } else {
       reorderQuestions(templateId, number, 1, true);
     }
-
     var questionObj = new Question(templateId, number,
         question.question(), question.multiline(), question.minAnswerLength());
     var questionSaved = questionRepo.save(questionObj);

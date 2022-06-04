@@ -32,7 +32,7 @@ export function executeTests(suiteName, tests = []) {
       if(matrix.length) {
         matrix.forEach(entry =>
             runTest({
-              itName: entry.name ?? '',
+              itName: entry.name ?? "default",
               name: name,
               auth: entry.auth ?? auth,
               variables: entry.variables ?? variables,
@@ -43,7 +43,7 @@ export function executeTests(suiteName, tests = []) {
               verify: entry.verify != null
                   ? {
                       query: entry.verify.query ?? verify?.query,
-                      variables: entry.verify.variables ?? verify?.variables,
+                      variables: entry.verify.variables ?? verify?.variables ?? entry.variables ?? variables,
                       response: entry.verify.response
                     } : verify
             }));
@@ -51,6 +51,7 @@ export function executeTests(suiteName, tests = []) {
       }
 
       runTest({
+        itName: "default",
         name,
         auth,
         variables,
@@ -64,22 +65,28 @@ export function executeTests(suiteName, tests = []) {
   })
 }
 
-function runTest({name, auth, variables, query, response, before, after, verify}) {
+function runTest({name, auth, variables, query, response, before, after, verify, itName}) {
   describe(name, () => {
-    beforeEach(wrapHookIfNeeded(before));
-    afterEach(wrapHookIfNeeded(after));
+    describe(itName, () => {
+      beforeAll(wrapHookIfNeeded(before));
+      afterAll(wrapHookIfNeeded(after));
 
-    it(`As ${Authorization.nameFor(auth)}`, async () => {
-      const graphQl = load(query);
-      const expectedResponse = load(response);
+      describe(`As ${Authorization.nameFor(auth)}`, () => {
+        it("Test", async () => {
+          const graphQl = load(query);
+          const expectedResponse = load(response);
 
-      await test(graphQl, expectedResponse, variables, auth);
-
-      if (verify != null) {
-        await test(load(verify.query), load(verify.response), verify.variables, Authorization.ADMIN)
-      }
+          await test(graphQl, expectedResponse, variables, auth);
+        })
+        if (verify != null && verify.response != null) {
+          it("Verify", async () => {
+            await test(load(verify.query), load(verify.response), verify.variables, Authorization.ADMIN)
+          })
+        }
+      })
     })
   })
+
 }
 
 function wrapHookIfNeeded(data) {

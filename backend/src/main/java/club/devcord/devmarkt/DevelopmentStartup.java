@@ -16,11 +16,17 @@
 
 package club.devcord.devmarkt;
 
+import club.devcord.devmarkt.entities.auth.Role;
+import club.devcord.devmarkt.entities.auth.User;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +39,12 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
   private static final Logger LOGGER = LoggerFactory.getLogger(DevelopmentStartup.class);
 
   private final JwtTokenGenerator generator;
+  private final JsonMapper mapper;
 
   public DevelopmentStartup(
-      JwtTokenGenerator jwtTokenGenerator) {
+      JwtTokenGenerator jwtTokenGenerator, JsonMapper mapper) {
     this.generator = jwtTokenGenerator;
+    this.mapper = mapper;
   }
 
   @Override
@@ -63,5 +71,16 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
         "sub", "notKnown:1",
         "iat", 1516239022
     )).get());
+
+    var code = System.identityHashCode(mapper);
+    LOGGER.info("{}", code);
+
+    try {
+      var role = new Role(-1, "test");
+      var user = new String(mapper.writeValueAsBytes(new User(-1, null, List.of(role))), StandardCharsets.UTF_8);
+      LOGGER.info(user);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

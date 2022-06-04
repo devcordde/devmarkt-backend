@@ -41,7 +41,6 @@ const tests = [
         response: "template/create.json",
         verify: {
           query: "template/template.graphql",
-          variables: {name: "PermissionTemplate"},
           response: "template/verify/create.json"
         },
         after: {
