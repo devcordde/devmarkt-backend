@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import {Authorization} from "../executor.js";
 import {executeTests} from "../spec_executor.js";
 

@@ -1,0 +1,39 @@
+{
+  "data": {
+    "template": {
+      "name": "Dev searched",
+      "questions": [
+        {
+          "number": 0,
+          "question": "Who are we?",
+          "multiline": false,
+          "minAnswerLength": 1
+        },
+        {
+          "number": 1,
+          "question": "Why should you join us?",
+          "multiline": true,
+          "minAnswerLength": 100
+        },
+        {
+          "number": 2,
+          "question": "What programming languages should you know?",
+          "multiline": false,
+          "minAnswerLength": 1
+        },
+        {
+          "number": 3,
+          "question": "Custom text:",
+          "multiline": true,
+          "minAnswerLength": 30
+        },
+        {
+          "question": "Interesting question, isn't it?",
+          "number": 4,
+          "minAnswerLength": 10,
+          "multiline": true
+        }
+      ]
+    }
+  }
+}

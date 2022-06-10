@@ -33,13 +33,32 @@ const tests = [
   {
     name: "Create Template",
     variables: templateCreateVars("PermissionTemplate"),
-    query: "template/create-template.graphql",
     auth: Authorization.ADMIN,
-    response: "template/create.json",
-    after: {
-      query: "template/delete-template.graphql",
-      variables: {name: "PermissionTemplate"}
-    }
+    matrix: [
+      {
+        name: 'success',
+        query: "template/create-template.graphql",
+        response: "template/create.json",
+        verify: {
+          query: "template/template.graphql",
+          response: "template/verify/create.json"
+        },
+        after: {
+          query: "template/delete-template.graphql",
+          variables: {name: "PermissionTemplate"}
+        }
+      },
+      {
+        name: 'duplicated',
+        query: 'template/create-template.graphql',
+        response: 'template/create-duplicated.json',
+        variables: {name: 'Dev searched', questions: []},
+        verify: {
+          query: "template/templates.graphql",
+          response: "template/templates.json"
+        }
+      }
+    ]
   },
   {
     name: "List Templates",
@@ -49,14 +68,32 @@ const tests = [
   },
   {
     name: "Delete Template",
-    query: "template/delete-template.graphql",
     variables: templateCreateVars("PermissionTemplate"),
-    before: {
-      query: "template/create-template.graphql",
-      variables: templateCreateVars("PermissionTemplate")
-    },
     auth: Authorization.ADMIN,
-    response: "template/delete.json"
+    query: "template/delete-template.graphql",
+    verify: {
+      query: "template/template-names.graphql"
+    },
+    matrix: [
+      {
+        name: 'success',
+        before: {
+          query: "template/create-template.graphql",
+          variables: templateCreateVars("PermissionTemplate")
+        },
+        response: "template/delete.json",
+        verify: {
+          response: "template/names.json"
+        }
+      },
+      {
+        name: 'notfound',
+        response: 'template/delete-notfound.json',
+        verify: {
+          response: "template/names.json"
+        }
+      }
+    ]
   }
 ];
 

@@ -1,0 +1,14 @@
+{
+  "data": {
+    "user": {
+      "roles": [
+        "admin",
+        "user"
+      ],
+      "userId": {
+        "type": "testuser",
+        "id": 1
+      }
+    }
+  }
+}

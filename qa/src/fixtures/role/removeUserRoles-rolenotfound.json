@@ -1,0 +1,11 @@
+{
+  "data": {
+    "removeUserRoles": {
+      "roles": [],
+      "userId": {
+        "type": "testuser",
+        "id": 1
+      }
+    }
+  }
+}

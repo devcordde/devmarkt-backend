@@ -24,6 +24,4 @@ type QuestionSuccess {
 type QuestionFailed implements Error {
     message: String!
     errorCode: String!
-    templateName: String!
-    number: NonNegativeInt!
 }

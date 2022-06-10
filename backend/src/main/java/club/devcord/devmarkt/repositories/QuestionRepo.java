@@ -19,7 +19,6 @@ package club.devcord.devmarkt.repositories;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.QuestionId;
 import io.micronaut.data.annotation.Join;
-import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.repository.CrudRepository;
@@ -47,10 +46,4 @@ public interface QuestionRepo extends CrudRepository<Question, QuestionId> {
   int updateOne(Question question);
 
   int delete(QuestionId id);
-
-  @MappedEntity
-  record UpdateData(
-      int internalId,
-      int number
-  ) {}
 }

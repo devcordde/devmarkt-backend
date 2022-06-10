@@ -1,7 +1,7 @@
 {
   "data": {
-    "createTemplate": {
-      "__typename": "TemplateSuccess",
+    "template": {
+      "name": "PermissionTemplate",
       "questions": [
         {
           "number": 1,

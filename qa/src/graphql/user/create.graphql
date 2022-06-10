@@ -1,0 +1,15 @@
+mutation ($id: UserIdInput!, $roles: [String!]!) {
+    createUser(userId: $id, roles: $roles) {
+        ... on UserSuccess {
+            roles
+            userId {
+                type
+                id
+            }
+        }
+        ... on UserFailed {
+            message
+            errorCode
+        }
+    }
+}

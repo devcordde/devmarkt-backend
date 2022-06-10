@@ -18,63 +18,97 @@ import test, {Authorization, execute, load} from "./executor.js";
 
 export function executeTests(suiteName, tests = []) {
   tests.forEach(({
-        name,
-        auth = Authorization.NONE,
-        variables = {},
-        query,
-        response,
-        before = () => {},
-        after = () => {},
-        matrix = []
-      }) => {
+    name,
+    auth = Authorization.NONE,
+    variables = {},
+    query,
+    response,
+    before = () => {
+    },
+    after = () => {
+    },
+    verify,
+    matrix = [],
+  }) => {
     describe(suiteName, () => {
-      if(matrix.length) {
+      if (matrix.length) {
         matrix.forEach(entry =>
             runTest({
-              name,
+              itName: entry.name ?? "default",
+              name: name,
               auth: entry.auth ?? auth,
               variables: entry.variables ?? variables,
               query: entry.query ?? query,
               response: entry.response ?? response,
               before: entry.before ?? before,
-              after: entry.after ?? after
+              after: entry.after ?? after,
+              verify: entry.verify != null
+                  ? {
+                    query: entry.verify.query ?? verify?.query,
+                    variables: entry.verify.variables ?? verify?.variables
+                        ?? entry.variables ?? variables,
+                    response: entry.verify.response
+                  } : verify
             }));
         return;
       }
 
       runTest({
+        itName: "default",
         name,
         auth,
         variables,
         query,
         response,
         before,
-        after
+        after,
+        verify
       });
     })
   })
 }
 
-function runTest({name, auth, variables, query, response, before, after}) {
+function runTest({
+  name,
+  auth,
+  variables,
+  query,
+  response,
+  before,
+  after,
+  verify,
+  itName
+}) {
   describe(name, () => {
-    beforeEach(wrapHookIfNeeded(before));
-    afterEach(wrapHookIfNeeded(after));
+    describe(itName, () => {
+      beforeAll(wrapHookIfNeeded(before));
+      afterAll(wrapHookIfNeeded(after));
 
-    it(`As ${Authorization.nameFor(auth)}`, async () => {
-      const graphQl = load(query);
-      const expectedResponse = load(response);
+      describe(`As ${Authorization.nameFor(auth)}`, () => {
+        it("Test", async () => {
+          const graphQl = load(query);
+          const expectedResponse = load(response);
 
-      await test(graphQl, expectedResponse, variables, auth);
+          await test(graphQl, expectedResponse, variables, auth);
+        })
+        if (verify != null && verify.response != null) {
+          it("Verify", async () => {
+            await test(load(verify.query), load(verify.response),
+                verify.variables, Authorization.ADMIN)
+          })
+        }
+      })
     })
   })
+
 }
 
 function wrapHookIfNeeded(data) {
-  if(typeof data === 'function') {
+  if (typeof data === 'function') {
     return data;
   }
 
-  if(Array.isArray(data)) {
+  if (Array.isArray(data)) {
     return async () => await Promise.all(data.map(convertToJestHook));
   }
 

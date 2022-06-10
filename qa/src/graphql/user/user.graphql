@@ -1,0 +1,14 @@
+query ($id: UserIdInput!) {
+    user(id: $id) {
+        ... on UserSuccess {
+            roles
+            userId {
+                id
+                type            }
+        }
+        ... on UserFailed {
+            errorCode
+            message
+        }
+    }
+}
