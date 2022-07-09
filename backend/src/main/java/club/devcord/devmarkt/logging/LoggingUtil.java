@@ -16,7 +16,6 @@
 
 package club.devcord.devmarkt.logging;
 
-import club.devcord.devmarkt.responses.Fail;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
 

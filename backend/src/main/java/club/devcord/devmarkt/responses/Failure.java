@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.template;
+package club.devcord.devmarkt.responses;
 
-import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.graphql.GraphQLType;
-import club.devcord.devmarkt.responses.Success;
 
-@GraphQLType("TemplateSuccess")
-public record TemplateSuccess(
-    Template template
-) implements TemplateResponse, Success {
+@GraphQLType("Failure")
+public record Failure<T>(
+    String errorCode,
+    String message
+) implements Response<T> {
 
 }

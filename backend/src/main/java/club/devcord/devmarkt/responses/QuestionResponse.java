@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.responses;
 
-import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.entities.template.Question;
 
-public sealed interface QuestionResponse extends Response permits QuestionSuccess, QuestionFailed {
+public interface QuestionResponse {
 
-  @Override
-  default Object graphQlUnion() {
-    if (this instanceof QuestionSuccess success) {
-      return success.question();
-    }
-    return this;
+  static Failure<Question> templateNotFound(String templateName) {
+    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(), "No template called '%s' was found.".formatted(templateName));
+  }
+
+  static Failure<Question> questionNotFound(String templateName, int number) {
+    return new Failure<>(Errors.QUESTION_NOT_FOUND.name(), "Template '%s' has no question with number %s".formatted(templateName, number));
+  }
+  
+  enum Errors {
+    TEMPLATE_NOT_FOUND,
+    QUESTION_NOT_FOUND
   }
 
 }
+

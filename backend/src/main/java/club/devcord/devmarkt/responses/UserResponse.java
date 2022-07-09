@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.user;
+package club.devcord.devmarkt.responses;
 
 import club.devcord.devmarkt.entities.auth.User;
-import club.devcord.devmarkt.responses.Success;
 
-public record UserSuccess(
-    User user
-) implements UserResponse, Success {
+public interface UserResponse {
 
+  static Failure<User> adminUserModify() {
+    return new Failure<>(Errors.ADMIN_USER_CANT_BE_MODIFIED.name(), "Admin user can't be modified,");
+  }
+
+  static Failure<User> notFound(String name) {
+    return new Failure<>(Errors.DUPLICATED.name(), "A user with the name '%s' wasn't found.".formatted(name));
+  }
+
+  static Failure<User> duplicated(String name) {
+    return new Failure<>(Errors.DUPLICATED.name(), "A user with the name '%s' already exists.".formatted(name));
+  }
+
+  enum Errors {
+    NOT_FOUND,
+    DUPLICATED,
+    ADMIN_USER_CANT_BE_MODIFIED
+  }
 }

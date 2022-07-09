@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 
-@GraphQLType("TemplateSuccess")
+@GraphQLType("Template")
 @MappedEntity("templates")
 public record Template(
     @JsonIgnore

@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses.question;
+package club.devcord.devmarkt.responses;
 
-import club.devcord.devmarkt.entities.template.Question;
-import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.entities.template.Template;
 
-public record QuestionSuccess(
-    Question question
-) implements QuestionResponse, Success {
+public interface TemplateResponse {
 
+  static Failure<Template> notFound(String name) {
+    return new Failure<>(Errors.NOT_FOUND.name(),
+        "No template called '%s' was found.".formatted(name));
+  }
+
+  static Failure<Template> duplicated(String name) {
+    return new Failure<>(Errors.DUPLICATED.name(),
+        "A template with the name '%s' already exists.".formatted(name));
+  }
+
+  enum Errors {
+    NOT_FOUND,
+    DUPLICATED
+  }
 }
