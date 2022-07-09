@@ -23,9 +23,11 @@ CREATE TABLE templates
 CREATE TABLE questions
 (
     id          SERIAL PRIMARY KEY,
-    template_id INT,
-    number      INT,
-    question    VARCHAR,
+    template_id INT NOT NULL,
+    number      INT NOT NULL,
+    question    VARCHAR NOT NULL,
+    multiline   BOOLEAN NOT NULL,
+    min_answer_length INT NOT NULL,
     UNIQUE (template_id, number),
     FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
 );
