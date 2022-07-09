@@ -24,6 +24,7 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
+import io.micronaut.data.annotation.Where;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.validation.constraints.NotBlank;
 
 @GraphQLType("Template")
 @MappedEntity("templates")
+@Where("@.enabled = true")
 public record Template(
     @JsonIgnore
     @Id @GeneratedValue
@@ -38,16 +40,19 @@ public record Template(
 
     @NotBlank
     String name,
+    @JsonIgnore
+    boolean enabled,
     @Relation(value = Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
     List<Question> questions
 ) {
 
-    public Template(int id, String name, List<Question> questions) {
+    public Template(int id, String name, boolean enabled, List<Question> questions) {
         var list = new ArrayList<>(questions != null ? questions : List.of());
         list.sort(Comparator.comparingInt(Question::number));
         this.questions = list;
         this.id = id;
         this.name = name;
+        this.enabled = enabled;
     }
 
 }

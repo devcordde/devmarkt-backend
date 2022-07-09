@@ -33,7 +33,7 @@ public record QuestionId(
 ) {
 
     public QuestionId(int templateId, int number) {
-        this(new Template(templateId, null, null), number);
+        this(new Template(templateId, null, true, null), number);
     }
 
 }

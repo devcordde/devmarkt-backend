@@ -38,7 +38,7 @@ public class TemplateService {
     if (templateRepo.existsByName(name)) {
       return Templates.duplicated(name);
     }
-    var savedTemplate = templateRepo.save(new Template(-1, name, questions));
+    var savedTemplate = templateRepo.save(new Template(-1, name, true, questions));
     return new Success<>(savedTemplate);
   }
 

@@ -17,7 +17,9 @@
 CREATE TABLE templates
 (
     id   SERIAL PRIMARY KEY,
-    name VARCHAR UNIQUE
+    name VARCHAR,
+    enabled BOOLEAN NOT NULL,
+    UNIQUE (name, enabled)
 );
 
 CREATE TABLE questions

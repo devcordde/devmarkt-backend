@@ -18,9 +18,7 @@ type Mutation {
         questions: [QuestionInput!]!
     ): TemplateResponse @Auth(role: "admin")
 
-    # TODO: adjust the implementation to 'disable' instead of delete it from the database
-    # TODO: rename this query due to the new functionality
-    deleteTemplate(
+    disableTemplate(
         name: TemplateName!
     ): Boolean @Auth(role: "admin")
 
