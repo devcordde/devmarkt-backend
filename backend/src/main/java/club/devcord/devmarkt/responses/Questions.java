@@ -18,7 +18,7 @@ package club.devcord.devmarkt.responses;
 
 import club.devcord.devmarkt.entities.template.Question;
 
-public interface QuestionResponse {
+public interface Questions {
 
   static Failure<Question> templateNotFound(String templateName) {
     return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(), "No template called '%s' was found.".formatted(templateName));
@@ -27,7 +27,7 @@ public interface QuestionResponse {
   static Failure<Question> questionNotFound(String templateName, int number) {
     return new Failure<>(Errors.QUESTION_NOT_FOUND.name(), "Template '%s' has no question with number %s".formatted(templateName, number));
   }
-  
+
   enum Errors {
     TEMPLATE_NOT_FOUND,
     QUESTION_NOT_FOUND

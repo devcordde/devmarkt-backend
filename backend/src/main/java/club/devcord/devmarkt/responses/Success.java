@@ -20,4 +20,8 @@ public record Success<T>(
   T value
 ) implements Response<T> {
 
+  public static <T> Response<T> response(T value) {
+    return new Success<>(value);
+  }
+
 }

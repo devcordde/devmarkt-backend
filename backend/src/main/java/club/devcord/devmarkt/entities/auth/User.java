@@ -26,7 +26,7 @@ import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.jdbc.annotation.JoinTable;
 import java.util.Collection;
 
-@GraphQLType("UserSuccess")
+@GraphQLType("User")
 @MappedEntity("users")
 public record User(
     @GeneratedValue @Id

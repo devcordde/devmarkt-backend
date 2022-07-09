@@ -19,9 +19,9 @@ package club.devcord.devmarkt.services;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.repositories.TemplateRepo;
-import club.devcord.devmarkt.responses.template.TemplateFailed;
-import club.devcord.devmarkt.responses.template.TemplateResponse;
-import club.devcord.devmarkt.responses.template.TemplateSuccess;
+import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.Templates;
 import jakarta.inject.Singleton;
 import java.util.List;
 
@@ -34,18 +34,18 @@ public class TemplateService {
     this.templateRepo = repo;
   }
 
-  public TemplateResponse create(String name, List<Question> questions) {
+  public Response<Template> create(String name, List<Question> questions) {
     if (templateRepo.existsByName(name)) {
-      return TemplateFailed.duplicated(name);
+      return Templates.duplicated(name);
     }
     var savedTemplate = templateRepo.save(new Template(-1, name, questions));
-    return new TemplateSuccess(savedTemplate);
+    return new Success<>(savedTemplate);
   }
 
-  public TemplateResponse find(String name) {
+  public Response<Template> find(String name) {
     return templateRepo.findByName(name)
-        .map(tem -> (TemplateResponse) new TemplateSuccess(tem))
-        .orElseGet(() -> TemplateFailed.notFound(name));
+        .map(Success::response)
+        .orElseGet(() -> Templates.notFound(name));
   }
 
   public boolean delete(String name) {

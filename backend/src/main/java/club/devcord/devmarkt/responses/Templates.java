@@ -18,7 +18,7 @@ package club.devcord.devmarkt.responses;
 
 import club.devcord.devmarkt.entities.template.Template;
 
-public interface TemplateResponse {
+public interface Templates {
 
   static Failure<Template> notFound(String name) {
     return new Failure<>(Errors.NOT_FOUND.name(),

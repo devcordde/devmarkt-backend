@@ -20,9 +20,9 @@ import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.QuestionId;
 import club.devcord.devmarkt.repositories.QuestionRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
-import club.devcord.devmarkt.responses.question.QuestionFailed;
-import club.devcord.devmarkt.responses.question.QuestionResponse;
-import club.devcord.devmarkt.responses.question.QuestionSuccess;
+import club.devcord.devmarkt.responses.Questions;
+import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.responses.Success;
 import jakarta.inject.Singleton;
 import java.util.Comparator;
 
@@ -38,15 +38,15 @@ public class QuestionService {
   }
 
 
-  public QuestionResponse question(String templateName, int number) {
+  public Response<Question> question(String templateName, int number) {
     var templateIdOpt = templateRepo.findByName(templateName);
     if (templateIdOpt.isEmpty()) {
-      return QuestionFailed.templateNotFound(templateName, number);
+      return Questions.templateNotFound(templateName);
     }
 
     return questionRepo.findById(new QuestionId(templateIdOpt.get(), number))
-        .map(question -> (QuestionResponse) new QuestionSuccess(question))
-        .orElseGet(() -> QuestionFailed.questionNotFound(templateName, number));
+        .map(Success::response)
+        .orElseGet(() -> Questions.questionNotFound(templateName, number));
   }
 
   /*
@@ -58,11 +58,11 @@ public class QuestionService {
   addQuestion(..., ..., -1): old, old, old -> old, old, old, new
   assQuestion(..., ..., 2) old, old, old -> old, old, new, old
    */
-  public QuestionResponse addQuestion(String templateName, Question question) {
+  public Response<Question> addQuestion(String templateName, Question question) {
     var templateIdOpt = templateRepo.findIdByName(templateName);
     var number = question.number();
     if (templateIdOpt.isEmpty()) {
-      return QuestionFailed.templateNotFound(templateName, question.number());
+      return Questions.templateNotFound(templateName);
     }
 
     int templateId = templateIdOpt.get();
@@ -76,22 +76,22 @@ public class QuestionService {
     var questionObj = new Question(templateId, number,
         question.question(), question.multiline(), question.minAnswerLength());
     var questionSaved = questionRepo.save(questionObj);
-    return new QuestionSuccess(questionSaved);
+    return new Success<>(questionSaved);
   }
 
-  public QuestionResponse updateQuestion(String templateName, Question question) {
+  public Response<Question> updateQuestion(String templateName, Question question) {
     var templateIdOpt = templateRepo.findIdByName(templateName);
     var number = question.number();
     if (templateIdOpt.isEmpty()) {
-      return QuestionFailed.templateNotFound(templateName, number);
+      return Questions.templateNotFound(templateName);
     }
 
     var newQuestion = new Question(templateIdOpt.get(), number,
         question.question(), question.multiline(), question.minAnswerLength());
     var updated = questionRepo.updateOne(newQuestion);
     return updated == 1
-        ? new QuestionSuccess(newQuestion)
-        : QuestionFailed.questionNotFound(templateName, number);
+        ? new Success<>(newQuestion)
+        : Questions.questionNotFound(templateName, number);
   }
 
   public boolean deleteQuestion(String templateName, int number) {

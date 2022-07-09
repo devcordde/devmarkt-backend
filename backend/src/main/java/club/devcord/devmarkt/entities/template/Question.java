@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.entities.template;
 
+import club.devcord.devmarkt.graphql.GraphQLType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Creator;
@@ -24,6 +25,7 @@ import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
 
+@GraphQLType("Question")
 @MappedEntity("questions")
 public record Question(
 

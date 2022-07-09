@@ -21,7 +21,9 @@ import club.devcord.devmarkt.entities.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
-import club.devcord.devmarkt.responses.UserResponse;
+import club.devcord.devmarkt.responses.Response;
+import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.Users;
 import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
 import java.util.Collection;
@@ -41,11 +43,10 @@ public class UserService {
     return repo.findByUserId(userId);
   }
 
-  public UserResponse find(UserId userId) {
+  public Response<User> find(UserId userId) {
     return repo.findByUserId(userId)
-        .map(user -> (UserResponse) new UserSuccess(user))
-        .orElseGet(
-            () -> new UserFailed(UserErrors.NOT_FOUND, "No user with the given internalId was found"));
+        .map(Success::response)
+        .orElseGet(() -> Users.notFound(userId.merged()));
   }
 
   public boolean delete(UserId userId) {
@@ -62,25 +63,25 @@ public class UserService {
     return user;
   }
 
-  public UserResponse save(UserId userId, Collection<String> roles) {
+  public Response<User> save(UserId userId, Collection<String> roles) {
     if (repo.existsByUserId(userId)) {
-      return new UserFailed(UserErrors.DUPLICATED, "A user with the same internalId already exists");
+      return Users.duplicated(userId.merged());
     }
     repo.save(new User(-1, userId, null));
     return addUserRoles(userId, roles);
   }
 
-  public UserResponse addUserRoles(UserId userId, Collection<String> roles) {
+  public Response<User> addUserRoles(UserId userId, Collection<String> roles) {
     if (Admins.isAdminUserId(userId)) {
-      return UserFailed.adminUserModify();
+      return Users.adminUserModify();
     }
     repo.addRoles(userId, roles);
     return find(userId);
   }
 
-  public UserResponse removeUserRoles(UserId userId, Collection<String> roles) {
+  public Response<User> removeUserRoles(UserId userId, Collection<String> roles) {
     if (Admins.isAdminUserId(userId)) {
-      return UserFailed.adminUserModify();
+      return Users.adminUserModify();
     }
     repo.removeRoles(userId, roles);
     return find(userId);
