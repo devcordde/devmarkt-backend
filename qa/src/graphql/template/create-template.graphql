@@ -1,7 +1,7 @@
 mutation($questions: [QuestionInput!]!, $name: TemplateName!) {
     createTemplate(questions: $questions, name: $name) {
         __typename
-        ...on TemplateSuccess {
+        ...on Template {
             questions {
                 number
                 question
@@ -9,7 +9,7 @@ mutation($questions: [QuestionInput!]!, $name: TemplateName!) {
                 multiline
             }
         }
-        ...on TemplateFailed {
+        ...on Failure {
             errorCode
             message
         }

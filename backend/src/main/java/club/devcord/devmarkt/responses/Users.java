@@ -27,7 +27,7 @@ public interface Users {
   }
 
   static Failure<User> notFound(UserId id) {
-    return new Failure<>(Errors.DUPLICATED.name(),
+    return new Failure<>(Errors.NOT_FOUND.name(),
         "A user with the id '%s' wasn't found.".formatted(id));
   }
 

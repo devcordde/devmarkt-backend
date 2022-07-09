@@ -1,11 +1,10 @@
 query($name: TemplateName!){
     template(name: $name) {
-        ... on TemplateFailed {
+        ... on Failure {
             errorCode
             message
-            name
         }
-        ... on TemplateSuccess {
+        ... on Template {
             name
             questions {
                 multiline

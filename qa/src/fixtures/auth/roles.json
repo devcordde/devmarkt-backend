@@ -1,8 +1,9 @@
 {
   "data": {
     "roles": [
-      "admin",
-      "user"
+      "ADMIN",
+      "USER",
+      "NONE"
     ]
   }
 }

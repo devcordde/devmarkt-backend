@@ -18,5 +18,6 @@ package club.devcord.devmarkt.auth;
 
 public enum Role {
   ADMIN,
-  USER
+  USER,
+  NONE
 }

@@ -25,12 +25,12 @@ const tests = [
     matrix: [
       {
         name: "success",
-        variables: {id: {type: "testuser", id: 1}},
+        variables: {id: {type: "testuser", number: 1}},
         response: "user/user.json"
       },
       {
         name: "notfound",
-        variables: {id: {type: "not_known", id: 1}},
+        variables: {id: {type: "not_known", number: 1}},
         response: "user/user-notfound.json"
       }
     ]
@@ -46,10 +46,8 @@ const tests = [
       {
         name: "success",
         variables: {
-          id: {type: "the_answer_of_all", id: 49},
-          roles: [
-            "user"
-          ]
+          id: {type: "the_answer_of_all", number: 49},
+          role: "USER"
         },
         response: "user/create-success.json",
         verify: {
@@ -57,16 +55,14 @@ const tests = [
         },
         after: {
           query: "user/delete.graphql",
-          variables: {id: {type: "the_answer_of_all", id: 49}}
+          variables: {id: {type: "the_answer_of_all", number: 49}}
         }
       },
       {
         name: "duplicated",
         variables: {
-          id: {type: "testuser", id: 1},
-          roles: [
-            "user"
-          ]
+          id: {type: "testuser", number: 1},
+          role: "USER"
         },
         response: "user/create-duplicated.json"
       }
@@ -79,22 +75,20 @@ const tests = [
       query: "user/user.graphql",
     },
     query: "user/delete.graphql",
-    variables: {id: {type: "Database_Witch", id: 1}},
+    variables: {id: {type: "Database_Witch", number: 1}},
     matrix: [
       {
         name: "success",
         before: {
           query: "user/create.graphql",
           variables: {
-            id: {type: "Database_Witch", id: 1},
-            roles: [
-              "Tabellenschubser"
-            ]
+            id: {type: "Database_Witch", number: 1},
+            role: "ADMIN"
           }
         },
         response: "user/delete-success.json",
         verify: {
-          response: "user/user-notfound.json"
+          response: "user/verify/delete.json"
         }
       },
       {
