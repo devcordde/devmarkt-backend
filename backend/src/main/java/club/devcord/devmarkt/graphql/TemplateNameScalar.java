@@ -36,8 +36,9 @@ public class TemplateNameScalar {
           if (dataFetcherResult instanceof String name && isValid(name)) {
             return name;
           }
-          throw new CoercingSerializeException("Unable to serialize %s as an TemplateName aka String"
-              .formatted(dataFetcherResult));
+          throw new CoercingSerializeException(
+              "Unable to serialize %s as an TemplateName aka String"
+                  .formatted(dataFetcherResult));
         }
 
         @NotNull

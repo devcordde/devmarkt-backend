@@ -15,4 +15,5 @@
  */
 
 INSERT INTO users (id_type, user_id, role)
-VALUES ('testuser', 1, 'NONE'::role), ('testuser', 2, 'USER'::role);
+VALUES ('testuser', 1, 'NONE'::role),
+       ('testuser', 2, 'USER'::role);

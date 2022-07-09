@@ -44,12 +44,12 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
 
   @Override
   public void onApplicationEvent(StartupEvent event) {
-    LOGGER.info("testuser:2 user: {}",generator.generateToken(Map.of(
+    LOGGER.info("testuser:2 user: {}", generator.generateToken(Map.of(
         "sub", "testuser:2",
         "iat", 1516239022
     )).get());
 
-    LOGGER.info("internal:1 user: {}",generator.generateToken(Map.of(
+    LOGGER.info("internal:1 user: {}", generator.generateToken(Map.of(
         "sub", "internal:1",
         "iat", 1516239022
     )).get());

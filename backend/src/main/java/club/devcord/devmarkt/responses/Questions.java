@@ -21,11 +21,13 @@ import club.devcord.devmarkt.entities.template.Question;
 public interface Questions {
 
   static Failure<Question> templateNotFound(String templateName) {
-    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(), "No template called '%s' was found.".formatted(templateName));
+    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(),
+        "No template called '%s' was found.".formatted(templateName));
   }
 
   static Failure<Question> questionNotFound(String templateName, int number) {
-    return new Failure<>(Errors.QUESTION_NOT_FOUND.name(), "Template '%s' has no question with number %s".formatted(templateName, number));
+    return new Failure<>(Errors.QUESTION_NOT_FOUND.name(),
+        "Template '%s' has no question with number %s".formatted(templateName, number));
   }
 
   enum Errors {

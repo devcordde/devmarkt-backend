@@ -18,7 +18,8 @@ DELETE
 FROM templates
 WHERE name IN ('Dev searched', 'Dev offered', 'Empty template');
 
-WITH templateId AS (INSERT INTO templates (name, enabled) VALUES ('Dev searched', true) RETURNING id)
+WITH templateId
+         AS (INSERT INTO templates (name, enabled) VALUES ('Dev searched', true) RETURNING id)
 INSERT
 INTO questions(template_id, number, question, multiline, min_answer_length)
 VALUES ((SELECT id FROM templateId), 0, 'Who are we?', false, 1),

@@ -52,7 +52,8 @@ public class TemplateMutation implements GraphQLMutationResolver {
 
   public Object updateTemplate(String templateName, Template updatedTemplate) {
     var response = service.update(templateName, updatedTemplate);
-    LOGGER.info("Template update. Successful: {}, Updated: {}", LoggingUtil.responseStatus(response), updatedTemplate);
+    LOGGER.info("Template update. Successful: {}, Updated: {}",
+        LoggingUtil.responseStatus(response), updatedTemplate);
     return response.graphQlUnion();
   }
 }

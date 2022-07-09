@@ -21,6 +21,6 @@ CREATE TABLE users
     id      SERIAL PRIMARY KEY,
     id_type VARCHAR NOT NULL,
     user_id BIGINT  NOT NULL,
-    role    role NOT NULL,
+    role    role    NOT NULL,
     UNIQUE (id_type, user_id)
 );

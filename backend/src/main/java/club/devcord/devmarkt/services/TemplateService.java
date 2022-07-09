@@ -68,19 +68,14 @@ public class TemplateService {
     var questions = currentTemplate.questions();
     for (var question : updated.questions()) {
       if (question.updateAction() == null
-        || (question.updateAction() != UpdateAction.APPEND && question.number() >= questions.size())) {
+          || (question.updateAction() != UpdateAction.APPEND
+          && question.number() >= questions.size())) {
         continue;
       }
       switch (question.updateAction()) {
-        case APPEND -> {
-          questions.add(mutateQuestion(question, questions.size()));
-        }
-        case REPLACE -> {
-          questions.set(question.number(), question);
-        }
-        case DELETE -> {
-          questions.remove(question.number());
-        }
+        case APPEND -> questions.add(mutateQuestion(question, questions.size()));
+        case REPLACE -> questions.set(question.number(), question);
+        case DELETE -> questions.remove(question.number());
         case INSERT -> {
           recorderQuestion(questions, 1, question.number());
           questions.set(question.number(), question);
@@ -90,13 +85,14 @@ public class TemplateService {
     recorderQuestion(questions, 0, 0);
     templateRepo.deleteByName(templateName);
     var name = updated.name() != null ? updated.name() : templateName;
-    var saved = templateRepo.save(new Template(-1, name , true, questions));
+    var saved = templateRepo.save(new Template(-1, name, true, questions));
     return new Success<>(saved);
   }
 
   private Question mutateQuestion(Question question, int number) {
     return new Question(question.internalId(), new QuestionId(question.id().template(), number),
-        question.question(), question.multiline(), question.minAnswerLength(), question.updateAction());
+        question.question(), question.multiline(), question.minAnswerLength(),
+        question.updateAction());
   }
 
   private void recorderQuestion(List<Question> questions, int offset, int start) {
@@ -106,7 +102,7 @@ public class TemplateService {
     for (var question : List.copyOf(questions)) {
       if (question.number() != i && question.number() >= start) {
         var updated = mutateQuestion(question, i + offset);
-        if (i >= questions.size() ) {
+        if (i >= questions.size()) {
           questions.add(updated);
         } else {
           questions.set(i, updated);

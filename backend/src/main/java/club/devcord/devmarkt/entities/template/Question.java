@@ -43,28 +43,29 @@ public record Question(
     UpdateAction updateAction
 ) {
 
-    @Creator
-    public Question(int internalId,
-        QuestionId id,
-        String question,
-        boolean multiline,
-        int minAnswerLength) {
-        this(internalId, id, question, multiline, minAnswerLength, null);
-    }
+  @Creator
+  public Question(int internalId,
+      QuestionId id,
+      String question,
+      boolean multiline,
+      int minAnswerLength) {
+    this(internalId, id, question, multiline, minAnswerLength, null);
+  }
 
-    @JsonCreator
-    public Question(
-        @JsonProperty("templateId") int templateId,
-        @JsonProperty("number") int number,
-        @JsonProperty("question" )String question,
-        @JsonProperty("multiline") boolean multiline,
-        @JsonProperty("minAnswerLength") int minAnswerLength,
-        @JsonProperty("updateAction") UpdateAction updateAction) {
-        this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength, updateAction);
-    }
+  @JsonCreator
+  public Question(
+      @JsonProperty("templateId") int templateId,
+      @JsonProperty("number") int number,
+      @JsonProperty("question") String question,
+      @JsonProperty("multiline") boolean multiline,
+      @JsonProperty("minAnswerLength") int minAnswerLength,
+      @JsonProperty("updateAction") UpdateAction updateAction) {
+    this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength,
+        updateAction);
+  }
 
-    public int number() {
-        return id.number();
-    }
+  public int number() {
+    return id.number();
+  }
 
 }

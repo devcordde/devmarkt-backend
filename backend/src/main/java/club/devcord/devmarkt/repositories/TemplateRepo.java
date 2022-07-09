@@ -37,10 +37,6 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   @Query("UPDATE templates SET enabled = false WHERE name = :name AND enabled = true")
   int deleteByName(String name);
 
-  int updateByName(String oldName, String name);
-
-  Optional<Integer> findIdByName(String name);
-
   @NotNull
   @Join(value = "questions", type = Type.LEFT_FETCH)
   List<Template> findAll();

@@ -44,13 +44,13 @@ public record Template(
     List<Question> questions
 ) {
 
-    public Template(int id, String name, boolean enabled, List<Question> questions) {
-        var list = new ArrayList<>(questions != null ? questions : List.of());
-        list.sort(Comparator.comparingInt(Question::number));
-        this.questions = list;
-        this.id = id;
-        this.name = name;
-        this.enabled = enabled;
-    }
+  public Template(int id, String name, boolean enabled, List<Question> questions) {
+    var list = new ArrayList<>(questions != null ? questions : List.of());
+    list.sort(Comparator.comparingInt(Question::number));
+    this.questions = list;
+    this.id = id;
+    this.name = name;
+    this.enabled = enabled;
+  }
 
 }
