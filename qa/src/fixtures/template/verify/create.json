@@ -1,6 +1,7 @@
 {
   "data": {
     "template": {
+      "__typename": "Template",
       "name": "PermissionTemplate",
       "questions": [
         {

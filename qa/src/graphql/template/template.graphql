@@ -1,5 +1,6 @@
 query($name: TemplateName!){
     template(name: $name) {
+        __typename
         ... on Failure {
             errorCode
             message

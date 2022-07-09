@@ -72,17 +72,20 @@ public class TemplateService {
           && question.number() >= questions.size())) {
         continue;
       }
+      System.out.println(question.updateAction());
       switch (question.updateAction()) {
         case APPEND -> questions.add(mutateQuestion(question, questions.size()));
         case REPLACE -> questions.set(question.number(), question);
-        case DELETE -> questions.remove(question.number());
+        case DELETE -> {
+          questions.remove(question.number());
+          recorderQuestion(questions, 0, 0);
+        }
         case INSERT -> {
           recorderQuestion(questions, 1, question.number());
           questions.set(question.number(), question);
         }
       }
     }
-    recorderQuestion(questions, 0, 0);
     templateRepo.deleteByName(templateName);
     var name = updated.name() != null ? updated.name() : templateName;
     var saved = templateRepo.save(new Template(-1, name, true, questions));
@@ -90,7 +93,7 @@ public class TemplateService {
   }
 
   private Question mutateQuestion(Question question, int number) {
-    return new Question(question.internalId(), new QuestionId(question.id().template(), number),
+    return new Question(question.internalId(), new QuestionId(null, number),
         question.question(), question.multiline(), question.minAnswerLength(),
         question.updateAction());
   }
@@ -98,25 +101,29 @@ public class TemplateService {
   private void recorderQuestion(List<Question> questions, int offset, int start) {
     questions.removeAll(Collections.singletonList(null));
     questions.sort(Comparator.comparingInt(Question::number));
-    int i = start;
-    for (var question : List.copyOf(questions)) {
-      if (question.number() != i && question.number() >= start) {
-        var updated = mutateQuestion(question, i + offset);
-        if (i >= questions.size()) {
-          questions.add(updated);
-        } else {
-          questions.set(i, updated);
-        }
+
+    var original = List.copyOf(questions);
+    for (int i = start; i < original.size(); i++) {
+      var question = original.get(i);
+      var newNum = i + offset;
+      var updated = mutateQuestion(question, newNum);
+      if (newNum >= original.size()) {
+        questions.add(updated);
+      } else {
+        questions.set(newNum, updated);
       }
-      i++;
     }
   }
 
   public List<Template> all() {
-    return templateRepo.findAll();
+    var templates = templateRepo.findAll();
+    templates.sort(Comparator.comparing(Template::name));
+    return templates;
   }
 
   public List<String> allNames() {
-    return templateRepo.findName();
+    var names = templateRepo.findName();
+    names.sort(String::compareTo);
+    return names;
   }
 }

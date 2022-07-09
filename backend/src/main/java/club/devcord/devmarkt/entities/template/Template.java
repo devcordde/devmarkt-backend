@@ -18,6 +18,7 @@ package club.devcord.devmarkt.entities.template;
 
 import club.devcord.devmarkt.graphql.GraphQLType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
@@ -44,13 +45,10 @@ public record Template(
     List<Question> questions
 ) {
 
-  public Template(int id, String name, boolean enabled, List<Question> questions) {
+  @Creator
+  public static Template newSorted(int id, String name, boolean enabled, List<Question> questions) {
     var list = new ArrayList<>(questions != null ? questions : List.of());
     list.sort(Comparator.comparingInt(Question::number));
-    this.questions = list;
-    this.id = id;
-    this.name = name;
-    this.enabled = enabled;
+    return new Template(id, name, enabled, list);
   }
-
 }

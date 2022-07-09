@@ -2,10 +2,10 @@
   "data": {
     "templates": [
       {
-        "name": "Dev searched"
+        "name": "Dev offered"
       },
       {
-        "name": "Dev offered"
+        "name": "Dev searched"
       },
       {
         "name": "Empty template"

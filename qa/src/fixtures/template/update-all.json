@@ -1,0 +1,40 @@
+{
+  "data": {
+    "updateTemplate": {
+      "__typename": "Template",
+      "name": "All updated",
+      "questions": [
+        {
+          "question": "Why should you join us?",
+          "number": 0,
+          "multiline": true,
+          "minAnswerLength": 100
+        },
+        {
+          "question": "Inserted Question NUM: 1",
+          "number": 1,
+          "multiline": false,
+          "minAnswerLength": 10
+        },
+        {
+          "question": "Replaced Question NUM: 2",
+          "number": 2,
+          "multiline": false,
+          "minAnswerLength": 44
+        },
+        {
+          "question": "Custom text:",
+          "number": 3,
+          "multiline": true,
+          "minAnswerLength": 30
+        },
+        {
+          "question": "Appened Question NUM: 4",
+          "number": 4,
+          "multiline": true,
+          "minAnswerLength": 100
+        }
+      ]
+    }
+  }
+}

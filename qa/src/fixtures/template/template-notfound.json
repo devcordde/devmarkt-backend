@@ -1,0 +1,9 @@
+{
+  "data": {
+    "template": {
+      "__typename": "Failure",
+      "message": "No template called 'Not existing template' was found.",
+      "errorCode": "NOT_FOUND"
+    }
+  }
+}
