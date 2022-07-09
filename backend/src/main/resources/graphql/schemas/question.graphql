@@ -13,8 +13,6 @@ enum UpdateAction {
     APPEND
 }
 
-union QuestionResponse = Question | Failure
-
 type Question {
     question: String!
     number: NonNegativeInt!
