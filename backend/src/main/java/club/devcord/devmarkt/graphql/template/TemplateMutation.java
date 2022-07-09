@@ -43,7 +43,7 @@ public class TemplateMutation implements GraphQLMutationResolver {
     return response.graphQlUnion();
   }
 
-  public boolean disableTemplate(String name) {
+  public boolean deleteTemplate(String name) {
     var response = service.delete(name);
     LOGGER.info("Template deletion. Successful: {}, Name: {}", response, name);
     return response;

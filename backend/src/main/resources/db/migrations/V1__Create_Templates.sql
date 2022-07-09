@@ -18,9 +18,10 @@ CREATE TABLE templates
 (
     id   SERIAL PRIMARY KEY,
     name VARCHAR,
-    enabled BOOLEAN NOT NULL,
-    UNIQUE (name, enabled)
+    enabled BOOLEAN NOT NULL
 );
+
+CREATE UNIQUE INDEX enabled_template ON templates (name, enabled) WHERE enabled = true;
 
 CREATE TABLE questions
 (

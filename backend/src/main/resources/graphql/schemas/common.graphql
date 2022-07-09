@@ -18,7 +18,7 @@ type Mutation {
         questions: [QuestionInput!]!
     ): TemplateResponse @Auth(role: "admin")
 
-    disableTemplate(
+    deleteTemplate(
         name: TemplateName!
     ): Boolean @Auth(role: "admin")
 
