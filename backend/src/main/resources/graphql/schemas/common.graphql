@@ -1,19 +1,14 @@
 type Query {
-    templates: [TemplateSuccess!] @Auth(role: "user")
+    templates: [Template!] @Auth(role: "user")
 
     template(
-        name: TemplateName
+        name: TemplateName!
     ): TemplateResponse @Auth(role: "user")
-
-    question(
-        templateName: TemplateName!
-        number: NonNegativeInt!
-    ): QuestionResponse @Auth(role: "user")
 
     roles: [String!] @Auth(role: "admin")
 
     user(
-        id: UserIdInput!
+        id: UserIdInput! # TODO: Refactor this to a string representation
     ): UserResponse @Auth(role: "admin")
 }
 
@@ -23,10 +18,13 @@ type Mutation {
         questions: [QuestionInput!]!
     ): TemplateResponse @Auth(role: "admin")
 
+    # TODO: adjust the implementation to 'disable' instead of delete it from the database
+    # TODO: rename this query due to the new functionality
     deleteTemplate(
         name: TemplateName!
     ): Boolean @Auth(role: "admin")
 
+    # TODO: merge the next 4 queries in a single 'editTemplate' query
     updateTemplateName(
         oldName: TemplateName!
         newName: TemplateName!
@@ -48,27 +46,28 @@ type Mutation {
     ): Boolean @Auth(role: "admin")
 
     createUser(
-        userId: UserIdInput!
-        roles: [String!]!
+        userId: UserIdInput! # TODO: Use string representation
+        roles: [String!]! # TODO: use enum for roles
     ): UserResponse @Auth(role: "admin")
 
     deleteUser(
-        userId: UserIdInput!
+        userId: UserIdInput! # TODO: Use string representation
     ): Boolean! @Auth(role: "admin")
 
+    #
     addUserRoles(
-        userId: UserIdInput!
-        roles: [String!]!
+        userId: UserIdInput! # TODO: Use string representation
+        roles: [String!]! # TODO: use enum for roles
     ): UserResponse @Auth(role: "admin")
 
     removeUserRoles(
-        userId: UserIdInput!
-        roles: [String!]!
+        userId: UserIdInput! # TODO: Use string representation
+        roles: [String!]!  # TODO: use enum for roles
     ): UserResponse @Auth(role: "admin")
 }
 
 # common
-interface Error {
+type Failure {
     message: String!
     errorCode: String!
 }

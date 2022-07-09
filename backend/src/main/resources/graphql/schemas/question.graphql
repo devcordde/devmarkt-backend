@@ -1,6 +1,6 @@
 input QuestionInput {
     question: String! @NotBlank @Size(min: 1, max: 200)
-    number: NonNegativeInt!
+    number: NonNegativeInt! # TODO: refactor this validation to prevent the redundant QuestionAddInput type
     multiline: Boolean!
     minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
 }
@@ -12,16 +12,11 @@ input QuestionAddInput {
     minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
 }
 
-union QuestionResponse = QuestionSuccess | QuestionFailed
+union QuestionResponse = Question | Failure
 
-type QuestionSuccess {
+type Question {
     question: String!
     number: NonNegativeInt!
     multiline: Boolean!
     minAnswerLength: PositiveInt!
-}
-
-type QuestionFailed implements Error {
-    message: String!
-    errorCode: String!
 }

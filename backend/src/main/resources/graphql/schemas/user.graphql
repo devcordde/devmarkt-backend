@@ -1,4 +1,4 @@
-union UserResponse = UserSuccess | UserFailed
+union UserResponse = User | Failure
 
 input UserIdInput {
     type: String! @NotBlank
@@ -10,12 +10,7 @@ type UserId {
     id: Long
 }
 
-type UserSuccess {
-    userId: UserId!
-    roles: [String!]!
-}
-
-type UserFailed implements Error {
-    errorCode: String!
-    message: String!
+type User {
+    userId: UserId! # TODO: use string representation
+    roles: [String!]! # TODO: use enum for roles
 }
