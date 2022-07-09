@@ -72,7 +72,6 @@ public class TemplateService {
           && question.number() >= questions.size())) {
         continue;
       }
-      System.out.println(question.updateAction());
       switch (question.updateAction()) {
         case APPEND -> questions.add(mutateQuestion(question, questions.size()));
         case REPLACE -> questions.set(question.number(), question);
