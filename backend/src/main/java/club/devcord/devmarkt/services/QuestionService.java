@@ -50,9 +50,9 @@ public class QuestionService {
   }
 
   /*
-  If a number is provided (higher than -1), than the question will be inserted.
-  In detail all numbers of the questions from the given number on
-  are increased by 1 and the question is added on the given number.
+  If a identity is provided (higher than -1), than the question will be inserted.
+  In detail all numbers of the questions from the given identity on
+  are increased by 1 and the question is added on the given identity.
 
   Examples:
   addQuestion(..., ..., -1): old, old, old -> old, old, old, new
@@ -107,7 +107,7 @@ public class QuestionService {
   }
 
   /*
-  Reorders (changes the number) of all questions with the given templateId, which
+  Reorders (changes the identity) of all questions with the given templateId, which
   numbers are out of the line to it's right order, optionally with an offset.
   Eg. 1, 2, 4 -> 1, 2, 3 (offset 0)
       1, 2, 4 -> 1, 2, 5 (offset 2)

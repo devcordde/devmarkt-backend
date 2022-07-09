@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 
-INSERT INTO roles (name)
-VALUES ('admin'),
-       ('user')
-ON CONFLICT DO NOTHING;
-
-INSERT INTO users (id_type, user_id)
-VALUES ('internal', 1)
-ON CONFLICT DO NOTHING;
-
-INSERT INTO user_roles (user_id, role_id)
-SELECT r.id, u.id
-FROM roles r
-         JOIN users u ON u.id_type = 'internal' AND u.user_id = 1
-WHERE r.name = 'admin'
+INSERT INTO users (id_type, user_id, role)
+VALUES ('internal', 1, 'ADMIN'::role)
 ON CONFLICT DO NOTHING;

@@ -20,7 +20,6 @@ import club.devcord.devmarkt.auth.error.ForbiddenError;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.User;
 import graphql.execution.DataFetcherResult;
-import graphql.language.StringValue;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.idl.SchemaDirectiveWiring;
@@ -38,9 +37,10 @@ public class RoleDirective implements SchemaDirectiveWiring {
   public GraphQLFieldDefinition onField(
       SchemaDirectiveWiringEnvironment<GraphQLFieldDefinition> environment) {
     var field = environment.getFieldDefinition();
-    var roleName = (StringValue) environment.getDirective().getArgument("role")
-        .getArgumentValue().getValue();
+    var roleName = (String) environment.getDirective().getArgument("role")
+        .toAppliedArgument().getValue();
     assert roleName != null;
+    var expectedRole = Role.valueOf(roleName.toUpperCase());
     var originalDataFetcher = environment.getFieldDataFetcher();
     DataFetcher<?> authDataFetcher = env -> {
       var user = (User) env.getGraphQlContext().get("user");
@@ -52,10 +52,10 @@ public class RoleDirective implements SchemaDirectiveWiring {
             .build();
       }
 
-      if (hasRole(user, roleName.getValue()) || hasRole(user, Roles.ADMIN.toString())) {
+      if (user.role() == expectedRole || user.role() == Role.ADMIN) {
         return originalDataFetcher.get(env);
       }
-      LOGGER.debug("Rejecting forbidden request for user {}", user.userId().merged());
+      LOGGER.debug("Rejecting forbidden request for user {}", user.id());
       return DataFetcherResult.newResult()
           .error(new ForbiddenError(environment.getFieldsContainer().getName(), field.getName()))
           .build();
@@ -63,12 +63,5 @@ public class RoleDirective implements SchemaDirectiveWiring {
 
     environment.setFieldDataFetcher(authDataFetcher);
     return field;
-  }
-
-  private boolean hasRole(User user, String name) {
-    return user
-        .roles()
-        .stream()
-        .anyMatch(role -> role.name().equals(name));
   }
 }

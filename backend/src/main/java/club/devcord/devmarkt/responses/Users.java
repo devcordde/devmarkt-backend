@@ -17,6 +17,7 @@
 package club.devcord.devmarkt.responses;
 
 import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.entities.auth.UserId;
 
 public interface Users {
 
@@ -24,11 +25,11 @@ public interface Users {
     return new Failure<>(Errors.ADMIN_USER_CANT_BE_MODIFIED.name(), "Admin user can't be modified,");
   }
 
-  static Failure<User> notFound(String id) {
+  static Failure<User> notFound(UserId id) {
     return new Failure<>(Errors.DUPLICATED.name(), "A user with the id '%s' wasn't found.".formatted(id));
   }
 
-  static Failure<User> duplicated(String id) {
+  static Failure<User> duplicated(UserId id) {
     return new Failure<>(Errors.DUPLICATED.name(), "A user with the id '%s' already exists.".formatted(id));
   }
 

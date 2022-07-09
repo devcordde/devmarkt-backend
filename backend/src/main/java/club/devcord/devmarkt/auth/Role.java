@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.repositories;
+package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.entities.auth.Role;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.repository.CrudRepository;
-import java.util.List;
-import java.util.Optional;
-
-@JdbcRepository
-public interface RoleRepo extends CrudRepository<Role, Integer> {
-
-  Optional<Role> findByName(String name);
-
-  List<Role> findAllOrderByName();
-
+public enum Role {
+  ADMIN,
+  USER
 }

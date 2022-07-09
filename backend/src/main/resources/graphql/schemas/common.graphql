@@ -47,23 +47,17 @@ type Mutation {
 
     createUser(
         userId: UserIdInput!
-        roles: [String!]! # TODO: use enum for roles
+        role: Role!
     ): UserResponse @Auth(role: "admin")
 
     deleteUser(
         userId: UserIdInput!
     ): Boolean! @Auth(role: "admin")
 
-    #
-    addUserRoles(
+    updateUserRole(
         userId: UserIdInput!
-        roles: [String!]! # TODO: use enum for roles
-    ): UserResponse @Auth(role: "admin")
-
-    removeUserRoles(
-        userId: UserIdInput!
-        roles: [String!]!  # TODO: use enum for roles
-    ): UserResponse @Auth(role: "admin")
+        role: Role!
+    ): UserResponse! @Auth(role: "admin")
 }
 
 # common

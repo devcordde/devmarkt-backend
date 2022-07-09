@@ -16,35 +16,19 @@
 
 package club.devcord.devmarkt.entities.auth;
 
-import club.devcord.devmarkt.auth.Roles;
+import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.EmbeddedId;
 import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.Relation;
-import io.micronaut.data.annotation.Relation.Kind;
-import io.micronaut.data.jdbc.annotation.JoinTable;
-import java.util.Collection;
+import io.micronaut.data.jdbc.annotation.ColumnTransformer;
 
 @GraphQLType("User")
 @MappedEntity("users")
 public record User(
-    @GeneratedValue @Id
-    int id,
-    @Relation(Kind.EMBEDDED)
-    UserId userId,
-    @Relation(Kind.ONE_TO_MANY)
-    @JoinTable(name = "user_roles")
-    Collection<Role> roles
+    @EmbeddedId
+    UserId id,
+    @ColumnTransformer(write = "?::role")
+    Role role
 ) {
-
-    public boolean hasRole(Roles role) {
-        for (var c : roles) {
-            if (c.name().equals(role.toString())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

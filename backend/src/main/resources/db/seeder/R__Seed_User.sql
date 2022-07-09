@@ -14,17 +14,5 @@
  * limitations under the License.
  */
 
-INSERT INTO users (id_type, user_id)
-VALUES ('testuser', 1); -- no roles user
-
-WITH user_role_user AS (
-    INSERT INTO users (id_type, user_id) VALUES ('testuser', 2) RETURNING id
-),
-     user_role AS (
-         SELECT id
-         FROM roles
-         WHERE name = 'user'
-     )
-INSERT
-INTO user_roles (user_id, role_id)
-VALUES ((SELECT id FROM user_role_user), (SELECT id FROM user_role));
+INSERT INTO users (id_type, user_id, role)
+VALUES ('testuser', 1, 'NONE'::role), ('testuser', 2, 'USER'::role);

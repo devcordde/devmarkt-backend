@@ -16,10 +16,9 @@
 
 package club.devcord.devmarkt.graphql.role;
 
-import club.devcord.devmarkt.services.RoleService;
+import club.devcord.devmarkt.auth.Role;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +27,8 @@ public class RoleQuery implements GraphQLQueryResolver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RoleQuery.class);
 
-  private final RoleService service;
-
-  public RoleQuery(RoleService service) {
-    this.service = service;
-  }
-
-  public List<String> roles() {
+  public Role[] roles() {
     LOGGER.info("All roles fetched.");
-    return service.roles();
+    return Role.values();
   }
 }

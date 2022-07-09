@@ -16,8 +16,7 @@
 
 package club.devcord.devmarkt.services;
 
-import club.devcord.devmarkt.auth.Roles;
-import club.devcord.devmarkt.entities.auth.Role;
+import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
@@ -26,9 +25,7 @@ import club.devcord.devmarkt.responses.Success;
 import club.devcord.devmarkt.responses.Users;
 import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
-import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 @Singleton
 public class UserService {
@@ -40,52 +37,40 @@ public class UserService {
   }
 
   public Optional<User> findDirect(UserId userId) {
-    return repo.findByUserId(userId);
+    return repo.findById(userId);
   }
 
   public Response<User> find(UserId userId) {
-    return repo.findByUserId(userId)
+    return repo.findById(userId)
         .map(Success::response)
-        .orElseGet(() -> Users.notFound(userId.merged()));
+        .orElseGet(() -> Users.notFound(userId));
   }
 
   public boolean delete(UserId userId) {
     if (Admins.isAdminUserId(userId)) {
       return false;
     }
-    return repo.deleteByUserId(userId) >= 1;
+    return repo.deleteOneById(userId) >= 1;
   }
 
   public User createDefaultUserUnsafe(UserId userId) {
-    var user = new User(-1, userId, Set.of(new Role(-1, Roles.USER.toString())));
+    var user = new User(userId, Role.USER);
     repo.save(user);
-    repo.addRoles(userId, Set.of(Roles.USER.toString()));
     return user;
   }
 
-  public Response<User> save(UserId userId, Collection<String> roles) {
-    if (repo.existsByUserId(userId)) {
-      return Users.duplicated(userId.merged());
+  public Response<User> save(UserId userId, Role role) {
+    if (repo.existsById(userId)) {
+      return Users.duplicated(userId);
     }
-    repo.save(new User(-1, userId, null));
-    return addUserRoles(userId, roles);
+    var saved = repo.save(new User(userId, role));
+    return new Success<>(saved);
   }
 
-  public Response<User> addUserRoles(UserId userId, Collection<String> roles) {
-    if (Admins.isAdminUserId(userId)) {
-      return Users.adminUserModify();
-    }
-    repo.addRoles(userId, roles);
-    return find(userId);
+  public Response<User> updateRole(UserId userId, Role role) {
+    var updated = repo.updateById(userId, role);
+    return updated != 0
+        ? new Success<>(new User(userId, role))
+        : Users.notFound(userId);
   }
-
-  public Response<User> removeUserRoles(UserId userId, Collection<String> roles) {
-    if (Admins.isAdminUserId(userId)) {
-      return Users.adminUserModify();
-    }
-    repo.removeRoles(userId, roles);
-    return find(userId);
-  }
-
-
 }

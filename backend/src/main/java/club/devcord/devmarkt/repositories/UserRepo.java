@@ -16,74 +16,17 @@
 
 package club.devcord.devmarkt.repositories;
 
+import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
-import io.micronaut.data.annotation.Join;
-import io.micronaut.data.annotation.Join.Type;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.jdbc.runtime.JdbcOperations;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
-import java.sql.Array;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
-import javax.transaction.Transactional;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-public abstract class UserRepo implements CrudRepository<User, Integer> {
+public interface UserRepo extends CrudRepository<User, UserId> {
 
-  private final JdbcOperations operations;
+  int updateById(UserId id, Role role);
 
-  protected UserRepo(JdbcOperations operations) {
-    this.operations = operations;
-  }
-
-  @Join(value = "roles", type = Type.LEFT_FETCH)
-  public abstract Optional<User> findByUserId(UserId userId);
-
-  public abstract boolean existsByUserId(UserId userId);
-
-  public abstract int deleteByUserId(UserId id);
-
-  @Transactional
-  public void addRoles(UserId id, Collection<String> roleNames) {
-    var sql = """
-        INSERT INTO user_roles
-            SELECT u.id, r.id FROM users u
-              JOIN roles r ON r.name = ANY (?)
-            WHERE u.id_type = ? AND u.user_id = ?
-        ON CONFLICT DO NOTHING;
-        """;
-    operations.prepareStatement(sql, statement -> {
-      statement.setArray(1, stringSqlArray(roleNames));
-      statement.setString(2, id.type());
-      statement.setLong(3, id.id());
-      return statement.executeUpdate();
-    });
-  }
-
-  @Transactional
-  public void removeRoles(UserId id, Collection<String> roleNames) {
-    var sql = """
-        WITH user_cte AS (
-            SELECT id FROM users WHERE id_type = ? AND user_id = ?
-        )
-        DELETE FROM user_roles
-          USING roles
-          WHERE roles.name = ANY (?)
-            AND user_roles.user_id = (SELECT id FROM user_cte)
-            AND roles.id = user_roles.role_id;
-        """;
-    operations.prepareStatement(sql, statement -> {
-      statement.setString(1, id.type());
-      statement.setLong(2, id.id());
-      statement.setArray(3, stringSqlArray(roleNames));
-      return statement.executeUpdate();
-    });
-  }
-
-  private Array stringSqlArray(Collection<String> values) throws SQLException {
-    return operations.getConnection().createArrayOf("VARCHAR", values.toArray());
-  }
+  int deleteOneById(UserId id);
 }

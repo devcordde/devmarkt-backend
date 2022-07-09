@@ -2,15 +2,20 @@ union UserResponse = User | Failure
 
 input UserIdInput {
     type: String! @NotBlank
-    id: Long
+    number: Long
 }
 
 type UserId {
     type: String!
-    id: Long
+    number: Long
 }
 
 type User {
-    userId: UserId!
-    roles: [String!]! # TODO: use enum for roles
+    id: UserId!
+    role: Role!
+}
+
+enum Role {
+    USER,
+    ADMIN
 }
