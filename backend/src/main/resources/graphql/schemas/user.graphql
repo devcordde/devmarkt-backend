@@ -11,6 +11,6 @@ type UserId {
 }
 
 type User {
-    userId: UserId! # TODO: use string representation
+    userId: UserId!
     roles: [String!]! # TODO: use enum for roles
 }
