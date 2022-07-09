@@ -22,26 +22,10 @@ type Mutation {
         name: TemplateName!
     ): Boolean @Auth(role: "admin")
 
-    # TODO: merge the next 4 queries in a single 'editTemplate' query
-    updateTemplateName(
-        oldName: TemplateName!
-        newName: TemplateName!
-    ): Boolean @Auth(role: "admin")
-
-    addQuestion(
-        templateName: TemplateName!
-        question: QuestionAddInput!
-    ): QuestionResponse @Auth(role: "admin")
-
-    updateQuestion(
-        templateName: TemplateName!
-        question: QuestionInput!
-    ): QuestionResponse @Auth(role: "admin")
-
-    deleteQuestion(
-        templateName: TemplateName!
-        number: PositiveInt!
-    ): Boolean @Auth(role: "admin")
+    updateTemplate(
+        name: TemplateName!
+        updated: TemplateInput!
+    ): TemplateResponse! @Auth(role: "admin")
 
     createUser(
         userId: UserIdInput!

@@ -1,15 +1,16 @@
 input QuestionInput {
     question: String! @NotBlank @Size(min: 1, max: 200)
-    number: NonNegativeInt! # TODO: refactor this validation to prevent the redundant QuestionAddInput type
+    number: NonNegativeInt!
     multiline: Boolean!
     minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
+    updateAction: UpdateAction
 }
 
-input QuestionAddInput {
-    question: String! @NotBlank @Size(min: 1, max: 200)
-    number: Int! = -1 @Min(value: -1)
-    multiline: Boolean!
-    minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)
+enum UpdateAction {
+    INSERT,
+    REPLACE,
+    DELETE,
+    APPEND
 }
 
 union QuestionResponse = Question | Failure

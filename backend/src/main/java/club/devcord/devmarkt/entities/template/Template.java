@@ -28,7 +28,6 @@ import io.micronaut.data.annotation.Where;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
 
 @GraphQLType("Template")
 @MappedEntity("templates")
@@ -38,7 +37,6 @@ public record Template(
     @Id @GeneratedValue
     int id,
 
-    @NotBlank
     String name,
     @JsonIgnore
     boolean enabled,

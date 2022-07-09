@@ -24,6 +24,7 @@ import io.micronaut.data.annotation.EmbeddedId;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
+import io.micronaut.data.annotation.Transient;
 
 @GraphQLType("Question")
 @MappedEntity("questions")
@@ -37,11 +38,19 @@ public record Question(
     QuestionId id,
     String question,
     boolean multiline,
-    int minAnswerLength
+    int minAnswerLength,
+    @Transient
+    UpdateAction updateAction
 ) {
 
     @Creator
-    public Question {}
+    public Question(int internalId,
+        QuestionId id,
+        String question,
+        boolean multiline,
+        int minAnswerLength) {
+        this(internalId, id, question, multiline, minAnswerLength, null);
+    }
 
     @JsonCreator
     public Question(
@@ -49,8 +58,9 @@ public record Question(
         @JsonProperty("number") int number,
         @JsonProperty("question" )String question,
         @JsonProperty("multiline") boolean multiline,
-        @JsonProperty("minAnswerLength") int minAnswerLength) {
-        this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength);
+        @JsonProperty("minAnswerLength") int minAnswerLength,
+        @JsonProperty("updateAction") UpdateAction updateAction) {
+        this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength, updateAction);
     }
 
     public int number() {
