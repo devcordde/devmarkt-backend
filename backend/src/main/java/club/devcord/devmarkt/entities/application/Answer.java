@@ -16,18 +16,27 @@
 
 package club.devcord.devmarkt.entities.application;
 
+import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Kind;
 
 @GraphQLType("Answer")
 @MappedEntity("answers")
 public record Answer(
     @GeneratedValue @Id
+    Integer id,
     int number,
     String answer,
-    String question
+    @Relation(value = Kind.MANY_TO_ONE)
+    Question question,
+    @Nullable
+    @Relation(value = Kind.MANY_TO_ONE)
+    Application application
 ) {
 
 }

@@ -41,7 +41,7 @@ public record Template(
     String name,
     @JsonIgnore
     boolean enabled,
-    @Relation(value = Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
+    @Relation(value = Kind.ONE_TO_MANY, mappedBy = "id.template", cascade = Cascade.ALL)
     List<Question> questions
 ) {
 

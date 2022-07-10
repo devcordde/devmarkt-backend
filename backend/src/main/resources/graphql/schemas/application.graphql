@@ -6,7 +6,7 @@ input AnswerInput {
 type Answer {
     number: NonNegativeInt!
     answer: String!
-    question: String!
+    question: Question!
 }
 
 enum ApplicationStatus {

@@ -18,15 +18,34 @@ package club.devcord.devmarkt.graphql.application;
 
 import club.devcord.devmarkt.entities.application.Answer;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
+import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.logging.LoggingUtil;
+import club.devcord.devmarkt.services.ApplicationService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.schema.DataFetchingEnvironment;
 import jakarta.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ApplicationMutation implements GraphQLMutationResolver {
 
-  public Object createApplication(String templateName, List<Answer> answers) {
-    return null;
+  private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationMutation.class);
+
+  private final ApplicationService service;
+
+  public ApplicationMutation(ApplicationService service) {
+    this.service = service;
+  }
+
+  public Object createApplication(String templateName, ArrayList<Answer> answers, DataFetchingEnvironment environment) {
+    var user = (User) environment.getGraphQlContext().get("user");
+    var response = service.createApplication(templateName, answers, user);
+    LOGGER.info("Application creation: User: {}, TemplateName: {}, Successful: {}",
+        user.id(), templateName, LoggingUtil.responseStatus(response));
+    return response.graphQlUnion();
   }
 
   public boolean deleteApplication(int id) {

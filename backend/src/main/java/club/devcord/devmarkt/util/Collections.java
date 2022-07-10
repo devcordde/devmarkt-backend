@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-CREATE TYPE application_status AS ENUM ('UNPROCESSED', 'REJECTED', 'ACCEPTED');
+package club.devcord.devmarkt.util;
 
-CREATE TABLE applications
-(
-    id SERIAL PRIMARY KEY,
-    process_time VARCHAR,
-    status application_status NOT NULL,
-    user_id INT NOT NULL REFERENCES users (id),
-    template_id INT NOT NULL REFERENCES templates (id)
-);
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.function.Function;
 
-CREATE TABLE answers
-(
-    id SERIAL PRIMARY KEY,
-    number INT NOT NULL,
-    answer VARCHAR NOT NULL,
-    question_id INT NOT NULL REFERENCES questions (id),
-    application_id INT NOT NULL REFERENCES applications (id) ON DELETE CASCADE
-)
+public final class Collections {
+
+  private Collections() {
+  }
+
+  public static <T, R> boolean hasDoubleValues(Collection<T> collection, Function<T, R> identity) {
+    var knownKeys = new HashSet<R>(collection.size());
+    for (var entry : collection) {
+      if (!knownKeys.add(identity.apply(entry))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+}

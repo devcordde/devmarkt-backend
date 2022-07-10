@@ -21,7 +21,6 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
-import io.micronaut.data.annotation.Query;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Inject;
@@ -78,24 +77,5 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
 
     var code = System.identityHashCode(mapper);
     LOGGER.info("{}", code);
-
-    var sql = context.getBeanDefinition(TemplateRepo.class)
-        .getRequiredMethod("findByName", String.class)
-        .getAnnotation(Query.class)
-        .getValue(String.class).get();
-    System.out.println(sql);
-
-    System.out.println("...");
-
-    sql = context.getBeanDefinition(TemplateRepo.class)
-        .getRequiredMethod("findById", int.class)
-        .getAnnotation(Query.class)
-        .getValue(String.class).get();
-    System.out.println(sql);
-
-    System.out.println("...");
-
-    templateRepo.findById(1).ifPresentOrElse(System.out::println,
-        () -> System.out.println("nothing"));
   }
 }

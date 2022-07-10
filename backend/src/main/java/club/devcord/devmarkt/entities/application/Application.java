@@ -18,12 +18,14 @@ package club.devcord.devmarkt.entities.application;
 
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
+import io.micronaut.data.jdbc.annotation.ColumnTransformer;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -32,13 +34,15 @@ import java.util.List;
 public record Application(
     @GeneratedValue @Id
     int id,
+    @Nullable
     OffsetDateTime processTime,
+    @ColumnTransformer(write = "?::application_status")
     ApplicationStatus status,
 
-    @Relation(Kind.MANY_TO_ONE)
+    @Relation(value = Kind.MANY_TO_ONE)
     User user,
     int templateId,
-    @Relation(value = Kind.ONE_TO_MANY, cascade = Cascade.ALL)
+    @Relation(value = Kind.ONE_TO_MANY, cascade = Cascade.ALL, mappedBy = "application")
     List<Answer> answers
 ) {
 

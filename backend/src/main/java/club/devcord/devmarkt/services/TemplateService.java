@@ -67,6 +67,8 @@ public class TemplateService {
     }
     var currentTemplate = currentTemplateOpt.get();
     var questions = currentTemplate.questions();
+    questions.replaceAll(this::removeInternalId); // remove old internalIds so that the questions are inserted (cascade)
+
     for (var question : updated.questions()) {
       if (question.updateAction() == null
           || (question.updateAction() != UpdateAction.APPEND
@@ -89,11 +91,18 @@ public class TemplateService {
     templateRepo.deleteByName(templateName);
     var name = updated.name() != null ? updated.name() : templateName;
     var saved = templateRepo.save(new Template(-1, name, true, questions));
+    System.out.println(saved);
     return new Success<>(saved);
   }
 
   private Question mutateQuestion(Question question, int number) {
     return new Question(question.internalId(), new QuestionId(null, number),
+        question.question(), question.multiline(), question.minAnswerLength(),
+        question.updateAction());
+  }
+
+  private Question removeInternalId(Question question) {
+    return new Question(null, question.id(),
         question.question(), question.multiline(), question.minAnswerLength(),
         question.updateAction());
   }
