@@ -16,18 +16,29 @@
 
 package club.devcord.devmarkt.entities.application;
 
-import club.devcord.devmarkt.entities.auth.UserId;
+import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Cascade;
+import io.micronaut.data.annotation.Relation.Kind;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @GraphQLType("Application")
+@MappedEntity("applications")
 public record Application(
+    @GeneratedValue @Id
     int id,
     OffsetDateTime processTime,
     ApplicationStatus status,
-    UserId userId,
+
+    @Relation(Kind.MANY_TO_ONE)
+    User user,
     int templateId,
+    @Relation(value = Kind.ONE_TO_MANY, cascade = Cascade.ALL)
     List<Answer> answers
 ) {
 

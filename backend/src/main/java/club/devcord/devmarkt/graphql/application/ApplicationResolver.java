@@ -17,28 +17,18 @@
 package club.devcord.devmarkt.graphql.application;
 
 import club.devcord.devmarkt.entities.application.Application;
-import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.services.TemplateService;
-import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLResolver;
 import jakarta.inject.Singleton;
 
 @Singleton
 public class ApplicationResolver implements GraphQLResolver<Application> {
 
-  private final UserService userService;
   private final TemplateService templateService;
 
-  public ApplicationResolver(UserService userService,
-      TemplateService templateService) {
-    this.userService = userService;
+  public ApplicationResolver(TemplateService templateService) {
     this.templateService = templateService;
-  }
-
-  // TODO: Enhance error handling
-  public User user(Application application) {
-    return userService.findDirect(application.userId()).orElseThrow();
   }
 
   public Template template(Application application) {

@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.entities.application;
+CREATE TYPE application_status AS ENUM ('UNPROCESSED', 'REJECTED', 'ACCEPTED');
 
-import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
-import io.micronaut.data.annotation.MappedEntity;
+CREATE TABLE applications
+(
+    id SERIAL PRIMARY KEY,
+    processTime VARCHAR,
+    status application_status NOT NULL,
+    user_id INT NOT NULL REFERENCES users (id),
+    template_id INT NOT NULL REFERENCES templates (id)
+);
 
-@GraphQLType("Answer")
-@MappedEntity("answers")
-public record Answer(
-    @GeneratedValue @Id
-    int number,
-    String answer,
-    String question
-) {
-
-}
+CREATE TABLE answers
+(
+    number INT NOT NULL,
+    answer VARCHAR NOT NULL,
+    question_id INT NOT NULL REFERENCES questions (id),
+    application_id INT NOT NULL REFERENCES applications (id) ON DELETE CASCADE
+)
