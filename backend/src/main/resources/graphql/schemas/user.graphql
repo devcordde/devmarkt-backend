@@ -13,6 +13,7 @@ type UserId {
 type User {
     id: UserId!
     role: Role!
+    applications: [Application!]!
 }
 
 enum Role {

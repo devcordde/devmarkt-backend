@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql;
+package club.devcord.devmarkt;
 
-import jakarta.inject.Singleton;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import io.micronaut.runtime.Micronaut;
 
-@Singleton
-@Retention(RetentionPolicy.RUNTIME)
-public @interface GraphQLType {
+public class App {
 
-  String value();
+  public static void main(String[] args) {
+    Micronaut.run(App.class, args);
+  }
 }

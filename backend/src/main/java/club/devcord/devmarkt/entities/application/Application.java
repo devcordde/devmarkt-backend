@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql;
+package club.devcord.devmarkt.entities.application;
 
-import jakarta.inject.Singleton;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import club.devcord.devmarkt.entities.auth.UserId;
+import club.devcord.devmarkt.graphql.GraphQLType;
+import java.time.OffsetDateTime;
+import java.util.List;
 
-@Singleton
-@Retention(RetentionPolicy.RUNTIME)
-public @interface GraphQLType {
+@GraphQLType("Application")
+public record Application(
+    int id,
+    OffsetDateTime processTime,
+    ApplicationStatus status,
+    UserId userId,
+    int templateId,
+    List<Answer> answers
+) {
 
-  String value();
 }

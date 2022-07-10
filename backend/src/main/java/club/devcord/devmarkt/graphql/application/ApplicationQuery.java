@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql;
+package club.devcord.devmarkt.graphql.application;
 
+import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.entities.auth.UserId;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @Singleton
-@Retention(RetentionPolicy.RUNTIME)
-public @interface GraphQLType {
+public class ApplicationQuery implements GraphQLQueryResolver {
 
-  String value();
+  public Object application(int id) {
+    return null;
+  }
+
+  public List<Application> applications(OffsetDateTime from, OffsetDateTime to, UserId userId) {
+    return null;
+  }
 }

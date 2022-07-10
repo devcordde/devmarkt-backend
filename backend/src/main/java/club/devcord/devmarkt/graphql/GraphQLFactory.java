@@ -55,12 +55,13 @@ public class GraphQLFactory {
       RoleDirective roleDirective) {
     var builder = new SchemaParserBuilder()
         .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME,
-            ExtendedScalars.NonNegativeInt, ExtendedScalars.PositiveInt)
+            ExtendedScalars.NonNegativeInt, ExtendedScalars.PositiveInt, ExtendedScalars.DateTime,
+            ExtendedScalars.newAliasedScalar("ApplicationId").aliasedScalar(ExtendedScalars.NonNegativeInt).build())
         .directive("Auth", roleDirective);
 
+    registerTypes(builder, context);
     readSchemas(builder, location, resourceResolver);
     addResolvers(resolver, builder);
-    registerTypes(builder, context);
     initValidation(builder);
 
     var schema = builder.build()

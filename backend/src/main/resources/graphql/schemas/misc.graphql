@@ -17,3 +17,5 @@ scalar PositiveInt
 scalar NonNegativeInt
 scalar Long
 scalar TemplateName
+scalar DateTime
+scalar ApplicationId

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.graphql.user;
 
-import io.micronaut.runtime.Micronaut;
+import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.entities.auth.User;
+import graphql.kickstart.tools.GraphQLResolver;
+import jakarta.inject.Singleton;
+import java.util.List;
 
-public class Application {
+@Singleton
+public class UserResolver implements GraphQLResolver<User> {
 
-  public static void main(String[] args) {
-    Micronaut.run(Application.class, args);
+  public List<Application> applications(User user) {
+    return null;
   }
+
 }

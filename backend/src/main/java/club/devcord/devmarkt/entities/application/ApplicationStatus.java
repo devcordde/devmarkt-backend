@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql;
+package club.devcord.devmarkt.entities.application;
 
-import jakarta.inject.Singleton;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Singleton
-@Retention(RetentionPolicy.RUNTIME)
-public @interface GraphQLType {
-
-  String value();
+public enum ApplicationStatus {
+  UNPROCESSED,
+  REJECTED,
+  ACCEPTED
 }

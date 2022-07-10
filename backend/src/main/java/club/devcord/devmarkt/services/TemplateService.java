@@ -28,6 +28,7 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class TemplateService {
@@ -124,5 +125,9 @@ public class TemplateService {
     var names = templateRepo.findName();
     names.sort(String::compareTo);
     return names;
+  }
+
+  public Optional<Template> findDirect(int id) {
+    return templateRepo.findById(id);
   }
 }

@@ -10,6 +10,16 @@ type Query {
     user(
         id: UserIdInput!
     ): UserResponse @Auth(role: "admin")
+
+    application(
+        id: ApplicationId!
+    ): ApplicationResponse! @Auth(role: "user") # TODO: add enhanced authorization based on application owner
+
+    applications(
+        from: DateTime!
+        to: DateTime!
+        userId: UserIdInput
+    ): [Application!]! @Auth(role: "user") # TODO: add enhanced authorization based on application owner
 }
 
 type Mutation {
@@ -40,6 +50,25 @@ type Mutation {
         userId: UserIdInput!
         role: Role!
     ): UserResponse! @Auth(role: "admin")
+
+    createApplication(
+        templateName: TemplateName!
+        answers: [AnswerInput!]!
+    ): ApplicationResponse! @Auth(role: "user")
+
+    deleteApplication(
+        id: ApplicationId!
+    ): Boolean! @Auth(role: "user") # TODO: add enhanced authorization based on application owner
+
+    updateApplication(
+        id: ApplicationId!
+        updatedAnswers: [AnswerInput!]!
+    ): ApplicationResponse! @Auth(role: "user") # TODO: add enhanced authorization based on application owner
+
+    processApplication(
+        id: ApplicationId!
+        status: ApplicationStatus!
+    ): ApplicationResponse! @Auth(role: "admin")
 }
 
 # common
