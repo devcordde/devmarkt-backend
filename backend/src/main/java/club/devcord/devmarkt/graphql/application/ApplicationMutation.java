@@ -49,7 +49,9 @@ public class ApplicationMutation implements GraphQLMutationResolver {
   }
 
   public boolean deleteApplication(int id) {
-    return false;
+    var response = service.deleteApplication(id);
+    LOGGER.info("Application deleted. ID: {}, Successful: {}", id, response);
+    return response;
   }
 
   public Object updateApplication(int id, List<Answer> updatedAnswers) {

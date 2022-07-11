@@ -36,4 +36,7 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   @Join(value = "answers", type = Type.LEFT_FETCH)
   @Join("answers.question")
   Optional<Application> findById(int id);
+
+
+  int deleteById(int id);
 }

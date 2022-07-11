@@ -48,6 +48,11 @@ public class ApplicationService {
         .orElseGet(() -> Applications.notFound(id));
   }
 
+  public boolean deleteApplication(int id) {
+    var deleted = repo.deleteById(id);
+    return deleted != 0;
+  }
+
   public Response<Application> createApplication(String templateName, ArrayList<Answer> answers, User user) {
     if (repo.existsUnprocessedByUser(user)) {
       return Applications.hasUnprocessedApplication(user.id());
