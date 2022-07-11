@@ -30,8 +30,13 @@ public interface Templates {
         "A template with the name '%s' already exists.".formatted(name));
   }
 
+  static Failure<Template> ambiguousNumber() {
+    return new Failure<>(Errors.AMBIGUOUS_NUMBER.name(), "This template has at least one ambiguous number.");
+  }
+
   enum Errors {
     NOT_FOUND,
-    DUPLICATED
+    DUPLICATED,
+    AMBIGUOUS_NUMBER
   }
 }
