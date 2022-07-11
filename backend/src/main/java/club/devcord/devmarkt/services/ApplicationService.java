@@ -59,7 +59,7 @@ public class ApplicationService {
     }
     var template = templateOpt.get();
 
-    if (Collections.hasDoubleValues(answers, Answer::number)) {
+    if (Collections.hasAmbiguousEntry(answers, Answer::number)) {
       return Applications.answersHaveSameNumber();
     }
 

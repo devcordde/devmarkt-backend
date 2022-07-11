@@ -24,8 +24,8 @@ import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
 import club.devcord.devmarkt.responses.Templates;
+import club.devcord.devmarkt.util.Collections;
 import jakarta.inject.Singleton;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +42,9 @@ public class TemplateService {
   public Response<Template> create(String name, List<Question> questions) {
     if (templateRepo.existsByName(name)) {
       return Templates.duplicated(name);
+    }
+    if (Collections.hasAmbiguousEntry(questions, Question::number)) {
+      return Templates.ambiguousNumber();
     }
     var savedTemplate = templateRepo.save(new Template(-1, name, true, questions));
     return new Success<>(savedTemplate);
@@ -108,7 +111,7 @@ public class TemplateService {
   }
 
   private void recorderQuestion(List<Question> questions, int offset, int start) {
-    questions.removeAll(Collections.singletonList(null));
+    questions.removeAll(java.util.Collections.singletonList(null));
     questions.sort(Comparator.comparingInt(Question::number));
 
     var original = List.copyOf(questions);
