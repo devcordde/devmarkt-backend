@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.entities.template;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.data.annotation.Embeddable;
 import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.annotation.Relation;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 
 @Embeddable
 public record QuestionId(
+    @JsonIgnore
     @Nullable
     @Relation(Kind.MANY_TO_ONE)
     @MappedProperty("template_id")
@@ -31,9 +33,5 @@ public record QuestionId(
     @MappedProperty("number")
     int number
 ) {
-
-  public QuestionId(int templateId, int number) {
-    this(new Template(templateId, null, true, null), number);
-  }
 
 }
