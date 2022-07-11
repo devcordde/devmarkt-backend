@@ -20,15 +20,15 @@ import club.devcord.devmarkt.entities.application.Answer;
 import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.repositories.ApplicationRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.Applications;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
-import club.devcord.devmarkt.util.Collections;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 
 @Singleton
 public class ApplicationService {
@@ -59,22 +59,33 @@ public class ApplicationService {
     }
     var template = templateOpt.get();
 
-    if (Collections.hasAmbiguousEntry(answers, Answer::number)) {
-      return Applications.answersHaveSameNumber();
-    }
-
-    answers.sort(Comparator.comparingInt(Answer::number));
+    var knownNumbers = new HashSet<Integer>(answers.size());
     for (int i = 0; i < answers.size(); i++) {
-      var originalAnswer = answers.get(i);
-      var updatedAnswer = new Answer(null, originalAnswer.number(), originalAnswer.answer(),
-          template.questions().get(i), null);
-      answers.set(i, updatedAnswer);
+      var answer = answers.get(i);
+      var number = answer.number();
+      if (knownNumbers.contains(number)) { // check if number is unique
+        return Applications.ambiguousAnswerNumber(number);
+      }
+      if (number >= template.questions().size()) { // check if a corresponding question exists
+        return Applications.noQuestion(number);
+      }
+      var question = template.questions().get(number);
+      if (answer.answer().length() < question.minAnswerLength()) { // check if answer has minimum length
+        return Applications.answerTooShort(answer.answer().length(), question.minAnswerLength(), number);
+      }
+      var preparedAnswer = prepareAnswer(answer, question);
+      answers.set(i, preparedAnswer);
+      knownNumbers.add(number);
     }
 
-    var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user,
-        template.id(), answers);
-    System.out.println(application);
+    var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template.id(),
+        answers);
     var saved = repo.save(application);
     return new Success<>(saved);
+  }
+
+  private Answer prepareAnswer(Answer answer, Question question) {
+    return new Answer(null, answer.number(), answer.answer(),
+        question, null);
   }
 }

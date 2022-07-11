@@ -36,15 +36,28 @@ public interface Applications {
         .formatted(name));
   }
 
-  static Failure<Application> answersHaveSameNumber() {
-    return new Failure<>(Errors.SAME_ANSWER_NUMBER.name(), "Multiple answers have the same number.");
+  static Failure<Application> ambiguousAnswerNumber(int number) {
+    return new Failure<>(Errors.AMBIGUOUS_ANSWER_NUMBER.name(), "The number '%s' is ambiguous."
+        .formatted(number));
+  }
+
+  static Failure<Application> noQuestion(int number)  {
+    return new Failure<>(Errors.NO_QUESTION.name(), "There's no question with number '%s'."
+        .formatted(number));
+  }
+
+  static Failure<Application> answerTooShort(int length, int expectedLength, int number) {
+    return new Failure<>(Errors.ANSWER_TOO_SHORT.name(), "The answer with number %s has %s characters but needs minimum %s"
+        .formatted(number, length, expectedLength));
   }
 
   enum Errors {
     NOT_FOUND,
     HAS_UNPROCESSED_APPLICATION,
     TEMPLATE_NOT_FOUND,
-    SAME_ANSWER_NUMBER
+    AMBIGUOUS_ANSWER_NUMBER,
+    NO_QUESTION,
+    ANSWER_TOO_SHORT
   }
 
 }
