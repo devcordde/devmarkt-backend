@@ -27,6 +27,7 @@ import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.annotation.Where;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,6 +50,6 @@ public record Template(
   public static Template newSorted(int id, String name, boolean enabled, List<Question> questions) {
     var list = new ArrayList<>(questions != null ? questions : List.of());
     list.sort(Comparator.comparingInt(Question::number));
-    return new Template(id, name, enabled, list);
+    return new Template(id, name, enabled, Collections.unmodifiableList(list));
   }
 }

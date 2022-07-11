@@ -26,6 +26,7 @@ import club.devcord.devmarkt.responses.Success;
 import club.devcord.devmarkt.responses.Templates;
 import club.devcord.devmarkt.util.Collections;
 import jakarta.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,7 @@ public class TemplateService {
       return Templates.notFound(templateName);
     }
     var currentTemplate = currentTemplateOpt.get();
-    var questions = currentTemplate.questions();
+    var questions = new ArrayList<>(currentTemplate.questions());
     questions.replaceAll(this::removeInternalId); // remove old internalIds so that the questions are inserted (cascade)
 
     for (var question : updated.questions()) {
