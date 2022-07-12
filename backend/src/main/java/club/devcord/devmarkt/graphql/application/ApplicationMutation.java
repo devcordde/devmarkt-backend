@@ -58,8 +58,10 @@ public class ApplicationMutation implements GraphQLMutationResolver {
     return null;
   }
 
-  public Object processApplication(int id, ApplicationStatus status) {
-    return null;
+  public boolean processApplication(int id, ApplicationStatus status) {
+    var response = service.processApplication(id, status);
+    LOGGER.info("Application process. ID: {}, Successful: {}, Status: {}", id, response, status);
+    return response;
   }
 
 }

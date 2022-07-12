@@ -57,6 +57,15 @@ public class ApplicationService {
     return deleted != 0;
   }
 
+  public boolean processApplication(int id, ApplicationStatus status) {
+    if (status == ApplicationStatus.UNPROCESSED) {
+      return false;
+    }
+
+    var updated = applicationRepo.updateStatusById(id, status);
+    return updated != 0;
+  }
+
   public Response<Application> createApplication(String templateName, ArrayList<Answer> answers, User user) {
     if (applicationRepo.existsUnprocessedByUser(user)) {
       return Applications.hasUnprocessedApplication(user.id());

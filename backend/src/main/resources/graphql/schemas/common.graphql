@@ -62,7 +62,7 @@ type Mutation {
     processApplication(
         id: ApplicationId!
         status: ApplicationStatus!
-    ): ApplicationResponse @Auth(role: "admin")
+    ): Boolean @Auth(role: "admin")
 }
 
 # common

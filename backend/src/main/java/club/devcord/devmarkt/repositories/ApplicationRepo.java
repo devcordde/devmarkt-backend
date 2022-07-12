@@ -17,6 +17,7 @@
 package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Join.Type;
@@ -40,4 +41,7 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   int deleteById(int id);
 
   boolean existsByIdAndUser(int id, User user);
+
+  @Where("@.status = 'UNPROCESSED'::application_status")
+  int updateStatusById(int id, ApplicationStatus status);
 }
