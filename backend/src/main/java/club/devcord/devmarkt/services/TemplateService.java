@@ -19,6 +19,7 @@ package club.devcord.devmarkt.services;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.QuestionId;
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.entities.template.TemplateUpdateInput;
 import club.devcord.devmarkt.entities.template.UpdateAction;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.Response;
@@ -64,7 +65,7 @@ public class TemplateService {
   /*
   Updates an existing template based on its current values.
    */
-  public Response<Template> update(String templateName, Template updated) {
+  public Response<Template> update(String templateName, TemplateUpdateInput updated) {
     var currentTemplateOpt = templateRepo.findByName(templateName);
     if (currentTemplateOpt.isEmpty()) {
       return Templates.notFound(templateName);
