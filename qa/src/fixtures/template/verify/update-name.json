@@ -1,0 +1,15 @@
+{
+  "data": {
+    "templates": [
+      {
+        "name": "Dev offered"
+      },
+      {
+        "name": "Empty template"
+      },
+      {
+        "name": "Updated name"
+      }
+    ]
+  }
+}

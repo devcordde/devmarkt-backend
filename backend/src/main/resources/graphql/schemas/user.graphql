@@ -1,21 +1,22 @@
-union UserResponse = UserSuccess | UserFailed
+union UserResponse = User | Failure
 
 input UserIdInput {
     type: String! @NotBlank
-    id: Long
+    number: Long
 }
 
 type UserId {
     type: String!
-    id: Long
+    number: Long
 }
 
-type UserSuccess {
-    userId: UserId!
-    roles: [String!]!
+type User {
+    id: UserId!
+    role: Role!
 }
 
-type UserFailed implements Error {
-    errorCode: String!
-    message: String!
+enum Role {
+    USER,
+    ADMIN,
+    NONE
 }

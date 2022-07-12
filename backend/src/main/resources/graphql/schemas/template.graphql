@@ -1,12 +1,11 @@
-union TemplateResponse = TemplateSuccess | TemplateFailed
+union TemplateResponse = Template | Failure
 
-type TemplateSuccess {
-    name: TemplateName!
-    questions: [QuestionSuccess!]!
+input TemplateInput {
+    name: TemplateName
+    questions: [QuestionInput!]!
 }
 
-type TemplateFailed implements Error {
+type Template {
     name: TemplateName!
-    errorCode: String!
-    message: String!
+    questions: [Question!]!
 }

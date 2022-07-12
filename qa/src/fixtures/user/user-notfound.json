@@ -2,7 +2,7 @@
   "data": {
     "user": {
       "errorCode": "NOT_FOUND",
-      "message": "No user with the given internalId was found"
+      "message": "A user with the id 'not_known:1' wasn't found."
     }
   }
 }

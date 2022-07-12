@@ -50,7 +50,7 @@ public class TemplateQuery implements GraphQLQueryResolver {
     if (fields.size() == 1 && fields.get(0).getName().equals("name")) {
       var names = service.allNames()
           .stream()
-          .map(name -> new Template(-1, name, List.of()))
+          .map(name -> new Template(-1, name, true, List.of()))
           .collect(Collectors.toList());
       LOGGER.info("All template names fetched.");
       return names;

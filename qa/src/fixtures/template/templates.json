@@ -2,54 +2,54 @@
   "data": {
     "templates": [
       {
-        "name": "Dev searched",
+        "name": "Dev offered",
         "questions": [
           {
+            "question": "Who am I?",
             "number": 0,
-            "question": "Who are we?",
             "multiline": false,
             "minAnswerLength": 1
           },
           {
+            "question": "What programming language do I know?",
             "number": 1,
-            "question": "Why should you join us?",
-            "multiline": true,
-            "minAnswerLength": 100
-          },
-          {
-            "number": 2,
-            "question": "What programming languages should you know?",
             "multiline": false,
             "minAnswerLength": 1
           },
           {
-            "number": 3,
-            "question": "Custom text:",
+            "question": "Why should you choose me?",
+            "number": 2,
             "multiline": true,
-            "minAnswerLength": 30
+            "minAnswerLength": 500
           }
         ]
       },
       {
-        "name": "Dev offered",
+        "name": "Dev searched",
         "questions": [
           {
+            "question": "Who are we?",
             "number": 0,
-            "question": "Who am I?",
             "multiline": false,
             "minAnswerLength": 1
           },
           {
+            "question": "Why should you join us?",
             "number": 1,
-            "question": "What programming language do I know?",
+            "multiline": true,
+            "minAnswerLength": 100
+          },
+          {
+            "question": "What programming languages should you know?",
+            "number": 2,
             "multiline": false,
             "minAnswerLength": 1
           },
           {
-            "number": 2,
-            "question": "Why should you choose me?",
+            "question": "Custom text:",
+            "number": 3,
             "multiline": true,
-            "minAnswerLength": 500
+            "minAnswerLength": 30
           }
         ]
       },

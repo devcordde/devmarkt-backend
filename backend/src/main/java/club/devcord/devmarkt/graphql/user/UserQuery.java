@@ -38,7 +38,7 @@ public class UserQuery implements GraphQLQueryResolver {
   public Object user(UserId userId) {
     var response = service.find(userId);
     LOGGER.info("User fetch, Response: {}, UserId: {}", LoggingUtil.responseStatus(response),
-        userId.merged());
+        userId);
     return response.graphQlUnion();
   }
 

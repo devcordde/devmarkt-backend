@@ -16,16 +16,21 @@
 
 CREATE TABLE templates
 (
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR UNIQUE
+    id      SERIAL PRIMARY KEY,
+    name    VARCHAR,
+    enabled BOOLEAN NOT NULL
 );
+
+CREATE UNIQUE INDEX enabled_template ON templates (name, enabled) WHERE enabled = true;
 
 CREATE TABLE questions
 (
-    id          SERIAL PRIMARY KEY,
-    template_id INT,
-    number      INT,
-    question    VARCHAR,
+    id                SERIAL PRIMARY KEY,
+    template_id       INT     NOT NULL,
+    number            INT     NOT NULL,
+    question          VARCHAR NOT NULL,
+    multiline         BOOLEAN NOT NULL,
+    min_answer_length INT     NOT NULL,
     UNIQUE (template_id, number),
     FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
 );

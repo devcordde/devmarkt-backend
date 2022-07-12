@@ -2,7 +2,7 @@
   "data": {
     "createUser": {
       "errorCode": "DUPLICATED",
-      "message": "A user with the same internalId already exists"
+      "message": "A user with the id 'testuser:1' already exists."
     }
   }
 }

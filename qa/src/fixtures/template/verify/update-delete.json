@@ -1,0 +1,28 @@
+{
+  "data": {
+    "template": {
+      "__typename": "Template",
+      "name": "Dev searched",
+      "questions": [
+        {
+          "question": "Who are we?",
+          "number": 0,
+          "multiline": false,
+          "minAnswerLength": 1
+        },
+        {
+          "question": "Why should you join us?",
+          "number": 1,
+          "multiline": true,
+          "minAnswerLength": 100
+        },
+        {
+          "question": "Custom text:",
+          "number": 2,
+          "multiline": true,
+          "minAnswerLength": 30
+        }
+      ]
+    }
+  }
+}

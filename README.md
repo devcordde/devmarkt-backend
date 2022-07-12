@@ -121,7 +121,7 @@ to identify the current user. If the user isn't found, then the api respond with
 
 #### Foreign authorization
 
-The "Foreign" method takes 2 argument, a sudoer jwt token and a user id (in the "type:id" format).
+The "Foreign" method takes 2 argument, a sudoer jwt token and a user id (in the "type:number" format).
 The user id is separated by a space.
 Example: `Foreign eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnRlcm5hbDoxIiwiaWF0IjoxNTE2MjM5MDIyfQ.CroFo1WLY0i5T_HpS0jIuVQCbO46Pie8jID93b2COk4 internal:1`
 

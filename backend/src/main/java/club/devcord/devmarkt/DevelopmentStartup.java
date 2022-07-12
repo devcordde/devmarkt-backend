@@ -16,17 +16,12 @@
 
 package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.entities.auth.Role;
-import club.devcord.devmarkt.entities.auth.User;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +44,12 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
 
   @Override
   public void onApplicationEvent(StartupEvent event) {
-    LOGGER.info("testuser:2 user: {}",generator.generateToken(Map.of(
+    LOGGER.info("testuser:2 user: {}", generator.generateToken(Map.of(
         "sub", "testuser:2",
         "iat", 1516239022
     )).get());
 
-    LOGGER.info("internal:1 user: {}",generator.generateToken(Map.of(
+    LOGGER.info("internal:1 user: {}", generator.generateToken(Map.of(
         "sub", "internal:1",
         "iat", 1516239022
     )).get());
@@ -74,13 +69,5 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
 
     var code = System.identityHashCode(mapper);
     LOGGER.info("{}", code);
-
-    try {
-      var role = new Role(-1, "test");
-      var user = new String(mapper.writeValueAsBytes(new User(-1, null, List.of(role))), StandardCharsets.UTF_8);
-      LOGGER.info(user);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }

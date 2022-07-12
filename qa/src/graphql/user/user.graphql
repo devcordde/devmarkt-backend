@@ -1,12 +1,13 @@
 query ($id: UserIdInput!) {
     user(id: $id) {
-        ... on UserSuccess {
-            roles
-            userId {
-                id
-                type            }
+        ... on User {
+            role
+            id {
+                number
+                type
+            }
         }
-        ... on UserFailed {
+        ... on Failure {
             errorCode
             message
         }

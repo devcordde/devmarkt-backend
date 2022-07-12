@@ -42,7 +42,7 @@ public class UserIdValidator {
   }
 
   public UserId validateUserId(String id) {
-    if(USERID_REGEX.matcher(id).matches()) {
+    if (USERID_REGEX.matcher(id).matches()) {
       return parseUserIdUnsafe(id);
     }
     return null;

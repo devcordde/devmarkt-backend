@@ -1,9 +1,9 @@
 {
   "data": {
     "createTemplate": {
-      "__typename": "TemplateFailed",
+      "__typename": "Failure",
       "errorCode": "DUPLICATED",
-      "message": "A template with the same name exists."
+      "message": "A template with the name 'Dev searched' already exists."
     }
   }
 }

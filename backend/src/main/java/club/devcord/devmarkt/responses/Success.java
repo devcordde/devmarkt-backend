@@ -16,6 +16,12 @@
 
 package club.devcord.devmarkt.responses;
 
-public interface Success extends Response {
+public record Success<T>(
+    T value
+) implements Response<T> {
+
+  public static <T> Response<T> response(T value) {
+    return new Success<>(value);
+  }
 
 }

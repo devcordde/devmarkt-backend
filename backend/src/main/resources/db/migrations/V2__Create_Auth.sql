@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
+CREATE TYPE role AS ENUM ('ADMIN', 'USER', 'NONE');
+
 CREATE TABLE users
 (
     id      SERIAL PRIMARY KEY,
     id_type VARCHAR NOT NULL,
     user_id BIGINT  NOT NULL,
+    role    role    NOT NULL,
     UNIQUE (id_type, user_id)
-);
-
-CREATE TABLE roles
-(
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR NOT NULL UNIQUE
-);
-
-CREATE TABLE user_roles
-(
-    user_id INT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    role_id INT NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
-    UNIQUE (user_id, role_id)
 );

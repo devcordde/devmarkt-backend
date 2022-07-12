@@ -32,8 +32,8 @@ public record QuestionId(
     int number
 ) {
 
-    public QuestionId(int templateId, int number) {
-        this(new Template(templateId, null, null), number);
-    }
+  public QuestionId(int templateId, int number) {
+    this(new Template(templateId, null, true, null), number);
+  }
 
 }

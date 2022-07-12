@@ -1,8 +1,0 @@
-{
-  "data": {
-    "addQuestion": {
-      "message": "No template with the given name found.",
-      "errorCode": "TEMPLATE_NOT_FOUND"
-    }
-  }
-}

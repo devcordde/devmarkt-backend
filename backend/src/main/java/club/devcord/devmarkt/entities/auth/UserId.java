@@ -26,9 +26,10 @@ public record UserId(
     @MappedProperty("id_type")
     String type,
     @MappedProperty("user_id")
-    long id) {
+    long number) {
 
-  public String merged() {
-    return type + ":" + id;
+  @Override
+  public String toString() {
+    return type + ":" + number;
   }
 }

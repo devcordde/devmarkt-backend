@@ -31,6 +31,27 @@ const templateCreateVars = (name) => ({
 
 const tests = [
   {
+    name: "Fetch Template",
+    auth: Authorization.USER,
+    query: "template/template.graphql",
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched"
+        },
+        response: "template/template.json"
+      },
+      {
+        name: "not found",
+        variables: {
+          name: "Not existing template"
+        },
+        response: "template/template-notfound.json"
+      }
+    ]
+  },
+  {
     name: "Create Template",
     variables: templateCreateVars("PermissionTemplate"),
     auth: Authorization.ADMIN,
@@ -94,6 +115,414 @@ const tests = [
         }
       }
     ]
+  },
+  {
+    name: "Update template name",
+    auth: Authorization.ADMIN,
+    query: "template/update-template.graphql",
+    verify: {
+      query: "template/template-names.graphql"
+    },
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            name: "Updated name",
+            questions: []
+          }
+        },
+        response: "template/update-name.json",
+        after: {
+          query: "template/update-template.graphql",
+          variables: {
+            name: "Updated name",
+            updated: {
+              name: "Dev searched",
+              questions: []
+            }
+          },
+        },
+        verify: {
+          response: "template/verify/update-name.json"
+        }
+      },
+      {
+        name: "template not found",
+        variables: {
+          name: "Not existing template",
+          updated: {
+            name: "Updated name",
+            questions: []
+          }
+        },
+        response: "template/update-notfound.json",
+        verify: {
+          response: "template/names.json"
+        }
+      }
+    ]
+  },
+  {
+    name: "Append question",
+    auth: Authorization.ADMIN,
+    query: "template/update-template.graphql",
+    verify: {
+      query: "template/template.graphql"
+    },
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 123,
+                question: "Appended Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "APPEND"
+              }
+            ]
+          }
+        },
+        response: "template/update-append-question.json",
+        verify: {
+          response: "template/verify/update-append-question.json"
+        },
+        after: {
+          query: "template/update-template.graphql",
+          variables: {
+            name: "Dev searched",
+            updated: {
+              questions: [
+                {
+                  number: 4,
+                  question: "Appended Question",
+                  multiline: false,
+                  minAnswerLength: 10,
+                  updateAction: "DELETE"
+                }
+              ]
+            }
+          },
+        }
+      },
+      {
+        name: "template not found",
+        variables: {
+          name: "Not existing template",
+          updated: {
+            questions: [
+              {
+                number: 10,
+                question: "Appended Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "APPEND"
+              }
+            ]
+          }
+        },
+        response: "template/update-notfound.json"
+      }
+    ]
+  },
+  {
+    name: "Insert Question",
+    query: "template/update-template.graphql",
+    auth: Authorization.ADMIN,
+    verify: {
+      query: "template/template.graphql"
+    },
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 2,
+                question: "Inserted Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "INSERT"
+              }
+            ]
+          }
+        },
+        response: "template/update-insert.json",
+        verify: {
+          response: "template/verify/update-insert.json"
+        },
+        after: {
+          query: "template/update-template.graphql",
+          variables: {
+            name: "Dev searched",
+            updated: {
+              questions: [
+                {
+                  number: 2,
+                  question: "Inserted Question",
+                  multiline: false,
+                  minAnswerLength: 10,
+                  updateAction: "DELETE"
+                }
+              ]
+            }
+          },
+        }
+      },
+      {
+        name: "out of index -> do nothing",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 4,
+                question: "Inserted Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "INSERT"
+              }
+            ]
+          }
+        },
+        response: "template/verify/update-nothing.json",
+        verify: {
+          response: "template/template.json"
+        }
+      }
+    ]
+  },
+  {
+    name: "replace question",
+    auth: Authorization.ADMIN,
+    query: "template/update-template.graphql",
+    verify: {
+      query: "template/template.graphql"
+    },
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 2,
+                question: "Replaced Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "REPLACE"
+              }
+            ]
+          }
+        },
+        response: "template/update-replace.json",
+        verify: {
+          response: "template/verify/update-replace.json"
+        },
+        after: {
+          query: "template/update-template.graphql",
+          variables: {
+            name: "Dev searched",
+            updated: {
+              questions: [
+                {
+                  number: 2,
+                  question: "What programming languages should you know?",
+                  multiline: false,
+                  minAnswerLength: 1,
+                  updateAction: "REPLACE"
+                }
+              ]
+            }
+          },
+        }
+      },
+      {
+        name: "out of index -> do nothing",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 4,
+                question: "Replaced Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "INSERT"
+              }
+            ]
+          }
+        },
+        response: "template/verify/update-nothing.json",
+        verify: {
+          response: "template/template.json"
+        }
+      }
+    ]
+  },
+  {
+    name: "delete question",
+    auth: Authorization.ADMIN,
+    query: "template/update-template.graphql",
+    verify: {
+      query: "template/template.graphql"
+    },
+    matrix: [
+      {
+        name: "success",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 2,
+                question: "Deleted Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "DELETE"
+              }
+            ]
+          }
+        },
+        response: "template/update-delete.json",
+        verify: {
+          response: "template/verify/update-delete.json"
+        },
+        after: {
+          query: "template/update-template.graphql",
+          variables: {
+            name: "Dev searched",
+            updated: {
+              questions: [
+                {
+                  number: 2,
+                  question: "What programming languages should you know?",
+                  multiline: false,
+                  minAnswerLength: 1,
+                  updateAction: "INSERT"
+                }
+              ]
+            }
+          },
+        }
+      },
+      {
+        name: "out of index -> do nothing",
+        variables: {
+          name: "Dev searched",
+          updated: {
+            questions: [
+              {
+                number: 4,
+                question: "Replaced Question",
+                multiline: false,
+                minAnswerLength: 10,
+                updateAction: "DELETE"
+              }
+            ]
+          }
+        },
+        response: "template/verify/update-nothing.json",
+        verify: {
+          response: "template/template.json"
+        }
+      }
+    ]
+  },
+  {
+    name: "all actions together",
+    auth: Authorization.ADMIN,
+    query: "template/update-template.graphql",
+    verify: {
+      query: "template/template.graphql",
+      response: "template/verify/update-all.json",
+      variables: {
+        name: "All updated"
+      }
+    },
+    response: "template/update-all.json",
+    variables: {
+      name: "Dev searched",
+      updated: {
+        name: "All updated",
+        questions: [
+          {
+            question: "Inserted Question NUM: 1",
+            number: 2,
+            minAnswerLength: 10,
+            multiline: false,
+            updateAction: "INSERT"
+          },
+          {
+            question: "Appened Question NUM: 4",
+            number: 10,
+            minAnswerLength: 100,
+            multiline: true,
+            updateAction: "APPEND"
+          },
+          {
+            question: "Deleted Question NUM: 0",
+            number: 0,
+            minAnswerLength: 10,
+            multiline: false,
+            updateAction: "DELETE"
+          },
+          {
+            question: "Replaced Question NUM: 2",
+            number: 2,
+            minAnswerLength: 44,
+            multiline: false,
+            updateAction: "REPLACE"
+          }
+        ]
+      }
+    },
+    after: {
+      query: "template/update-template.graphql",
+      variables: {
+        name: "All updated",
+        updated: {
+          name: "Dev searched",
+          questions: [
+            {
+              question: "delete",
+              number: 4,
+              multiline: false,
+              updateAction: "DELETE"
+            },
+            {
+              question: "Who are we?",
+              number: 0,
+              multiline: false,
+              minAnswerLength: 1,
+              updateAction: "REPLACE"
+            },
+            {
+              question: "Why should you join us?",
+              number: 1,
+              multiline: true,
+              minAnswerLength: 100,
+              updateAction: "REPLACE"
+            },
+            {
+              question: "What programming languages should you know?",
+              number: 2,
+              multiline: false,
+              minAnswerLength: 1,
+              updateAction: "REPLACE"
+            },
+          ]
+        }
+      }
+    }
   }
 ];
 

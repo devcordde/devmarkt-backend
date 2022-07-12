@@ -1,7 +1,7 @@
 {
   "data": {
     "createTemplate": {
-      "__typename": "TemplateSuccess",
+      "__typename": "Template",
       "questions": [
         {
           "number": 1,

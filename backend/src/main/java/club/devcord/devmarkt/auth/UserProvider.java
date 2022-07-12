@@ -68,7 +68,7 @@ public class UserProvider {
       return Optional.empty();
     }
     var isAdmin = userService.findDirect(sudoer)
-        .filter(user -> user.hasRole(Roles.ADMIN)).isPresent();
+        .filter(user -> user.role() == Role.ADMIN).isPresent();
     if (isAdmin) {
       var userId = userIdValidator.validateUserId(split[1]);
       if (userId == null) {

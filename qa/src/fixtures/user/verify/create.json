@@ -1,13 +1,11 @@
 {
   "data": {
     "user": {
-      "roles": [
-        "user"
-      ],
-      "userId": {
+      "id": {
         "type": "the_answer_of_all",
-        "id": 49
-      }
+        "number": 49
+      },
+      "role": "USER"
     }
   }
 }

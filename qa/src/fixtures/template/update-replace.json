@@ -1,0 +1,34 @@
+{
+  "data": {
+    "updateTemplate": {
+      "__typename": "Template",
+      "name": "Dev searched",
+      "questions": [
+        {
+          "question": "Who are we?",
+          "number": 0,
+          "multiline": false,
+          "minAnswerLength": 1
+        },
+        {
+          "question": "Why should you join us?",
+          "number": 1,
+          "multiline": true,
+          "minAnswerLength": 100
+        },
+        {
+          "question": "Replaced Question",
+          "number": 2,
+          "multiline": false,
+          "minAnswerLength": 10
+        },
+        {
+          "question": "Custom text:",
+          "number": 3,
+          "multiline": true,
+          "minAnswerLength": 30
+        }
+      ]
+    }
+  }
+}

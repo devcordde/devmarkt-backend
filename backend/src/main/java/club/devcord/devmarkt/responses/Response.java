@@ -16,8 +16,12 @@
 
 package club.devcord.devmarkt.responses;
 
-public interface Response {
+public sealed interface Response<T> permits Failure, Success {
 
-  Object graphQlUnion();
+  default Object graphQlUnion() {
+    return this instanceof Success<T> success
+        ? success.value()
+        : this;
+  }
 
 }
