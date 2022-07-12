@@ -23,7 +23,6 @@ const tests = [
     query: "role/roles.graphql",
     response: "role/roles.json"
   }
-
 ]
 
 executeTests("Role", tests)
