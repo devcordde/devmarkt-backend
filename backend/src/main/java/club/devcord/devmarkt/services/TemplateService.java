@@ -95,7 +95,6 @@ public class TemplateService {
     templateRepo.deleteByName(templateName);
     var name = updated.name() != null ? updated.name() : templateName;
     var saved = templateRepo.save(new Template(-1, name, true, questions));
-    System.out.println(saved);
     return new Success<>(saved);
   }
 
