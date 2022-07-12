@@ -25,7 +25,6 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +53,11 @@ public class ApplicationMutation implements GraphQLMutationResolver {
     return response;
   }
 
-  public Object updateApplication(int id, List<Answer> updatedAnswers) {
-    return null;
+  public Object updateApplication(int id, ArrayList<Answer> updatedAnswers) {
+    var response = service.updateApplication(id, updatedAnswers);
+    LOGGER.info("Application update. ID: {}, AnswerNumbers: {}, Response: {}", id,
+        updatedAnswers.stream().map(Answer::number).toArray(), LoggingUtil.responseStatus(response));
+    return response.graphQlUnion();
   }
 
   public boolean processApplication(int id, ApplicationStatus status) {

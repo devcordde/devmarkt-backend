@@ -33,6 +33,11 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
 
   boolean existsByName(String name);
 
+  @Override
+  @Where("true")
+  @Join(value = "questions", type = Type.LEFT_FETCH)
+  Optional<Template> findById(@javax.validation.constraints.NotNull Integer integer);
+
   @Executable
   @Join(value = "questions", type = Type.LEFT_FETCH)
   Optional<Template> findByName(String name);

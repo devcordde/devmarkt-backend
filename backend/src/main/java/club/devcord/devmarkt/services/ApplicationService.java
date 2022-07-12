@@ -21,6 +21,8 @@ import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.repositories.AnswerRepo;
 import club.devcord.devmarkt.repositories.ApplicationRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.Applications;
@@ -29,17 +31,20 @@ import club.devcord.devmarkt.responses.Success;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Function;
 
 @Singleton
 public class ApplicationService {
 
   private final ApplicationRepo applicationRepo;
   private final TemplateRepo templateRepo;
+  private final AnswerRepo answerRepo;
 
   public ApplicationService(ApplicationRepo repo,
-      TemplateRepo templateRepo) {
+      TemplateRepo templateRepo, AnswerRepo answerRepo) {
     this.applicationRepo = repo;
     this.templateRepo = templateRepo;
+    this.answerRepo = answerRepo;
   }
 
   public Response<Application> application(int id) {
@@ -76,7 +81,18 @@ public class ApplicationService {
       return Applications.templateNotFound(templateName);
     }
     var template = templateOpt.get();
+    var validationResponse = validateAndPrepareAnswers(answers, template, answer -> null, null);
+    if (validationResponse != null) {
+      return validationResponse;
+    }
 
+    var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
+        answers);
+    var saved = applicationRepo.save(application);
+    return new Success<>(saved);
+  }
+
+  private Response<Application> validateAndPrepareAnswers(ArrayList<Answer> answers, Template template, Function<Answer, Integer> numberFunc, Application application) {
     var knownNumbers = new HashSet<Integer>(answers.size());
     for (int i = 0; i < answers.size(); i++) {
       var answer = answers.get(i);
@@ -91,19 +107,44 @@ public class ApplicationService {
       if (answer.answer().length() < question.minAnswerLength()) { // check if answer has minimum length
         return Applications.answerTooShort(answer.answer().length(), question.minAnswerLength(), number);
       }
-      var preparedAnswer = prepareAnswer(answer, question);
+      var preparedAnswer = prepareAnswer(answer, question, numberFunc.apply(answer), application);
       answers.set(i, preparedAnswer);
       knownNumbers.add(number);
     }
-
-    var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template.id(),
-        answers);
-    var saved = applicationRepo.save(application);
-    return new Success<>(saved);
+    return null;
   }
 
-  private Answer prepareAnswer(Answer answer, Question question) {
-    return new Answer(null, answer.number(), answer.answer(),
-        question, null);
+
+  private Answer prepareAnswer(Answer answer, Question question, Integer number, Application application) {
+    return new Answer(number, answer.number(), answer.answer(),
+        question, application);
+  }
+
+  public Response<Application> updateApplication(int id, ArrayList<Answer> newAnswers) {
+    var infoOpt = applicationRepo.findById(id); // since relations aren't supported in dto projections yet, it's the easiest to fetch the whole application
+    if (infoOpt.isEmpty()) {
+      return Applications.notFound(id);
+    }
+    var applicationInfo = infoOpt.get();
+
+    if (applicationInfo.status() == ApplicationStatus.ACCEPTED) {
+      return Applications.alreadyAccepted(id);
+    }
+
+    var template = templateRepo.findById(applicationInfo.template().id());
+    if (template.isEmpty()) {
+      return Applications.templateNotFound(applicationInfo.template().name());
+    }
+    var validationResponse = validateAndPrepareAnswers(newAnswers, template.get(),
+        answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo);
+    if (validationResponse != null) {
+      return validationResponse;
+    }
+    answerRepo.updateAll(newAnswers);
+    var updated = applicationRepo.findById(id);
+    if (updated.isEmpty()) {
+      return Applications.notFound(id);
+    }
+    return new Success<>(updated.get());
   }
 }

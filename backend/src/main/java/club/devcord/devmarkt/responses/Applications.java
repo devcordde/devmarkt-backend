@@ -51,13 +51,19 @@ public interface Applications {
         .formatted(number, length, expectedLength));
   }
 
+  static Failure<Application> alreadyAccepted(int id) {
+    return new Failure<>(Errors.ALREADY_ACCEPTED.name(), "The application with id %s is already accepted."
+        .formatted(id));
+  }
+
   enum Errors {
     NOT_FOUND,
     HAS_UNPROCESSED_APPLICATION,
     TEMPLATE_NOT_FOUND,
     AMBIGUOUS_ANSWER_NUMBER,
     NO_QUESTION,
-    ANSWER_TOO_SHORT
+    ANSWER_TOO_SHORT,
+    ALREADY_ACCEPTED
   }
 
 }

@@ -17,7 +17,9 @@
 package club.devcord.devmarkt.entities.application;
 
 import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -27,6 +29,8 @@ import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.jdbc.annotation.ColumnTransformer;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @GraphQLType("Application")
@@ -41,9 +45,17 @@ public record Application(
 
     @Relation(value = Kind.MANY_TO_ONE)
     User user,
-    int templateId,
+    @Relation(value = Kind.MANY_TO_ONE)
+    Template template,
     @Relation(value = Kind.ONE_TO_MANY, cascade = Cascade.ALL, mappedBy = "application")
     List<Answer> answers
 ) {
 
+    @Creator
+    public static Application newSorted(int id, @Nullable OffsetDateTime processTime, ApplicationStatus status,
+        User user, Template template, List<Answer> answers) {
+        var list = new ArrayList<>(answers != null ? answers : List.of());
+        list.sort(Comparator.comparingInt(Answer::number));
+        return new Application(id, processTime, status, user, template, answers);
+    }
 }

@@ -32,7 +32,7 @@ public class ApplicationResolver implements GraphQLResolver<Application> {
   }
 
   public Template template(Application application) {
-    return templateService.findDirect(application.templateId()).orElseThrow();
+    return templateService.findDirect(application.template().id()).orElseThrow();
   }
 
 }

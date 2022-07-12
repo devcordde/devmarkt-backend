@@ -17,36 +17,11 @@
 package club.devcord.devmarkt.repositories;
 
 import club.devcord.devmarkt.entities.application.Answer;
-import club.devcord.devmarkt.entities.application.Application;
-import club.devcord.devmarkt.entities.application.ApplicationStatus;
-import club.devcord.devmarkt.entities.auth.User;
-import io.micronaut.data.annotation.Join;
-import io.micronaut.data.annotation.Join.Type;
-import io.micronaut.data.annotation.Where;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
-import java.util.List;
-import java.util.Optional;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-public interface ApplicationRepo extends CrudRepository<Application, Integer> {
+public interface AnswerRepo extends CrudRepository<Answer, Integer> {
 
-  @Where("@.status = 'UNPROCESSED'::application_status")
-  boolean existsUnprocessedByUser(User user);
-
-  @Join("user")
-  @Join(value = "answers", type = Type.LEFT_FETCH)
-  @Join("answers.question")
-  @Join("template")
-  Optional<Application> findById(int id);
-
-  int deleteById(int id);
-
-  boolean existsByIdAndUser(int id, User user);
-
-  @Where("@.status != :status::application_status")
-  int updateById(int id, ApplicationStatus status);
-
-  int updateAnswersById(int id, List<Answer> answers);
 }
