@@ -16,14 +16,10 @@
 
 package club.devcord.devmarkt.graphql.application;
 
-import club.devcord.devmarkt.entities.application.Application;
-import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.ApplicationService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
-import java.time.OffsetDateTime;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +38,5 @@ public class ApplicationQuery implements GraphQLQueryResolver {
     var response = service.application(id);
     LOGGER.info("Application fetched with id: {} Successful: {}", id, LoggingUtil.responseStatus(response));
     return response.graphQlUnion();
-  }
-
-  public List<Application> applications(OffsetDateTime from, OffsetDateTime to, UserId userId) {
-    return null;
   }
 }

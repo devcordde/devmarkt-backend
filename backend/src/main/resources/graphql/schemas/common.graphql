@@ -14,12 +14,6 @@ type Query {
     application(
         id: ApplicationId!
     ): ApplicationResponse @Auth(role: "user") @AuthOwnApplication(idField: "id")
-
-    applications(
-        from: DateTime!
-        to: DateTime!
-        userId: UserIdInput
-    ): [Application!] @Auth(role: "user") # TODO: add enhanced authorization based on application owner
 }
 
 type Mutation {
