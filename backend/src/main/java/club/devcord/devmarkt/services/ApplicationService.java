@@ -86,6 +86,10 @@ public class ApplicationService {
       return validationResponse;
     }
 
+    if (template.questions().size() != answers.size()) {
+      return Applications.questionsUnanswered();
+    }
+
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
         answers);
     var saved = applicationRepo.save(application);

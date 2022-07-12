@@ -56,6 +56,10 @@ public interface Applications {
         .formatted(id));
   }
 
+  static Failure<Application> questionsUnanswered() {
+    return new Failure<>(Errors.QUESTION_UNANSWERED.name(), "You have to answer all questions.");
+  }
+
   enum Errors {
     NOT_FOUND,
     HAS_UNPROCESSED_APPLICATION,
@@ -63,7 +67,8 @@ public interface Applications {
     AMBIGUOUS_ANSWER_NUMBER,
     NO_QUESTION,
     ANSWER_TOO_SHORT,
-    ALREADY_ACCEPTED
+    ALREADY_ACCEPTED,
+    QUESTION_UNANSWERED
   }
 
 }
