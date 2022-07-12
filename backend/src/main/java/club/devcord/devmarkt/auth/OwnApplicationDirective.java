@@ -16,9 +16,10 @@
 
 package club.devcord.devmarkt.auth;
 
-import club.devcord.devmarkt.auth.error.ForbiddenError;
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.responses.Applications;
+import club.devcord.devmarkt.services.ApplicationService;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLFieldDefinition;
@@ -29,18 +30,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class RoleDirective implements SchemaDirectiveWiring {
+public class OwnApplicationDirective implements SchemaDirectiveWiring {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RoleDirective.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(OwnApplicationDirective.class);
+
+  private final ApplicationService applicationService;
+
+  public OwnApplicationDirective(
+      ApplicationService applicationService) {
+    this.applicationService = applicationService;
+  }
 
   @Override
   public GraphQLFieldDefinition onField(
       SchemaDirectiveWiringEnvironment<GraphQLFieldDefinition> environment) {
     var field = environment.getFieldDefinition();
-    var roleName = (String) environment.getDirective().getArgument("role")
-        .toAppliedArgument().getValue();
-    assert roleName != null;
-    var expectedRole = Role.valueOf(roleName.toUpperCase());
+    var idField = (String) environment.getDirective().toAppliedDirective().getArgument("idField")
+        .getValue();
+    assert idField != null;
     var originalDataFetcher = environment.getFieldDataFetcher();
     DataFetcher<?> authDataFetcher = env -> {
       var user = (User) env.getGraphQlContext().get("user");
@@ -52,12 +59,14 @@ public class RoleDirective implements SchemaDirectiveWiring {
             .build();
       }
 
-      if (user.role() == expectedRole || user.role() == Role.ADMIN) {
+      var value = (int) env.getArgument(idField);
+      if (user.role() == Role.ADMIN || applicationService.isOwnApplication(value, user)) {
         return originalDataFetcher.get(env);
       }
-      LOGGER.info("Rejecting forbidden request for user {}", user.id());
+      LOGGER.info("Rejecting request because user {} doesn't own application id: {}",
+          user.id(), value);
       return DataFetcherResult.newResult()
-          .error(new ForbiddenError(environment.getFieldsContainer().getName(), field.getName()))
+          .data(Applications.notFound(value))
           .build();
     };
 

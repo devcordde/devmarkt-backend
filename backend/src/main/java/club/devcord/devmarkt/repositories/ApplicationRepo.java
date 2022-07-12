@@ -37,6 +37,7 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   @Join("answers.question")
   Optional<Application> findById(int id);
 
-
   int deleteById(int id);
+
+  boolean existsByIdAndUser(int id, User user);
 }

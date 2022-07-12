@@ -33,28 +33,32 @@ import java.util.HashSet;
 @Singleton
 public class ApplicationService {
 
-  private final ApplicationRepo repo;
+  private final ApplicationRepo applicationRepo;
   private final TemplateRepo templateRepo;
 
   public ApplicationService(ApplicationRepo repo,
       TemplateRepo templateRepo) {
-    this.repo = repo;
+    this.applicationRepo = repo;
     this.templateRepo = templateRepo;
   }
 
   public Response<Application> application(int id) {
-    return repo.findById(id)
+    return applicationRepo.findById(id)
         .map(Success::response)
         .orElseGet(() -> Applications.notFound(id));
   }
 
+  public boolean isOwnApplication(int applicationId, User user) {
+    return applicationRepo.existsByIdAndUser(applicationId, user);
+  }
+
   public boolean deleteApplication(int id) {
-    var deleted = repo.deleteById(id);
+    var deleted = applicationRepo.deleteById(id);
     return deleted != 0;
   }
 
   public Response<Application> createApplication(String templateName, ArrayList<Answer> answers, User user) {
-    if (repo.existsUnprocessedByUser(user)) {
+    if (applicationRepo.existsUnprocessedByUser(user)) {
       return Applications.hasUnprocessedApplication(user.id());
     }
 
@@ -85,7 +89,7 @@ public class ApplicationService {
 
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template.id(),
         answers);
-    var saved = repo.save(application);
+    var saved = applicationRepo.save(application);
     return new Success<>(saved);
   }
 
