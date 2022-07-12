@@ -71,7 +71,8 @@ public class ApplicationService {
     return updated != 0;
   }
 
-  public Response<Application> createApplication(String templateName, ArrayList<Answer> answers, User user) {
+  public Response<Application> createApplication(String templateName, ArrayList<Answer> answers,
+      User user) {
     if (applicationRepo.existsUnprocessedByUser(user)) {
       return Applications.hasUnprocessedApplication(user.id());
     }
@@ -96,7 +97,8 @@ public class ApplicationService {
     return new Success<>(saved);
   }
 
-  private Response<Application> validateAndPrepareAnswers(ArrayList<Answer> answers, Template template, Function<Answer, Integer> numberFunc, Application application) {
+  private Response<Application> validateAndPrepareAnswers(ArrayList<Answer> answers,
+      Template template, Function<Answer, Integer> numberFunc, Application application) {
     var knownNumbers = new HashSet<Integer>(answers.size());
     for (int i = 0; i < answers.size(); i++) {
       var answer = answers.get(i);
@@ -108,8 +110,10 @@ public class ApplicationService {
         return Applications.noQuestion(number);
       }
       var question = template.questions().get(number);
-      if (answer.answer().length() < question.minAnswerLength()) { // check if answer has minimum length
-        return Applications.answerTooShort(answer.answer().length(), question.minAnswerLength(), number);
+      if (answer.answer().length()
+          < question.minAnswerLength()) { // check if answer has minimum length
+        return Applications.answerTooShort(answer.answer().length(), question.minAnswerLength(),
+            number);
       }
       var preparedAnswer = prepareAnswer(answer, question, numberFunc.apply(answer), application);
       answers.set(i, preparedAnswer);
@@ -119,13 +123,15 @@ public class ApplicationService {
   }
 
 
-  private Answer prepareAnswer(Answer answer, Question question, Integer number, Application application) {
+  private Answer prepareAnswer(Answer answer, Question question, Integer number,
+      Application application) {
     return new Answer(number, answer.number(), answer.answer(),
         question, application);
   }
 
   public Response<Application> updateApplication(int id, ArrayList<Answer> newAnswers) {
-    var infoOpt = applicationRepo.findById(id); // since relations aren't supported in dto projections yet, it's the easiest to fetch the whole application
+    var infoOpt = applicationRepo.findById(
+        id); // since relations aren't supported in dto projections yet, it's the easiest to fetch the whole application
     if (infoOpt.isEmpty()) {
       return Applications.notFound(id);
     }

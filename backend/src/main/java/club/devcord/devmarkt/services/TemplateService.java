@@ -72,7 +72,8 @@ public class TemplateService {
     }
     var currentTemplate = currentTemplateOpt.get();
     var questions = new ArrayList<>(currentTemplate.questions());
-    questions.replaceAll(this::removeInternalId); // remove old internalIds so that the questions are inserted (cascade)
+    questions.replaceAll(
+        this::removeInternalId); // remove old internalIds so that the questions are inserted (cascade)
 
     for (var question : updated.questions()) {
       if (question.updateAction() == null

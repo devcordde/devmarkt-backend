@@ -36,7 +36,8 @@ public class ApplicationQuery implements GraphQLQueryResolver {
 
   public Object application(int id) {
     var response = service.application(id);
-    LOGGER.info("Application fetched with id: {} Successful: {}", id, LoggingUtil.responseStatus(response));
+    LOGGER.info("Application fetched with id: {} Successful: {}", id,
+        LoggingUtil.responseStatus(response));
     return response.graphQlUnion();
   }
 }

@@ -18,18 +18,18 @@ CREATE TYPE application_status AS ENUM ('UNPROCESSED', 'REJECTED', 'ACCEPTED');
 
 CREATE TABLE applications
 (
-    id SERIAL PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     process_time VARCHAR,
-    status application_status NOT NULL,
-    user_id INT NOT NULL REFERENCES users (id),
-    template_id INT NOT NULL REFERENCES templates (id)
+    status       application_status NOT NULL,
+    user_id      INT                NOT NULL REFERENCES users (id),
+    template_id  INT                NOT NULL REFERENCES templates (id)
 );
 
 CREATE TABLE answers
 (
-    id SERIAL PRIMARY KEY,
-    number INT NOT NULL,
-    answer VARCHAR NOT NULL,
-    question_id INT NOT NULL REFERENCES questions (id),
-    application_id INT NOT NULL REFERENCES applications (id) ON DELETE CASCADE
+    id             SERIAL PRIMARY KEY,
+    number         INT     NOT NULL,
+    answer         VARCHAR NOT NULL,
+    question_id    INT     NOT NULL REFERENCES questions (id),
+    application_id INT     NOT NULL REFERENCES applications (id) ON DELETE CASCADE
 )

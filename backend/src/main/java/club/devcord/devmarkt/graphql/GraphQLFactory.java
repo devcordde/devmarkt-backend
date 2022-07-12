@@ -58,7 +58,8 @@ public class GraphQLFactory {
     var builder = new SchemaParserBuilder()
         .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME,
             ExtendedScalars.NonNegativeInt, ExtendedScalars.PositiveInt, ExtendedScalars.DateTime,
-            ExtendedScalars.newAliasedScalar("ApplicationId").aliasedScalar(ExtendedScalars.NonNegativeInt).build())
+            ExtendedScalars.newAliasedScalar("ApplicationId")
+                .aliasedScalar(ExtendedScalars.NonNegativeInt).build())
         .directive("Auth", roleDirective)
         .directive("AuthOwnApplication", ownApplicationDirective);
 

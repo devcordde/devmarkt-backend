@@ -25,7 +25,8 @@ public final class Collections {
   private Collections() {
   }
 
-  public static <T, R> boolean hasAmbiguousEntry(Collection<T> collection, Function<T, R> identity) {
+  public static <T, R> boolean hasAmbiguousEntry(Collection<T> collection,
+      Function<T, R> identity) {
     var knownKeys = new HashSet<R>(collection.size());
     for (var entry : collection) {
       if (!knownKeys.add(identity.apply(entry))) {

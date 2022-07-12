@@ -27,13 +27,15 @@ public interface Applications {
   }
 
   static Failure<Application> hasUnprocessedApplication(UserId userId) {
-    return new Failure<>(Errors.HAS_UNPROCESSED_APPLICATION.name(), "The user '%s' has already one unprocessed application."
-        .formatted(userId));
+    return new Failure<>(Errors.HAS_UNPROCESSED_APPLICATION.name(),
+        "The user '%s' has already one unprocessed application."
+            .formatted(userId));
   }
 
   static Failure<Application> templateNotFound(String name) {
-    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(), "A template with the name '%s' wasn't found."
-        .formatted(name));
+    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(),
+        "A template with the name '%s' wasn't found."
+            .formatted(name));
   }
 
   static Failure<Application> ambiguousAnswerNumber(int number) {
@@ -41,19 +43,21 @@ public interface Applications {
         .formatted(number));
   }
 
-  static Failure<Application> noQuestion(int number)  {
+  static Failure<Application> noQuestion(int number) {
     return new Failure<>(Errors.NO_QUESTION.name(), "There's no question with number '%s'."
         .formatted(number));
   }
 
   static Failure<Application> answerTooShort(int length, int expectedLength, int number) {
-    return new Failure<>(Errors.ANSWER_TOO_SHORT.name(), "The answer with number %s has %s characters but needs minimum %s"
-        .formatted(number, length, expectedLength));
+    return new Failure<>(Errors.ANSWER_TOO_SHORT.name(),
+        "The answer with number %s has %s characters but needs minimum %s"
+            .formatted(number, length, expectedLength));
   }
 
   static Failure<Application> alreadyAccepted(int id) {
-    return new Failure<>(Errors.ALREADY_ACCEPTED.name(), "The application with id %s is already accepted."
-        .formatted(id));
+    return new Failure<>(Errors.ALREADY_ACCEPTED.name(),
+        "The application with id %s is already accepted."
+            .formatted(id));
   }
 
   static Failure<Application> questionsUnanswered() {

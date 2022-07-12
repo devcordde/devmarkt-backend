@@ -53,9 +53,9 @@ public record Application(
     List<Answer> answers
 ) {
 
-    public Application {
-        var list = new ArrayList<>(answers != null ? answers : List.of());
-        list.sort(Comparator.comparingInt(Answer::number));
-        answers = Collections.unmodifiableList(list);
-    }
+  public Application {
+    var list = new ArrayList<>(answers != null ? answers : List.of());
+    list.sort(Comparator.comparingInt(Answer::number));
+    answers = Collections.unmodifiableList(list);
+  }
 }

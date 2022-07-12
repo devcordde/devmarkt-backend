@@ -21,4 +21,6 @@ import java.util.List;
 public record TemplateUpdateInput(
     String name,
     List<Question> questions
-) {}
+) {
+
+}

@@ -39,7 +39,8 @@ public class ApplicationMutation implements GraphQLMutationResolver {
     this.service = service;
   }
 
-  public Object createApplication(String templateName, ArrayList<Answer> answers, DataFetchingEnvironment environment) {
+  public Object createApplication(String templateName, ArrayList<Answer> answers,
+      DataFetchingEnvironment environment) {
     var user = (User) environment.getGraphQlContext().get("user");
     var response = service.createApplication(templateName, answers, user);
     LOGGER.info("Application creation: User: {}, TemplateName: {}, Successful: {}",
@@ -56,7 +57,8 @@ public class ApplicationMutation implements GraphQLMutationResolver {
   public Object updateApplication(int id, ArrayList<Answer> updatedAnswers) {
     var response = service.updateApplication(id, updatedAnswers);
     LOGGER.info("Application update. ID: {}, AnswerNumbers: {}, Response: {}", id,
-        updatedAnswers.stream().map(Answer::number).toArray(), LoggingUtil.responseStatus(response));
+        updatedAnswers.stream().map(Answer::number).toArray(),
+        LoggingUtil.responseStatus(response));
     return response.graphQlUnion();
   }
 

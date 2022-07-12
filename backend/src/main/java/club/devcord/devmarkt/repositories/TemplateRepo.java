@@ -51,7 +51,8 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
 
   List<String> findName();
 
-  @Where("true") // replaced the @Where conditions of the entity, so that we're able to find soft deleted templates.
+  @Where("true")
+  // replaced the @Where conditions of the entity, so that we're able to find soft deleted templates.
   @Join(value = "questions", type = Type.LEFT_FETCH)
   Optional<Template> findById(int id);
 }
