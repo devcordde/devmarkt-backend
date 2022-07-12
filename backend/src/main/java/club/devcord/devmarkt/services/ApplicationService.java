@@ -62,7 +62,7 @@ public class ApplicationService {
       return false;
     }
 
-    var updated = applicationRepo.updateStatusById(id, status);
+    var updated = applicationRepo.updateById(id, status);
     return updated != 0;
   }
 

@@ -42,6 +42,6 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
 
   boolean existsByIdAndUser(int id, User user);
 
-  @Where("@.status = 'UNPROCESSED'::application_status")
-  int updateStatusById(int id, ApplicationStatus status);
+  @Where("@.status != :status::application_status")
+  int updateById(int id, ApplicationStatus status);
 }
