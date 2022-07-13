@@ -2,6 +2,7 @@
   "data": {
     "user": {
       "applications": [],
+      "currentApplication": null,
       "id": {
         "type": "the_answer_of_all",
         "number": 49

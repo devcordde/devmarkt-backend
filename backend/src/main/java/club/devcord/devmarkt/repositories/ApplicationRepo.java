@@ -52,4 +52,11 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   @Join(value = "answers.question", type = Type.LEFT_FETCH)
   @Join("template")
   List<Application> findAllByUser(User user);
+
+  @Join("user")
+  @Join(value = "answers", type = Type.LEFT_FETCH)
+  @Join(value = "answers.question", type = Type.LEFT_FETCH)
+  @Join("template")
+  @Where("@.status = 'UNPROCESSED'::application_status")
+  Optional<Application> findOneByUser(User user);
 }

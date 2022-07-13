@@ -36,4 +36,8 @@ public class UserResolver implements GraphQLResolver<User> {
     return service.applicationsForUser(user);
   }
 
+  public Application currentApplication(User user) {
+    return service.currentApplication(user);
+  }
+
 }

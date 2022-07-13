@@ -6,7 +6,8 @@
         "number": 1,
         "type": "internal"
       },
-      "applications": []
+      "applications": [],
+      "currentApplication": null
     }
   }
 }

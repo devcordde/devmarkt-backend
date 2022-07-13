@@ -1,6 +1,43 @@
 {
   "data": {
     "user": {
+      "currentApplication": {
+        "processTime": null,
+        "id": 1,
+        "status": "UNPROCESSED",
+        "template": {
+          "name": "Dev offered"
+        },
+        "user": {
+          "id": {
+            "number": 1,
+            "type": "testuser"
+          }
+        },
+        "answers": [
+          {
+            "number": 0,
+            "answer": "Lorem ipsum dolor sit amet, co N0",
+            "question": {
+              "question": "Who am I?"
+            }
+          },
+          {
+            "number": 1,
+            "answer": "Lorem ipsum dolor sit amet, co N1",
+            "question": {
+              "question": "What programming language do I know?"
+            }
+          },
+          {
+            "number": 2,
+            "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2",
+            "question": {
+              "question": "Why should you choose me?"
+            }
+          }
+        ]
+      },
       "role": "NONE",
       "id": {
         "number": 1,

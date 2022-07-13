@@ -58,6 +58,10 @@ public class ApplicationService {
     return applicationRepo.existsByIdAndUser(applicationId, user);
   }
 
+  public Application currentApplication(User user) {
+    return applicationRepo.findOneByUser(user).orElse(null);
+  }
+
   public List<Application> applicationsForUser(User user) {
     return applicationRepo.findAllByUser(user);
   }

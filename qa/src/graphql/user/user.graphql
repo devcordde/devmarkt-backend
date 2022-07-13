@@ -1,6 +1,27 @@
 query ($id: UserIdInput!) {
     user(id: $id) {
         ... on User {
+            currentApplication {
+                processTime
+                id
+                status
+                template {
+                    name
+                }
+                user {
+                    id {
+                        number
+                        type
+                    }
+                }
+                answers {
+                    number
+                    answer
+                    question {
+                        question
+                    }
+                }
+            }
             role
             id {
                 number
