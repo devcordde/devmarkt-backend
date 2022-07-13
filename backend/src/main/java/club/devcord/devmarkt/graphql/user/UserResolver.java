@@ -18,6 +18,7 @@ package club.devcord.devmarkt.graphql.user;
 
 import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.entities.auth.User;
+import club.devcord.devmarkt.services.ApplicationService;
 import graphql.kickstart.tools.GraphQLResolver;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -25,8 +26,14 @@ import java.util.List;
 @Singleton
 public class UserResolver implements GraphQLResolver<User> {
 
+  private final ApplicationService service;
+
+  public UserResolver(ApplicationService service) {
+    this.service = service;
+  }
+
   public List<Application> applications(User user) {
-    return null;
+    return service.applicationsForUser(user);
   }
 
 }

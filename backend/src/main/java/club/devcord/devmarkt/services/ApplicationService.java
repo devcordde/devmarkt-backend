@@ -31,6 +31,7 @@ import club.devcord.devmarkt.responses.Success;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
 
 @Singleton
@@ -55,6 +56,10 @@ public class ApplicationService {
 
   public boolean isOwnApplication(int applicationId, User user) {
     return applicationRepo.existsByIdAndUser(applicationId, user);
+  }
+
+  public List<Application> applicationsForUser(User user) {
+    return applicationRepo.findAllByUser(user);
   }
 
   public boolean deleteApplication(int id) {

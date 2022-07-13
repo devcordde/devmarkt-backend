@@ -16,7 +16,6 @@
 
 package club.devcord.devmarkt.repositories;
 
-import club.devcord.devmarkt.entities.application.Answer;
 import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
@@ -48,5 +47,5 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   @Where("@.status != :status::application_status")
   int updateById(int id, ApplicationStatus status);
 
-  int updateAnswersById(int id, List<Answer> answers);
+  List<Application> findAllByUser(User user);
 }
