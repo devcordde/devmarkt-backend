@@ -1,0 +1,39 @@
+query($id: ApplicationId!) {
+    application(id: $id) {
+        __typename
+        ... on Application {
+            id
+            template {
+                name
+                questions {
+                    multiline
+                    minAnswerLength
+                    question
+                    number
+                }
+            }
+            processTime
+            status
+            user {
+                id {
+                    number
+                    type
+                }
+                role
+                applications {
+                    id
+                }
+            }
+            answers {
+                number
+                answer
+                question {
+                    question
+                    number
+                    minAnswerLength
+                    multiline
+                }
+            }
+        }
+    }
+}
