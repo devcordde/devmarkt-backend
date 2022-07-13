@@ -105,8 +105,10 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
         new Answer(null, 1, "Lorem ipsum dolor sit amet, co N1", devOffered.questions().get(1), null),
         new Answer(null, 2, lorem500 + " N2", devOffered.questions().get(2),null)
     );
-    applicationRepo.save(new Application(-1, null, ApplicationStatus.UNPROCESSED, userUser, devOffered, answers));
-    applicationRepo.save(new Application(-1, null, ApplicationStatus.ACCEPTED, userUser, emptyTemplate, List.of()));
-    applicationRepo.save(new Application(-1, null, ApplicationStatus.REJECTED, userUser, devOffered, answers));
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.UNPROCESSED, noneUser, devOffered, answers));
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.ACCEPTED, noneUser, emptyTemplate, List.of()));
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.REJECTED, noneUser, devOffered, answers));
+
+
   }
 }

@@ -1,6 +1,7 @@
 {
   "data": {
     "user": {
+      "applications": [],
       "id": {
         "type": "the_answer_of_all",
         "number": 49

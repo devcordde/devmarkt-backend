@@ -1,11 +1,84 @@
 {
   "data": {
     "user": {
+      "role": "NONE",
       "id": {
-        "type": "testuser",
-        "number": 1
+        "number": 1,
+        "type": "testuser"
       },
-      "role": "NONE"
+      "applications": [
+        {
+          "answers": [
+            {
+              "number": 0,
+              "question": {
+                "question": "Who am I?",
+                "number": 0,
+                "multiline": false,
+                "minAnswerLength": 1
+              },
+              "answer": "Lorem ipsum dolor sit amet, co N0"
+            },
+            {
+              "number": 1,
+              "question": {
+                "question": "What programming language do I know?",
+                "number": 1,
+                "multiline": false,
+                "minAnswerLength": 1
+              },
+              "answer": "Lorem ipsum dolor sit amet, co N1"
+            },
+            {
+              "number": 2,
+              "question": {
+                "question": "Why should you choose me?",
+                "number": 2,
+                "multiline": true,
+                "minAnswerLength": 500
+              },
+              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2"
+            }
+          ]
+        },
+        {
+          "answers": [
+            {
+              "number": 0,
+              "question": {
+                "question": "Who am I?",
+                "number": 0,
+                "multiline": false,
+                "minAnswerLength": 1
+              },
+              "answer": "Lorem ipsum dolor sit amet, co N0"
+            },
+            {
+              "number": 1,
+              "question": {
+                "question": "What programming language do I know?",
+                "number": 1,
+                "multiline": false,
+                "minAnswerLength": 1
+              },
+              "answer": "Lorem ipsum dolor sit amet, co N1"
+            },
+            {
+              "number": 2,
+              "question": {
+                "question": "Why should you choose me?",
+                "number": 2,
+                "multiline": true,
+                "minAnswerLength": 500
+              },
+              "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2"
+            }
+          ]
+        },
+        {
+          "answers": []
+        }
+      ]
     }
   }
 }

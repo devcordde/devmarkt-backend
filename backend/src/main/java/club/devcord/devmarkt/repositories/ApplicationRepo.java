@@ -47,5 +47,9 @@ public interface ApplicationRepo extends CrudRepository<Application, Integer> {
   @Where("@.status != :status::application_status")
   int updateById(int id, ApplicationStatus status);
 
+  @Join("user")
+  @Join(value = "answers", type = Type.LEFT_FETCH)
+  @Join(value = "answers.question", type = Type.LEFT_FETCH)
+  @Join("template")
   List<Application> findAllByUser(User user);
 }

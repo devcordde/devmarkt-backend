@@ -29,6 +29,11 @@ const tests = [
         response: "user/user.json"
       },
       {
+        name: "success - user with no applications",
+        variables: {id: {type: "testuser", number: 2}},
+        response: "user/user-noapp.json"
+      },
+      {
         name: "notfound",
         variables: {id: {type: "not_known", number: 1}},
         response: "user/user-notfound.json"

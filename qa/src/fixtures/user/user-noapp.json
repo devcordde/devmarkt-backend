@@ -1,0 +1,12 @@
+{
+  "data": {
+    "user": {
+      "role": "USER",
+      "id": {
+        "number": 2,
+        "type": "testuser"
+      },
+      "applications": []
+    }
+  }
+}

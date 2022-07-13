@@ -6,6 +6,18 @@ query ($id: UserIdInput!) {
                 number
                 type
             }
+            applications {
+                answers {
+                    number
+                    question {
+                        question
+                        number
+                        multiline
+                        minAnswerLength
+                    }
+                    answer
+                }
+            }
         }
         ... on Failure {
             errorCode
