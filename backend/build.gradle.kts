@@ -43,7 +43,7 @@ dependencies {
 
 
 application {
-    mainClass.set("club.devcord.devmarkt.Application")
+    mainClass.set("club.devcord.devmarkt.App")
 }
 
 java {
