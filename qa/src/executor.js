@@ -37,7 +37,8 @@ export const Authorization = {
   FOREIGN_UNAUTHORIZED_SUDOER: readToken('foreign_unauthorized_sudoer'),
   FOREIGN_ADMIN: readToken('foreign_admin'),
   FOREIGN_WRONG_TOKEN_USERID_FORMAT: readToken(
-      'wrong_foreign_token_userid_format')
+      'wrong_foreign_token_userid_format'),
+  SECOND_USER: readToken('second_user')
 };
 
 function readToken(name) {

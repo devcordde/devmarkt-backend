@@ -1,0 +1,9 @@
+{
+  "data": {
+    "createApplication": {
+      "__typename": "Failure",
+      "message": "You have to answer all questions.",
+      "errorCode": "QUESTION_UNANSWERED"
+    }
+  }
+}

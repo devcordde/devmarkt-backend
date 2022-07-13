@@ -1,0 +1,71 @@
+mutation ($id: ApplicationId!, $answers: [AnswerInput!]!) {
+    updateApplication(id: $id, updatedAnswers: $answers) {
+        __typename
+        ... on Application {
+            id
+            answers {
+                number
+                question {
+                    question
+                    number
+                    multiline
+                    minAnswerLength
+                }
+            }
+            status
+            processTime
+            template {
+                questions {
+                    number
+                    minAnswerLength
+                    multiline
+                    question
+                }
+                name
+            }
+            user { # fetch one more complete application list and than assume that this is endless repeatable
+                id {
+                    number
+                    type
+                }
+                role
+                applications {
+                    id
+                    processTime
+                    status
+                    answers {
+                        question {
+                            question
+                            multiline
+                            minAnswerLength
+                            number
+                        }
+                        answer
+                    }
+                    user {
+                        role
+                        applications {
+                            id
+                            answers {
+                                number
+                            }
+                        }
+                    }
+                    template {
+                        name
+                        questions {
+                            number
+                            minAnswerLength
+                            multiline
+                            question
+                        }
+                    }
+                }
+            }
+        }
+        ... on Failure {
+            message
+            errorCode
+        }
+    }
+}

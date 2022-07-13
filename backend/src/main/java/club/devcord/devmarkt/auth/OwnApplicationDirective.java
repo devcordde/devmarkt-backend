@@ -23,6 +23,7 @@ import club.devcord.devmarkt.services.ApplicationService;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLFieldDefinition;
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import jakarta.inject.Singleton;
@@ -49,6 +50,8 @@ public class OwnApplicationDirective implements SchemaDirectiveWiring {
         .getValue();
     assert idField != null;
     var originalDataFetcher = environment.getFieldDataFetcher();
+    var fieldBooleanReturn = environment.getFieldDefinition().getType() instanceof GraphQLScalarType scalarType
+        && scalarType.getName().equals("Boolean");
     DataFetcher<?> authDataFetcher = env -> {
       var user = (User) env.getGraphQlContext().get("user");
 
@@ -65,7 +68,9 @@ public class OwnApplicationDirective implements SchemaDirectiveWiring {
       }
       LOGGER.info("Rejecting request because user {} doesn't own application id: {}",
           user.id(), value);
-      return DataFetcherResult.newResult()
+      return fieldBooleanReturn
+          ? false
+          : DataFetcherResult.newResult()
           .data(Applications.notFound(value))
           .build();
     };

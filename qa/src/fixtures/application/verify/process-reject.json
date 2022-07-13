@@ -1,0 +1,43 @@
+{
+  "data": {
+    "application": {
+      "__typename": "Application",
+      "id": 10,
+      "answers": [],
+      "status": "REJECTED",
+      "processTime": null,
+      "template": {
+        "questions": [],
+        "name": "Empty template"
+      },
+      "user": {
+        "id": {
+          "number": 1,
+          "type": "internal"
+        },
+        "role": "ADMIN",
+        "applications": [
+          {
+            "id": 10,
+            "processTime": null,
+            "status": "REJECTED",
+            "answers": [],
+            "user": {
+              "role": "ADMIN",
+              "applications": [
+                {
+                  "id": 10,
+                  "answers": []
+                }
+              ]
+            },
+            "template": {
+              "name": "Empty template",
+              "questions": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "data": {
+    "createApplication": {
+      "__typename": "Failure",
+      "message": "There's no question with number '6'.",
+      "errorCode": "NO_QUESTION"
+    }
+  }
+}

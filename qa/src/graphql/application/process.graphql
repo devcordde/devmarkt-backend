@@ -1,0 +1,3 @@
+mutation ($id: ApplicationId!, $status: ApplicationStatus!) {
+    processApplication(id: $id, status: $status)
+}

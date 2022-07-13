@@ -74,6 +74,10 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
         "sub", "notKnown:1",
         "iat", 1516239022
     )).get());
+    LOGGER.info("testuser:3 userid: {}", generator.generateToken(Map.of(
+        "sub", "testuser:3",
+        "iat", 1516239022
+    )).get());
 
     var code = System.identityHashCode(mapper);
     LOGGER.info("{}", code);

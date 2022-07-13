@@ -30,7 +30,7 @@ const tests = [
       },
       {
         name: "success - user with no applications",
-        variables: {id: {type: "testuser", number: 2}},
+        variables: {id: {type: "internal", number: 1}},
         response: "user/user-noapp.json"
       },
       {

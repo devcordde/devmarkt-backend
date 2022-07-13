@@ -1,10 +1,10 @@
 {
   "data": {
     "user": {
-      "role": "USER",
+      "role": "ADMIN",
       "id": {
-        "number": 2,
-        "type": "testuser"
+        "number": 1,
+        "type": "internal"
       },
       "applications": []
     }

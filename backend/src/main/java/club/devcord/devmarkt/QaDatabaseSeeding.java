@@ -51,6 +51,7 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
 
   private User userUser;
   private User noneUser;
+  private User secondUserUser;
 
   public QaDatabaseSeeding(TemplateRepo templateRepo,
       UserRepo userRepo, ApplicationRepo applicationRepo) {
@@ -89,6 +90,7 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
     LOGGER.info("Start user seeding");
     noneUser = userRepo.save(new User(-1, new UserId("testuser", 1), Role.NONE));
     userUser = userRepo.save(new User(-1, new UserId("testuser", 2), Role.USER));
+    secondUserUser = userRepo.save(new User(-1, new UserId("testuser", 3), Role.USER));
   }
 
   private final String lorem500 = """
@@ -109,6 +111,9 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
     applicationRepo.save(new Application(-1, null, ApplicationStatus.ACCEPTED, noneUser, emptyTemplate, List.of()));
     applicationRepo.save(new Application(-1, null, ApplicationStatus.REJECTED, noneUser, devOffered, answers));
 
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.ACCEPTED, userUser, devOffered, answers));
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.REJECTED, userUser, emptyTemplate, List.of()));
 
+    applicationRepo.save(new Application(-1, null, ApplicationStatus.UNPROCESSED, secondUserUser, emptyTemplate, List.of()));
   }
 }
