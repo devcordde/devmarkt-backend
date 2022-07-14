@@ -10,7 +10,7 @@
   "devDependencies": {
     "jest": "^28.1.2",
     "jest-junit": "^14.0.0",
-    "node-fetch": "^3.2.6"
+    "node-fetch": "^3.2.8"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
