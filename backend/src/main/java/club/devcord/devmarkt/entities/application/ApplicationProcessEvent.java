@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses;
+package club.devcord.devmarkt.entities.application;
 
-import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.core.annotation.Introspected;
 
-public interface Questions {
-
-  static Failure<Question> templateNotFound(String templateName) {
-    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(),
-        "No template called '%s' was found.".formatted(templateName));
-  }
-
-  static Failure<Question> questionNotFound(String templateName, int number) {
-    return new Failure<>(Errors.QUESTION_NOT_FOUND.name(),
-        "Template '%s' has no question with number %s".formatted(templateName, number));
-  }
-
-  enum Errors {
-    TEMPLATE_NOT_FOUND,
-    QUESTION_NOT_FOUND
-  }
+@Introspected
+@GraphQLType("ApplicationProcessEvent")
+public record ApplicationProcessEvent(
+    Integer id,
+    ApplicationStatus status
+) {
 
 }
-

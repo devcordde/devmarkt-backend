@@ -18,6 +18,7 @@ package club.devcord.devmarkt.services;
 
 import club.devcord.devmarkt.entities.application.Answer;
 import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.entities.application.ApplicationProcessEvent;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.template.Question;
@@ -33,9 +34,22 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Sinks;
 
 @Singleton
 public class ApplicationService {
+
+  public enum ApplicationEventType {
+    CREATED,
+    PROCESSED,
+    DELETED
+  }
+
+  public record ApplicationEvent(Object data, ApplicationEventType type) {}
+
+  private final Sinks.Many<ApplicationEvent>  eventStream =
+      Sinks.many().multicast().onBackpressureBuffer();
 
   private final ApplicationRepo applicationRepo;
   private final TemplateRepo templateRepo;
@@ -46,6 +60,10 @@ public class ApplicationService {
     this.applicationRepo = repo;
     this.templateRepo = templateRepo;
     this.answerRepo = answerRepo;
+  }
+
+  public Publisher<ApplicationEvent> eventStream() {
+    return eventStream.asFlux();
   }
 
   public Response<Application> application(int id) {
@@ -68,7 +86,11 @@ public class ApplicationService {
 
   public boolean deleteApplication(int id) {
     var deleted = applicationRepo.deleteById(id);
-    return deleted != 0;
+    if (deleted != 0) {
+      eventStream.tryEmitNext(new ApplicationEvent(id, ApplicationEventType.DELETED));
+      return true;
+    }
+    return false;
   }
 
   public boolean processApplication(int id, ApplicationStatus status) {
@@ -77,7 +99,11 @@ public class ApplicationService {
     }
 
     var updated = applicationRepo.updateById(id, status);
-    return updated != 0;
+    if (updated != 0) {
+      eventStream.tryEmitNext(new ApplicationEvent(new ApplicationProcessEvent(id, status), ApplicationEventType.PROCESSED));
+      return true;
+    }
+    return false;
   }
 
   public Response<Application> createApplication(String templateName, ArrayList<Answer> answers,
@@ -103,6 +129,7 @@ public class ApplicationService {
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
         answers);
     var saved = applicationRepo.save(application);
+    eventStream.tryEmitNext(new ApplicationEvent(saved, ApplicationEventType.CREATED));
     return new Success<>(saved);
   }
 

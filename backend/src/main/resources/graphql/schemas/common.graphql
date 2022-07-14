@@ -65,6 +65,12 @@ type Mutation {
     ): Boolean @Auth(role: "admin")
 }
 
+type Subscription {
+    applicationCreated: Application!
+    applicationDeleted: ApplicationId! @Auth(role: "admin")
+    applicationProcessed: ApplicationProcessEvent!
+}
+
 # common
 type Failure {
     message: String!

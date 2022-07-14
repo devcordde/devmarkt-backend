@@ -25,3 +25,8 @@ type Application {
     template: Template!
     answers: [Answer!]!
 }
+
+type ApplicationProcessEvent {
+    id: ApplicationId!
+    status: ApplicationStatus!
+}
