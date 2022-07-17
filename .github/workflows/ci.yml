@@ -113,6 +113,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
         working-directory: qa
+      - name: Check if backend is reachable
+        run: curl --fail -sv --retry 3 --retry-delay 3 --retry-connrefused http://172.16.0.2:8080/health
       - name: Run Tests
         run: BACKEND_HOST=http://172.16.0.2:8080 yarn test:ci
         working-directory: qa
