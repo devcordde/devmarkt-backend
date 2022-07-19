@@ -39,11 +39,6 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
   private final JwtTokenGenerator generator;
   private final JsonMapper mapper;
 
-  @Inject
-  private TemplateRepo templateRepo;
-  @Inject
-  private BeanContext context;
-
   public DevelopmentStartup(
       JwtTokenGenerator jwtTokenGenerator, JsonMapper mapper) {
     this.generator = jwtTokenGenerator;
