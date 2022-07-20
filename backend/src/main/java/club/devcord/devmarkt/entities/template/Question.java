@@ -18,33 +18,41 @@ package club.devcord.devmarkt.entities.template;
 
 import club.devcord.devmarkt.graphql.GraphQLType;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Creator;
-import io.micronaut.data.annotation.EmbeddedId;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.annotation.Transient;
 
 @GraphQLType("Question")
 @MappedEntity("questions")
 public record Question(
 
+    @JsonIgnore
+    @Nullable
     @GeneratedValue
+    @Id
     @MappedProperty("id")
-    int internalId,
+    Integer internalId,
 
-    @EmbeddedId
+    @Relation(Kind.EMBEDDED)
     QuestionId id,
     String question,
     boolean multiline,
     int minAnswerLength,
     @Transient
+    @Nullable
     UpdateAction updateAction
 ) {
 
   @Creator
-  public Question(int internalId,
+  public Question(Integer internalId,
       QuestionId id,
       String question,
       boolean multiline,
@@ -54,13 +62,12 @@ public record Question(
 
   @JsonCreator
   public Question(
-      @JsonProperty("templateId") int templateId,
       @JsonProperty("number") int number,
       @JsonProperty("question") String question,
       @JsonProperty("multiline") boolean multiline,
       @JsonProperty("minAnswerLength") int minAnswerLength,
       @JsonProperty("updateAction") UpdateAction updateAction) {
-    this(-1, new QuestionId(templateId, number), question, multiline, minAnswerLength,
+    this(null, new QuestionId(null, number), question, multiline, minAnswerLength,
         updateAction);
   }
 

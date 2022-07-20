@@ -1,0 +1,13 @@
+{
+  "data": {
+    "user": {
+      "role": "ADMIN",
+      "id": {
+        "number": 1,
+        "type": "internal"
+      },
+      "applications": [],
+      "currentApplication": null
+    }
+  }
+}

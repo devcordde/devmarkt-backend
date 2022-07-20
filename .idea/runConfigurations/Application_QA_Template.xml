@@ -4,7 +4,7 @@
     <option name="alternativeJrePath" />
     <option name="alternativeJrePathEnabled" value="false" />
     <option name="includeProvidedScope" value="true" />
-    <option name="mainClass" value="club.devcord.devmarkt.Application" />
+    <option name="mainClass" value="club.devcord.devmarkt.App" />
     <option name="passParentEnvs" value="true" />
     <option name="programParameters" value="" />
     <option name="shortenCommandLine" value="NONE" />

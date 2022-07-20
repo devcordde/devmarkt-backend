@@ -31,7 +31,8 @@ public interface Templates {
   }
 
   static Failure<Template> ambiguousNumber() {
-    return new Failure<>(Errors.AMBIGUOUS_NUMBER.name(), "This template has at least one ambiguous number.");
+    return new Failure<>(Errors.AMBIGUOUS_NUMBER.name(),
+        "This template has at least one ambiguous number.");
   }
 
   enum Errors {

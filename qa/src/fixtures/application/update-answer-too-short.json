@@ -1,0 +1,9 @@
+{
+  "data": {
+    "updateApplication": {
+      "__typename": "Failure",
+      "message": "The answer with number 2 has 4 characters but needs minimum 500",
+      "errorCode": "ANSWER_TOO_SHORT"
+    }
+  }
+}

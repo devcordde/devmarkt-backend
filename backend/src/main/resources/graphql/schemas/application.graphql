@@ -1,0 +1,27 @@
+input AnswerInput {
+    number: NonNegativeInt!
+    answer: String! @NotBlank
+}
+
+type Answer {
+    number: NonNegativeInt!
+    answer: String!
+    question: Question!
+}
+
+enum ApplicationStatus {
+    UNPROCESSED,
+    REJECTED,
+    ACCEPTED
+}
+
+union ApplicationResponse = Application | Failure
+
+type Application {
+    id: ApplicationId!
+    processTime: DateTime
+    status: ApplicationStatus!
+    user: User!
+    template: Template!
+    answers: [Answer!]!
+}

@@ -1,0 +1,43 @@
+{
+  "data": {
+    "application": {
+      "__typename": "Application",
+      "id": 11,
+      "answers": [],
+      "status": "UNPROCESSED",
+      "processTime": null,
+      "template": {
+        "questions": [],
+        "name": "Empty template"
+      },
+      "user": {
+        "id": {
+          "number": 1,
+          "type": "internal"
+        },
+        "role": "ADMIN",
+        "applications": [
+          {
+            "id": 11,
+            "processTime": null,
+            "status": "UNPROCESSED",
+            "answers": [],
+            "user": {
+              "role": "ADMIN",
+              "applications": [
+                {
+                  "id": 11,
+                  "answers": []
+                }
+              ]
+            },
+            "template": {
+              "name": "Empty template",
+              "questions": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -18,14 +18,21 @@ package club.devcord.devmarkt.entities.auth;
 
 import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.graphql.GraphQLType;
-import io.micronaut.data.annotation.EmbeddedId;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.MappedProperty;
+import io.micronaut.data.annotation.Relation;
+import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.jdbc.annotation.ColumnTransformer;
 
 @GraphQLType("User")
 @MappedEntity("users")
 public record User(
-    @EmbeddedId
+    @MappedProperty("id")
+    @Id @GeneratedValue
+    int internalId,
+    @Relation(Kind.EMBEDDED)
     UserId id,
     @ColumnTransformer(write = "?::role")
     Role role

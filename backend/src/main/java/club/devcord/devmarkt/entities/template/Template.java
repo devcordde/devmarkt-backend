@@ -17,8 +17,6 @@
 package club.devcord.devmarkt.entities.template;
 
 import club.devcord.devmarkt.graphql.GraphQLType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.micronaut.core.annotation.Creator;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
@@ -27,6 +25,7 @@ import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
 import io.micronaut.data.annotation.Where;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,21 +33,20 @@ import java.util.List;
 @MappedEntity("templates")
 @Where("@.enabled = true")
 public record Template(
-    @JsonIgnore
     @Id @GeneratedValue
     int id,
 
     String name,
-    @JsonIgnore
     boolean enabled,
-    @Relation(value = Kind.ONE_TO_MANY, mappedBy = "template", cascade = Cascade.ALL)
+
+    // It's assumed that this list is immutable and sorted by number
+    @Relation(value = Kind.ONE_TO_MANY, mappedBy = "id.template", cascade = Cascade.ALL)
     List<Question> questions
 ) {
 
-  @Creator
-  public static Template newSorted(int id, String name, boolean enabled, List<Question> questions) {
+  public Template {
     var list = new ArrayList<>(questions != null ? questions : List.of());
     list.sort(Comparator.comparingInt(Question::number));
-    return new Template(id, name, enabled, list);
+    questions = Collections.unmodifiableList(list);
   }
 }

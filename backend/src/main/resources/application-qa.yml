@@ -11,7 +11,4 @@ micronaut:
 flyway:
   datasources:
     default:
-      locations:
-        - classpath:db/migrations
-        - classpath:db/seeder
       clean-schema: true

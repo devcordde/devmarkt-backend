@@ -19,6 +19,7 @@ package club.devcord.devmarkt.services;
 import club.devcord.devmarkt.entities.template.Question;
 import club.devcord.devmarkt.entities.template.QuestionId;
 import club.devcord.devmarkt.entities.template.Template;
+import club.devcord.devmarkt.entities.template.TemplateUpdateInput;
 import club.devcord.devmarkt.entities.template.UpdateAction;
 import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.responses.Response;
@@ -26,8 +27,10 @@ import club.devcord.devmarkt.responses.Success;
 import club.devcord.devmarkt.responses.Templates;
 import club.devcord.devmarkt.util.Collections;
 import jakarta.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class TemplateService {
@@ -62,13 +65,16 @@ public class TemplateService {
   /*
   Updates an existing template based on its current values.
    */
-  public Response<Template> update(String templateName, Template updated) {
+  public Response<Template> update(String templateName, TemplateUpdateInput updated) {
     var currentTemplateOpt = templateRepo.findByName(templateName);
     if (currentTemplateOpt.isEmpty()) {
       return Templates.notFound(templateName);
     }
     var currentTemplate = currentTemplateOpt.get();
-    var questions = currentTemplate.questions();
+    var questions = new ArrayList<>(currentTemplate.questions());
+    questions.replaceAll(
+        this::removeInternalId); // remove old internalIds so that the questions are inserted (cascade)
+
     for (var question : updated.questions()) {
       if (question.updateAction() == null
           || (question.updateAction() != UpdateAction.APPEND
@@ -100,6 +106,12 @@ public class TemplateService {
         question.updateAction());
   }
 
+  private Question removeInternalId(Question question) {
+    return new Question(null, question.id(),
+        question.question(), question.multiline(), question.minAnswerLength(),
+        question.updateAction());
+  }
+
   private void recorderQuestion(List<Question> questions, int offset, int start) {
     questions.removeAll(java.util.Collections.singletonList(null));
     questions.sort(Comparator.comparingInt(Question::number));
@@ -127,5 +139,9 @@ public class TemplateService {
     var names = templateRepo.findName();
     names.sort(String::compareTo);
     return names;
+  }
+
+  public Optional<Template> findDirect(int id) {
+    return templateRepo.findById(id);
   }
 }

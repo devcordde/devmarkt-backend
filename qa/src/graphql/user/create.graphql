@@ -6,6 +6,18 @@ mutation ($id: UserIdInput!, $role: Role!) {
                 type
                 number
             }
+            applications {
+                answers {
+                    answer
+                    number
+                    question {
+                        question
+                        number
+                        minAnswerLength
+                        multiline
+                    }
+                }
+            }
         }
         ... on Failure {
             message

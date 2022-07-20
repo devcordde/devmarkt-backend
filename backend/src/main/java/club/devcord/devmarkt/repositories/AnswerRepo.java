@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-INSERT INTO users (id_type, user_id, role)
-VALUES ('testuser', 1, 'NONE'::role),
-       ('testuser', 2, 'USER'::role);
+package club.devcord.devmarkt.repositories;
+
+import club.devcord.devmarkt.entities.application.Answer;
+import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.model.query.builder.sql.Dialect;
+import io.micronaut.data.repository.CrudRepository;
+
+@JdbcRepository(dialect = Dialect.POSTGRES)
+public interface AnswerRepo extends CrudRepository<Answer, Integer> {
+
+}

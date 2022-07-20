@@ -46,7 +46,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
       var user = (User) env.getGraphQlContext().get("user");
 
       if (user == null) {
-        LOGGER.debug("Rejecting unauthorized request");
+        LOGGER.info("Rejecting unauthorized request");
         return DataFetcherResult.newResult()
             .error(new UnauthorizedError())
             .build();
@@ -55,7 +55,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
       if (user.role() == expectedRole || user.role() == Role.ADMIN) {
         return originalDataFetcher.get(env);
       }
-      LOGGER.debug("Rejecting forbidden request for user {}", user.id());
+      LOGGER.info("Rejecting forbidden request for user {}", user.id());
       return DataFetcherResult.newResult()
           .error(new ForbiddenError(environment.getFieldsContainer().getName(), field.getName()))
           .build();

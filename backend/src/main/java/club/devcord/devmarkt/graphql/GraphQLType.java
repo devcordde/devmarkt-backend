@@ -17,11 +17,9 @@
 package club.devcord.devmarkt.graphql;
 
 import jakarta.inject.Singleton;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@Inherited
 @Singleton
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GraphQLType {

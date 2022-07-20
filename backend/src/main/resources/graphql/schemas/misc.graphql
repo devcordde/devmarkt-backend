@@ -10,10 +10,12 @@ on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 directive @Range(min: Int = 0, max: Int = 2147483647, message: String = "graphql.validation.Range.message")
 on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 
-directive @Auth(role: String!)
-on FIELD_DEFINITION
+directive @Auth(role: String!) on FIELD_DEFINITION
+directive @AuthOwnApplication(idField: String!) on FIELD_DEFINITION # user must own application or be admin
 
 scalar PositiveInt
 scalar NonNegativeInt
 scalar Long
 scalar TemplateName
+scalar DateTime
+scalar ApplicationId

@@ -10,6 +10,10 @@ type Query {
     user(
         id: UserIdInput!
     ): UserResponse @Auth(role: "admin")
+
+    application(
+        id: ApplicationId!
+    ): ApplicationResponse @Auth(role: "user") @AuthOwnApplication(idField: "id")
 }
 
 type Mutation {
@@ -25,7 +29,7 @@ type Mutation {
     updateTemplate(
         name: TemplateName!
         updated: TemplateInput!
-    ): TemplateResponse! @Auth(role: "admin")
+    ): TemplateResponse @Auth(role: "admin")
 
     createUser(
         userId: UserIdInput!
@@ -34,12 +38,31 @@ type Mutation {
 
     deleteUser(
         userId: UserIdInput!
-    ): Boolean! @Auth(role: "admin")
+    ): Boolean @Auth(role: "admin")
 
     updateUserRole(
         userId: UserIdInput!
         role: Role!
-    ): UserResponse! @Auth(role: "admin")
+    ): UserResponse @Auth(role: "admin")
+
+    createApplication(
+        templateName: TemplateName!
+        answers: [AnswerInput!]!
+    ): ApplicationResponse @Auth(role: "user")
+
+    deleteApplication(
+        id: ApplicationId!
+    ): Boolean @Auth(role: "user") @AuthOwnApplication(idField: "id")
+
+    updateApplication(
+        id: ApplicationId!
+        updatedAnswers: [AnswerInput!]!
+    ): ApplicationResponse @Auth(role: "user") @AuthOwnApplication(idField: "id")
+
+    processApplication(
+        id: ApplicationId!
+        status: ApplicationStatus!
+    ): Boolean @Auth(role: "admin")
 }
 
 # common

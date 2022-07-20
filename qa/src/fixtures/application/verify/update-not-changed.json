@@ -1,0 +1,309 @@
+{
+  "data": {
+    "application": {
+      "__typename": "Application",
+      "id": 3,
+      "answers": [
+        {
+          "answer": "Lorem ipsum dolor sit amet, co N0",
+          "number": 0,
+          "question": {
+            "question": "Who am I?",
+            "number": 0,
+            "multiline": false,
+            "minAnswerLength": 1
+          }
+        },
+        {
+          "answer": "Lorem ipsum dolor sit amet, co N1",
+          "number": 1,
+          "question": {
+            "question": "What programming language do I know?",
+            "number": 1,
+            "multiline": false,
+            "minAnswerLength": 1
+          }
+        },
+        {
+          "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2",
+          "number": 2,
+          "question": {
+            "question": "Why should you choose me?",
+            "number": 2,
+            "multiline": true,
+            "minAnswerLength": 500
+          }
+        }
+      ],
+      "status": "REJECTED",
+      "processTime": null,
+      "template": {
+        "questions": [
+          {
+            "number": 0,
+            "minAnswerLength": 1,
+            "multiline": false,
+            "question": "Who am I?"
+          },
+          {
+            "number": 1,
+            "minAnswerLength": 1,
+            "multiline": false,
+            "question": "What programming language do I know?"
+          },
+          {
+            "number": 2,
+            "minAnswerLength": 500,
+            "multiline": true,
+            "question": "Why should you choose me?"
+          }
+        ],
+        "name": "Dev offered"
+      },
+      "user": {
+        "id": {
+          "number": 1,
+          "type": "testuser"
+        },
+        "role": "NONE",
+        "applications": [
+          {
+            "id": 1,
+            "processTime": null,
+            "status": "UNPROCESSED",
+            "answers": [
+              {
+                "question": {
+                  "question": "Who am I?",
+                  "multiline": false,
+                  "minAnswerLength": 1,
+                  "number": 0
+                },
+                "answer": "Lorem ipsum dolor sit amet, co N0"
+              },
+              {
+                "question": {
+                  "question": "What programming language do I know?",
+                  "multiline": false,
+                  "minAnswerLength": 1,
+                  "number": 1
+                },
+                "answer": "Lorem ipsum dolor sit amet, co N1"
+              },
+              {
+                "question": {
+                  "question": "Why should you choose me?",
+                  "multiline": true,
+                  "minAnswerLength": 500,
+                  "number": 2
+                },
+                "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2"
+              }
+            ],
+            "user": {
+              "role": "NONE",
+              "applications": [
+                {
+                  "id": 1,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "answers": []
+                }
+              ]
+            },
+            "template": {
+              "name": "Dev offered",
+              "questions": [
+                {
+                  "number": 0,
+                  "minAnswerLength": 1,
+                  "multiline": false,
+                  "question": "Who am I?"
+                },
+                {
+                  "number": 1,
+                  "minAnswerLength": 1,
+                  "multiline": false,
+                  "question": "What programming language do I know?"
+                },
+                {
+                  "number": 2,
+                  "minAnswerLength": 500,
+                  "multiline": true,
+                  "question": "Why should you choose me?"
+                }
+              ]
+            }
+          },
+          {
+            "id": 3,
+            "processTime": null,
+            "status": "REJECTED",
+            "answers": [
+              {
+                "question": {
+                  "question": "Who am I?",
+                  "multiline": false,
+                  "minAnswerLength": 1,
+                  "number": 0
+                },
+                "answer": "Lorem ipsum dolor sit amet, co N0"
+              },
+              {
+                "question": {
+                  "question": "What programming language do I know?",
+                  "multiline": false,
+                  "minAnswerLength": 1,
+                  "number": 1
+                },
+                "answer": "Lorem ipsum dolor sit amet, co N1"
+              },
+              {
+                "question": {
+                  "question": "Why should you choose me?",
+                  "multiline": true,
+                  "minAnswerLength": 500,
+                  "number": 2
+                },
+                "answer": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore\net dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet c\nlita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se\nd diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et e\n N2"
+              }
+            ],
+            "user": {
+              "role": "NONE",
+              "applications": [
+                {
+                  "id": 1,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "answers": []
+                }
+              ]
+            },
+            "template": {
+              "name": "Dev offered",
+              "questions": [
+                {
+                  "number": 0,
+                  "minAnswerLength": 1,
+                  "multiline": false,
+                  "question": "Who am I?"
+                },
+                {
+                  "number": 1,
+                  "minAnswerLength": 1,
+                  "multiline": false,
+                  "question": "What programming language do I know?"
+                },
+                {
+                  "number": 2,
+                  "minAnswerLength": 500,
+                  "multiline": true,
+                  "question": "Why should you choose me?"
+                }
+              ]
+            }
+          },
+          {
+            "id": 2,
+            "processTime": null,
+            "status": "ACCEPTED",
+            "answers": [],
+            "user": {
+              "role": "NONE",
+              "applications": [
+                {
+                  "id": 1,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "answers": [
+                    {
+                      "number": 0
+                    },
+                    {
+                      "number": 1
+                    },
+                    {
+                      "number": 2
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "answers": []
+                }
+              ]
+            },
+            "template": {
+              "name": "Empty template",
+              "questions": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -16,11 +16,14 @@
 
 package club.devcord.devmarkt;
 
+import club.devcord.devmarkt.repositories.TemplateRepo;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -64,6 +67,10 @@ public class DevelopmentStartup implements ApplicationEventListener<StartupEvent
     )).get());
     LOGGER.info("notKnown_user 'not_known:1' userid: {}", generator.generateToken(Map.of(
         "sub", "notKnown:1",
+        "iat", 1516239022
+    )).get());
+    LOGGER.info("testuser:3 userid: {}", generator.generateToken(Map.of(
+        "sub", "testuser:3",
         "iat", 1516239022
     )).get());
 

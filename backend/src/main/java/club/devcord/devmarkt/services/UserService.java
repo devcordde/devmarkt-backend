@@ -54,7 +54,7 @@ public class UserService {
   }
 
   public User createDefaultUserUnsafe(UserId userId) {
-    var user = new User(userId, Role.USER);
+    var user = new User(-1, userId, Role.USER);
     repo.save(user);
     return user;
   }
@@ -63,14 +63,14 @@ public class UserService {
     if (repo.existsById(userId)) {
       return Users.duplicated(userId);
     }
-    var saved = repo.save(new User(userId, role));
+    var saved = repo.save(new User(-1, userId, role));
     return new Success<>(saved);
   }
 
   public Response<User> updateRole(UserId userId, Role role) {
     var updated = repo.updateById(userId, role);
     return updated != 0
-        ? new Success<>(new User(userId, role))
+        ? new Success<>(new User(-1, userId, role))
         : Users.notFound(userId);
   }
 }

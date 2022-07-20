@@ -1,0 +1,9 @@
+{
+  "data": {
+    "updateApplication": {
+      "__typename": "Failure",
+      "message": "An application with the ID '3' was not found.",
+      "errorCode": "NOT_FOUND"
+    }
+  }
+}
