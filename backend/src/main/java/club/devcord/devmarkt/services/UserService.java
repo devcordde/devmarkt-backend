@@ -68,6 +68,10 @@ public class UserService {
   }
 
   public Response<User> updateRole(UserId userId, Role role) {
+    if (Admins.isAdminUserId(userId)) {
+      return Users.adminUserModify();
+    }
+
     var updated = repo.updateById(userId, role);
     return updated != 0
         ? new Success<>(new User(-1, userId, role))
