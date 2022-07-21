@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.util;
+package club.devcord.devmarkt.responses.failure.application;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.function.Function;
+import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.graphql.GraphQLType;
+import club.devcord.devmarkt.responses.failure.ErrorData;
 
-public final class Collections {
-
-  private Collections() {
-  }
-
-  public static <T, R> Collection<R> ambiguousEntries(Collection<T> collection,
-      Function<T, R> identity) {
-    var knownKeys = new HashSet<R>(collection.size());
-    var ambiguousEntries = new HashSet<R>();
-    for (var entry : collection) {
-      var id = identity.apply(entry);
-      if (!knownKeys.add(id)) {
-        ambiguousEntries.add(id);
-      }
-    }
-    return ambiguousEntries;
-  }
+@GraphQLType
+public record AnswerTooShortApplicationErrorData(
+    int answerLength,
+    int minimumLength,
+    int number
+) implements ErrorData<Application> {
 
 }

@@ -105,10 +105,14 @@ public class GraphQLFactory {
   private void registerTypes(SchemaParserBuilder builder, BeanContext context) {
     context.getBeanDefinitions(Qualifiers.byStereotype(GraphQLType.class))
         .forEach(beanDefinition -> {
-          var type = beanDefinition.stringValue(GraphQLType.class).orElseThrow();
+          var type = beanDefinition.stringValue(GraphQLType.class);
           var beanType = beanDefinition.getBeanType();
-          builder.dictionary(type, beanType);
-          LOGGER.info("GraphQL Type {} mapped to class {}.", type, beanType);
+
+          var typeName = type.isEmpty()
+              ? beanType.getSimpleName()
+              : type.get();
+          builder.dictionary(typeName, beanType);
+          LOGGER.info("GraphQL Type {} mapped to class {}.", typeName, beanType);
         });
   }
 

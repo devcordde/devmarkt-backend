@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.util;
+package club.devcord.devmarkt.responses.failure;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.function.Function;
+import club.devcord.devmarkt.graphql.GraphQLType;
 
-public final class Collections {
+@GraphQLType("Error")
+public record Error<T>(
+    String code,
+    // We're not able to use the ErrorData interface here because of a weird graphql error,
+    // nevertheless type safety is guaranteed by the constructor
+    Object data
+) {
 
-  private Collections() {
+  public Error(ErrorCode<T> code, ErrorData<T> data) {
+    this(code.name(), data);
   }
-
-  public static <T, R> Collection<R> ambiguousEntries(Collection<T> collection,
-      Function<T, R> identity) {
-    var knownKeys = new HashSet<R>(collection.size());
-    var ambiguousEntries = new HashSet<R>();
-    for (var entry : collection) {
-      var id = identity.apply(entry);
-      if (!knownKeys.add(id)) {
-        ambiguousEntries.add(id);
-      }
-    }
-    return ambiguousEntries;
-  }
-
 }

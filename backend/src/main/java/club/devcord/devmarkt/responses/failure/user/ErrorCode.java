@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses;
+package club.devcord.devmarkt.responses.failure.user;
 
-import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.auth.User;
 
-public interface Questions {
-
-  static Failure<Question> templateNotFound(String templateName) {
-    return new Failure<>(Errors.TEMPLATE_NOT_FOUND.name(),
-        "No template called '%s' was found.".formatted(templateName));
-  }
-
-  static Failure<Question> questionNotFound(String templateName, int number) {
-    return new Failure<>(Errors.QUESTION_NOT_FOUND.name(),
-        "Template '%s' has no question with number %s".formatted(templateName, number));
-  }
-
-  enum Errors {
-    TEMPLATE_NOT_FOUND,
-    QUESTION_NOT_FOUND
-  }
-
+public enum ErrorCode implements club.devcord.devmarkt.responses.failure.ErrorCode<User> {
+  NOT_FOUND,
+  DUPLICATED,
+  ADMIN_USER_CANT_BE_MODIFIED
 }
-

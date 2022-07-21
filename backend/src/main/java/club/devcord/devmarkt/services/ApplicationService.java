@@ -25,11 +25,16 @@ import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.repositories.AnswerRepo;
 import club.devcord.devmarkt.repositories.ApplicationRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
-import club.devcord.devmarkt.responses.Applications;
+import club.devcord.devmarkt.responses.Failure;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.failure.Error;
+import club.devcord.devmarkt.responses.failure.application.AnswerTooShortApplicationErrorData;
+import club.devcord.devmarkt.responses.failure.application.ErrorCode;
+import club.devcord.devmarkt.responses.failure.application.NumberApplicationErrorData;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
@@ -51,7 +56,7 @@ public class ApplicationService {
   public Response<Application> application(int id) {
     return applicationRepo.findById(id)
         .map(Success::response)
-        .orElseGet(() -> Applications.notFound(id));
+        .orElseGet(() -> new Failure<>(ErrorCode.NOT_FOUND));
   }
 
   public boolean isOwnApplication(int applicationId, User user) {
@@ -83,21 +88,20 @@ public class ApplicationService {
   public Response<Application> createApplication(String templateName, ArrayList<Answer> answers,
       User user) {
     if (applicationRepo.existsUnprocessedByUser(user)) {
-      return Applications.hasUnprocessedApplication(user.id());
+      return new Failure<>(ErrorCode.HAS_UNPROCESSED_APPLICATION);
     }
 
     var templateOpt = templateRepo.findByName(templateName);
     if (templateOpt.isEmpty()) {
-      return Applications.templateNotFound(templateName);
-    }
-    var template = templateOpt.get();
-    var validationResponse = validateAndPrepareAnswers(answers, template, answer -> null, null);
-    if (validationResponse != null) {
-      return validationResponse;
+      return new Failure<>(ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
-    if (template.questions().size() != answers.size()) {
-      return Applications.questionsUnanswered();
+    var errors = new ArrayList<Error<Application>>();
+    var template = templateOpt.get();
+    validateAndPrepareAnswers(answers, template, answer -> null, null, errors);
+
+    if (!errors.isEmpty()) {
+      return new Failure<>(errors);
     }
 
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
@@ -106,29 +110,43 @@ public class ApplicationService {
     return new Success<>(saved);
   }
 
-  private Response<Application> validateAndPrepareAnswers(ArrayList<Answer> answers,
-      Template template, Function<Answer, Integer> numberFunc, Application application) {
+  private boolean containsNumber(Collection<Answer> answers, int number) {
+    return answers.stream().anyMatch(answer -> answer.number() == number);
+  }
+
+  private void validateAndPrepareAnswers(ArrayList<Answer> answers,
+      Template template, Function<Answer, Integer> numberFunc, Application application,
+      Collection<Error<Application>> errors) {
     var knownNumbers = new HashSet<Integer>(answers.size());
+    var unansweredQuestions = new ArrayList<>(template.questions());
     for (int i = 0; i < answers.size(); i++) {
       var answer = answers.get(i);
       var number = answer.number();
       if (knownNumbers.contains(number)) { // check if number is unique
-        return Applications.ambiguousAnswerNumber(number);
+        var error = new Error<>(ErrorCode.AMBIGUOUS_ANSWER_NUMBER,
+            new NumberApplicationErrorData(number));
+        if (!errors.contains(error)) {
+          errors.add(error); // prevent duplicated errors
+        }
       }
       if (number >= template.questions().size()) { // check if a corresponding question exists
-        return Applications.noQuestion(number);
+        errors.add(new Error<>(ErrorCode.NO_QUESTION, new NumberApplicationErrorData(number)));
       }
       var question = template.questions().get(number);
       if (answer.answer().length()
           < question.minAnswerLength()) { // check if answer has minimum length
-        return Applications.answerTooShort(answer.answer().length(), question.minAnswerLength(),
-            number);
+        errors.add(new Error<>(ErrorCode.ANSWER_TOO_SHORT,
+            new AnswerTooShortApplicationErrorData(answer.answer().length(),
+                question.minAnswerLength(), number)));
       }
       var preparedAnswer = prepareAnswer(answer, question, numberFunc.apply(answer), application);
       answers.set(i, preparedAnswer);
       knownNumbers.add(number);
     }
-    return null;
+    for (var question : unansweredQuestions) {
+      errors.add(new Error<>(ErrorCode.QUESTION_UNANSWERED,
+          new NumberApplicationErrorData(question.number())));
+    }
   }
 
 
@@ -142,27 +160,28 @@ public class ApplicationService {
     var infoOpt = applicationRepo.findById(
         id); // since relations aren't supported in dto projections yet, it's the easiest to fetch the whole application
     if (infoOpt.isEmpty()) {
-      return Applications.notFound(id);
+      return new Failure<>(ErrorCode.NOT_FOUND);
     }
     var applicationInfo = infoOpt.get();
 
     if (applicationInfo.status() == ApplicationStatus.ACCEPTED) {
-      return Applications.alreadyAccepted(id);
+      return new Failure<>(ErrorCode.ALREADY_ACCEPTED);
     }
 
     var template = templateRepo.findById(applicationInfo.template().id());
     if (template.isEmpty()) {
-      return Applications.templateNotFound(applicationInfo.template().name());
+      return new Failure<>(ErrorCode.TEMPLATE_NOT_FOUND);
     }
-    var validationResponse = validateAndPrepareAnswers(newAnswers, template.get(),
-        answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo);
-    if (validationResponse != null) {
-      return validationResponse;
+    var errors = new ArrayList<Error<Application>>();
+    validateAndPrepareAnswers(newAnswers, template.get(),
+        answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo, errors);
+    if (!errors.isEmpty()) {
+      return new Failure<>(errors);
     }
     answerRepo.updateAll(newAnswers);
     var updated = applicationRepo.findById(id);
     if (updated.isEmpty()) {
-      return Applications.notFound(id);
+      return new Failure<>(ErrorCode.NOT_FOUND);
     }
     return new Success<>(updated.get());
   }

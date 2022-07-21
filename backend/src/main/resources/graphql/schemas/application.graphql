@@ -15,6 +15,16 @@ enum ApplicationStatus {
     ACCEPTED
 }
 
+type NumberApplicationErrorData {
+    number: NonNegativeInt!
+}
+
+type AnswerTooShortApplicationErrorData {
+    answerLength: NonNegativeInt!
+    minimumLength: PositiveInt!
+    number: NonNegativeInt!
+}
+
 union ApplicationResponse = Application | Failure
 
 type Application {
