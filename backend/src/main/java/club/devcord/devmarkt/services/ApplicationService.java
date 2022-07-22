@@ -98,7 +98,7 @@ public class ApplicationService {
 
     var errors = new ArrayList<Error<Application>>();
     var template = templateOpt.get();
-    validateAndPrepareAnswers(answers, template, answer -> null, null, errors);
+    validateAndPrepareAnswers(answers, template, answer -> null, null, errors, true);
 
     if (!errors.isEmpty()) {
       return new Failure<>(errors);
@@ -116,7 +116,7 @@ public class ApplicationService {
 
   private void validateAndPrepareAnswers(ArrayList<Answer> answers,
       Template template, Function<Answer, Integer> numberFunc, Application application,
-      Collection<Error<Application>> errors) {
+      Collection<Error<Application>> errors, boolean checkUnansweredQuestions) {
     var knownNumbers = new HashSet<Integer>(answers.size());
     var unansweredQuestions = new ArrayList<>(template.questions());
     for (int i = 0; i < answers.size(); i++) {
@@ -147,9 +147,11 @@ public class ApplicationService {
       knownNumbers.add(number);
       unansweredQuestions.removeIf(question1 -> question1.number() == number);
     }
-    for (var question : unansweredQuestions) {
-      errors.add(new Error<>(ErrorCode.QUESTION_UNANSWERED,
-          new NumberApplicationErrorData(question.number())));
+    if (checkUnansweredQuestions) {
+      for (var question : unansweredQuestions) {
+        errors.add(new Error<>(ErrorCode.QUESTION_UNANSWERED,
+            new NumberApplicationErrorData(question.number())));
+      }
     }
   }
 
@@ -178,7 +180,7 @@ public class ApplicationService {
     }
     var errors = new ArrayList<Error<Application>>();
     validateAndPrepareAnswers(newAnswers, template.get(),
-        answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo, errors);
+        answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo, errors, false);
     if (!errors.isEmpty()) {
       return new Failure<>(errors);
     }

@@ -2,8 +2,12 @@
   "data": {
     "createApplication": {
       "__typename": "Failure",
-      "message": "The user 'testuser:3' has already one unprocessed application.",
-      "errorCode": "HAS_UNPROCESSED_APPLICATION"
+      "errors": [
+        {
+          "code": "HAS_UNPROCESSED_APPLICATION",
+          "data": null
+        }
+      ]
     }
   }
 }

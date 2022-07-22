@@ -2,8 +2,14 @@
   "data": {
     "updateApplication": {
       "__typename": "Failure",
-      "message": "There's no question with number '6'.",
-      "errorCode": "NO_QUESTION"
+      "errors": [
+        {
+          "code": "NO_QUESTION",
+          "data": {
+            "number": 6
+          }
+        }
+      ]
     }
   }
 }

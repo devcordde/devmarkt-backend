@@ -2,8 +2,14 @@ query($name: TemplateName!){
     template(name: $name) {
         __typename
         ... on Failure {
-            errorCode
-            message
+            errors {
+                code
+                data {
+                    ... on NumberTemplateErrorData {
+                        number
+                    }
+                }
+            }
         }
         ... on Template {
             name

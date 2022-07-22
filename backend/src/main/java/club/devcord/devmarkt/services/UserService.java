@@ -62,7 +62,7 @@ public class UserService {
 
   public Response<User> save(UserId userId, Role role) {
     if (repo.existsById(userId)) {
-      return new Failure<>(ErrorCode.NOT_FOUND);
+      return new Failure<>(ErrorCode.DUPLICATED);
     }
     var saved = repo.save(new User(-1, userId, role));
     return new Success<>(saved);
