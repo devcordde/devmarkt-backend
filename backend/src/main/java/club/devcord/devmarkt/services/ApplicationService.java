@@ -127,10 +127,12 @@ public class ApplicationService {
             new NumberApplicationErrorData(number));
         if (!errors.contains(error)) {
           errors.add(error); // prevent duplicated errors
+          continue;
         }
       }
       if (number >= template.questions().size()) { // check if a corresponding question exists
         errors.add(new Error<>(ErrorCode.NO_QUESTION, new NumberApplicationErrorData(number)));
+        continue;
       }
       var question = template.questions().get(number);
       if (answer.answer().length()
@@ -138,10 +140,12 @@ public class ApplicationService {
         errors.add(new Error<>(ErrorCode.ANSWER_TOO_SHORT,
             new AnswerTooShortApplicationErrorData(answer.answer().length(),
                 question.minAnswerLength(), number)));
+        continue;
       }
       var preparedAnswer = prepareAnswer(answer, question, numberFunc.apply(answer), application);
       answers.set(i, preparedAnswer);
       knownNumbers.add(number);
+      unansweredQuestions.removeIf(question1 -> question1.number() == number);
     }
     for (var question : unansweredQuestions) {
       errors.add(new Error<>(ErrorCode.QUESTION_UNANSWERED,
