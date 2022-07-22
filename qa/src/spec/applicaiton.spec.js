@@ -168,7 +168,7 @@ const tests = [
   {
     name: "delete Application",
     query: "application/delete.graphql",
-    variables: {id: 8},
+    variables: {id: 7},
     matrix: [
       {
         name: "success",
@@ -277,54 +277,54 @@ const tests = [
       {
         name: "success - accept",
         response: "application/process.json",
-        variables: {id: 9, status: 'ACCEPTED'},
+        variables: {id: 7, status: 'ACCEPTED'},
         before: {
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
         },
         after: {
           query: "application/delete.graphql",
-          variables: {id: 9},
+          variables: {id: 7},
         },
         verify: {
           query: "application/application.graphql",
-          variables: {id: 9},
+          variables: {id: 7},
           response: "application/verify/process-accept.json"
         }
       },
       {
         name: "success - rejected",
         response: "application/process.json",
-        variables: {id: 10, status: 'REJECTED'},
+        variables: {id: 7, status: 'REJECTED'},
         before: {
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
         },
         after: {
           query: "application/delete.graphql",
-          variables: {id: 10},
+          variables: {id: 7},
         },
         verify: {
           query: "application/application.graphql",
-          variables: {id: 10},
+          variables: {id: 7},
           response: "application/verify/process-reject.json"
         }
       },
       {
         name: "status unprocessed",
         response: "application/process-false.json",
-        variables: {id: 11, status: 'UNPROCESSED'},
+        variables: {id: 7, status: 'UNPROCESSED'},
         before: {
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
         },
         after: {
           query: "application/delete.graphql",
-          variables: {id: 11},
+          variables: {id: 7},
         },
         verify: {
           query: "application/application.graphql",
-          variables: {id: 11},
+          variables: {id: 7},
           response: "application/verify/process-unprocessed.json"
         }
       },

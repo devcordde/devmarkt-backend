@@ -2,7 +2,7 @@
   "data": {
     "application": {
       "__typename": "Application",
-      "id": 9,
+      "id": 7,
       "answers": [],
       "status": "ACCEPTED",
       "processTime": null,
@@ -18,7 +18,7 @@
         "role": "ADMIN",
         "applications": [
           {
-            "id": 9,
+            "id": 7,
             "processTime": null,
             "status": "ACCEPTED",
             "answers": [],
@@ -26,7 +26,7 @@
               "role": "ADMIN",
               "applications": [
                 {
-                  "id": 9,
+                  "id": 7,
                   "answers": []
                 }
               ]
