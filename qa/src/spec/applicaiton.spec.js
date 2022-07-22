@@ -92,10 +92,6 @@ const tests = [
         name: "success",
         variables: applicationVariables("Dev offered", validLastAnswer),
         response: "application/create-success.json",
-        after: {
-          query: "application/delete.graphql",
-          variables: {id: 7}
-        },
         verify: {
           query: "application/application.graphql",
           variables: {id: 7},
@@ -219,10 +215,6 @@ const tests = [
         auth: Authorization.ADMIN,
         variables: {id: 3, answers: [{number: 0, answer: "updated answer n0"}]},
         response: "application/update.json",
-        after: {
-          query: "application/update.graphql",
-          variables: {id: 3, answers: [{number: 0, answer: "Lorem ipsum dolor sit amet, co N0"}]}
-        },
         verify: {
           query: "application/application.graphql",
           response: "application/verify/update.json",
@@ -282,10 +274,6 @@ const tests = [
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
         },
-        after: {
-          query: "application/delete.graphql",
-          variables: {id: 7},
-        },
         verify: {
           query: "application/application.graphql",
           variables: {id: 7},
@@ -300,10 +288,6 @@ const tests = [
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
         },
-        after: {
-          query: "application/delete.graphql",
-          variables: {id: 7},
-        },
         verify: {
           query: "application/application.graphql",
           variables: {id: 7},
@@ -317,10 +301,6 @@ const tests = [
         before: {
           query: "application/create.graphql",
           variables: unprocessedApplicationVars
-        },
-        after: {
-          query: "application/delete.graphql",
-          variables: {id: 7},
         },
         verify: {
           query: "application/application.graphql",
