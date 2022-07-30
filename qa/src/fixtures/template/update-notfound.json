@@ -2,8 +2,12 @@
   "data": {
     "updateTemplate": {
       "__typename": "Failure",
-      "message": "No template called 'Not existing template' was found.",
-      "errorCode": "NOT_FOUND"
+      "errors": [
+        {
+          "code": "NOT_FOUND",
+          "data": null
+        }
+      ]
     }
   }
 }

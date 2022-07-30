@@ -2,8 +2,12 @@
   "data": {
     "createApplication": {
       "__typename": "Failure",
-      "errorCode": "TEMPLATE_NOT_FOUND",
-      "message": "A template with the name 'not existing template' wasn't found."
+      "errors": [
+        {
+          "code": "TEMPLATE_NOT_FOUND",
+          "data": null
+        }
+      ]
     }
   }
 }

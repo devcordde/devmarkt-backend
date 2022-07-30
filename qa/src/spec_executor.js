@@ -15,6 +15,14 @@
  */
 
 import test, {Authorization, execute, load} from "./executor.js";
+import fetch from "node-fetch";
+
+function reseedDatabase() {
+  return fetch(`${process.env.BACKEND_HOST}/qa/seedDatabase`, {
+    method: "post"
+  });
+}
+
 
 export function executeTests(suiteName, tests = []) {
   tests.forEach(({
@@ -81,6 +89,7 @@ function runTest({
 }) {
   describe(name, () => {
     describe(itName, () => {
+      beforeAll(async () => await reseedDatabase())
       beforeAll(wrapHookIfNeeded(before));
       afterAll(wrapHookIfNeeded(after));
 

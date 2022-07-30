@@ -64,8 +64,19 @@ mutation ($id: ApplicationId!, $answers: [AnswerInput!]!) {
             }
         }
         ... on Failure {
-            message
-            errorCode
+            errors {
+                code
+                data {
+                    ... on AnswerTooShortApplicationErrorData {
+                        answerLength
+                        minimumLength
+                        number
+                    }
+                    ... on NumberApplicationErrorData {
+                        number
+                    }
+                }
+            }
         }
     }
 }

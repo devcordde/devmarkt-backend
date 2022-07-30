@@ -57,10 +57,6 @@ const tests = [
         response: "user/create-success.json",
         verify: {
           response: "user/verify/create.json"
-        },
-        after: {
-          query: "user/delete.graphql",
-          variables: {id: {type: "the_answer_of_all", number: 49}}
         }
       },
       {

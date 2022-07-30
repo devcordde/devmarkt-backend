@@ -9,9 +9,15 @@ mutation($questions: [QuestionInput!]!, $name: TemplateName!) {
                 multiline
             }
         }
-        ...on Failure {
-            errorCode
-            message
+        ... on Failure {
+            errors {
+                code
+                data {
+                    ... on NumberTemplateErrorData {
+                        number
+                    }
+                }
+            }
         }
     }
 }

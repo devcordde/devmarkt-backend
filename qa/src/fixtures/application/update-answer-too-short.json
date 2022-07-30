@@ -2,8 +2,16 @@
   "data": {
     "updateApplication": {
       "__typename": "Failure",
-      "message": "The answer with number 2 has 4 characters but needs minimum 500",
-      "errorCode": "ANSWER_TOO_SHORT"
+      "errors": [
+        {
+          "code": "ANSWER_TOO_SHORT",
+          "data": {
+            "answerLength": 4,
+            "minimumLength": 500,
+            "number": 2
+          }
+        }
+      ]
     }
   }
 }
