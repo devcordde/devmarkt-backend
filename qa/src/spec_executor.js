@@ -20,7 +20,7 @@ import fetch from "node-fetch";
 function reseedDatabase() {
   return fetch(`${process.env.BACKEND_HOST}/qa/seedDatabase`, {
     method: "post"
-  }).then(r => r)
+  });
 }
 
 
