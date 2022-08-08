@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt;
+package club.devcord.devmarkt.qa;
 
 import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.entities.application.Answer;
@@ -30,8 +30,11 @@ import club.devcord.devmarkt.repositories.UserRepo;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.event.ApplicationStartupEvent;
+import io.micronaut.transaction.exceptions.TransactionSystemException;
+import io.micronaut.transaction.jdbc.DataSourceTransactionManager;
 import jakarta.inject.Singleton;
 import java.util.List;
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +48,10 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
   private final UserRepo userRepo;
   private final ApplicationRepo applicationRepo;
 
+  private final DataSourceTransactionManager dataSourceTransactionManager;
+
+  private final Flyway flyway;
+
   private Template devSearched;
   private Template devOffered;
   private Template emptyTemplate;
@@ -54,14 +61,35 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
   private User secondUserUser;
 
   public QaDatabaseSeeding(TemplateRepo templateRepo,
-      UserRepo userRepo, ApplicationRepo applicationRepo) {
+      UserRepo userRepo, ApplicationRepo applicationRepo,
+      DataSourceTransactionManager dataSourceTransactionManager, Flyway flyway) {
     this.templateRepo = templateRepo;
     this.userRepo = userRepo;
     this.applicationRepo = applicationRepo;
+    this.dataSourceTransactionManager = dataSourceTransactionManager;
+    this.flyway = flyway;
   }
 
   @Override
   public void onApplicationEvent(ApplicationStartupEvent event) {
+    seed();
+  }
+
+  public void reseedDatabase() {
+    LOGGER.info("Reseeding database");
+    try {
+      flyway.clean();
+      flyway.migrate();
+      seed();
+    } catch (TransactionSystemException e) {
+      LOGGER.info("TransactionSystemException occurred, might be have something to do with prepared statement caching."
+          + "Retrying...");
+      // As this is only used for qa tests, this should be fine to avoid errors with caching (retrying solves them usually here)
+      reseedDatabase();
+    }
+  }
+
+  private void seed() {
     LOGGER.info("Starting database seeding");
     seedTemplates();
     seedUsers();

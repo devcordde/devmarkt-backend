@@ -20,8 +20,9 @@ mutation ($id: UserIdInput!, $role: Role!) {
             }
         }
         ... on Failure {
-            message
-            errorCode
+            errors {
+                code
+            }
         }
     }
 }

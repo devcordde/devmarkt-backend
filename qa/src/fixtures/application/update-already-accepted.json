@@ -2,8 +2,12 @@
   "data": {
     "updateApplication": {
       "__typename": "Failure",
-      "message": "The application with id 4 is already accepted.",
-      "errorCode": "ALREADY_ACCEPTED"
+      "errors": [
+        {
+          "code": "ALREADY_ACCEPTED",
+          "data": null
+        }
+      ]
     }
   }
 }

@@ -11,8 +11,14 @@ mutation ($name: TemplateName!, $updated: TemplateInput!){
             }
         }
         ... on Failure {
-            errorCode
-            message
+            errors {
+                code
+                data {
+                    ... on NumberTemplateErrorData {
+                        number
+                    }
+                }
+            }
         }
     }
 }

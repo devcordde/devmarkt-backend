@@ -2,8 +2,14 @@
   "data": {
     "updateApplication": {
       "__typename": "Failure",
-      "message": "The number '0' is ambiguous.",
-      "errorCode": "AMBIGUOUS_ANSWER_NUMBER"
+      "errors": [
+        {
+          "code": "AMBIGUOUS_ANSWER_NUMBER",
+          "data": {
+            "number": 0
+          }
+        }
+      ]
     }
   }
 }

@@ -17,11 +17,26 @@
 package club.devcord.devmarkt.responses;
 
 import club.devcord.devmarkt.graphql.GraphQLType;
+import club.devcord.devmarkt.responses.failure.Error;
+import club.devcord.devmarkt.responses.failure.ErrorCode;
+import club.devcord.devmarkt.responses.failure.ErrorData;
+import java.util.Collection;
+import java.util.Collections;
 
-@GraphQLType("Failure")
+@GraphQLType
 public record Failure<T>(
-    String errorCode,
-    String message
+    Collection<Error<T>> errors
 ) implements Response<T> {
+
+  public Failure(ErrorCode<T> code) {
+    this(code, (ErrorData<T>) null);
+  }
+  public Failure(ErrorCode<T> code, ErrorData<T> data) {
+    this(Collections.singletonList(new Error<>(code, data)));
+  }
+
+  public Failure(ErrorCode<T> code, Collection<ErrorData<T>> data) {
+    this(data.stream().map(eD -> new Error<>(code, eD)).toList());
+  }
 
 }

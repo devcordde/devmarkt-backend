@@ -64,8 +64,19 @@ mutation ($tName: TemplateName!, $answers: [AnswerInput!]!) {
             }
         }
         ... on Failure {
-            message
-            errorCode
+            errors {
+                code
+                data {
+                    ... on AnswerTooShortApplicationErrorData {
+                        answerLength
+                        minimumLength
+                        number
+                    }
+                    ... on NumberApplicationErrorData {
+                        number
+                    }
+                }
+            }
         }
     }
 }

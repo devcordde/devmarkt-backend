@@ -2,8 +2,20 @@
   "data": {
     "createApplication": {
       "__typename": "Failure",
-      "message": "The number '0' is ambiguous.",
-      "errorCode": "AMBIGUOUS_ANSWER_NUMBER"
+      "errors": [
+        {
+          "code": "AMBIGUOUS_ANSWER_NUMBER",
+          "data": {
+            "number": 0
+          }
+        },
+        {
+          "code": "QUESTION_UNANSWERED",
+          "data": {
+            "number": 2
+          }
+        }
+      ]
     }
   }
 }

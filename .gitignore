@@ -42,3 +42,4 @@ build
 node_modules/
 
 .graphqlconfig
+.application.log*

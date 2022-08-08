@@ -63,10 +63,6 @@ const tests = [
         verify: {
           query: "template/template.graphql",
           response: "template/verify/create.json"
-        },
-        after: {
-          query: "template/delete-template.graphql",
-          variables: {name: "PermissionTemplate"}
         }
       },
       {
@@ -134,16 +130,6 @@ const tests = [
           }
         },
         response: "template/update-name.json",
-        after: {
-          query: "template/update-template.graphql",
-          variables: {
-            name: "Updated name",
-            updated: {
-              name: "Dev searched",
-              questions: []
-            }
-          },
-        },
         verify: {
           response: "template/verify/update-name.json"
         }
@@ -191,23 +177,6 @@ const tests = [
         response: "template/update-append-question.json",
         verify: {
           response: "template/verify/update-append-question.json"
-        },
-        after: {
-          query: "template/update-template.graphql",
-          variables: {
-            name: "Dev searched",
-            updated: {
-              questions: [
-                {
-                  number: 4,
-                  question: "Appended Question",
-                  multiline: false,
-                  minAnswerLength: 10,
-                  updateAction: "DELETE"
-                }
-              ]
-            }
-          },
         }
       },
       {
@@ -257,23 +226,6 @@ const tests = [
         response: "template/update-insert.json",
         verify: {
           response: "template/verify/update-insert.json"
-        },
-        after: {
-          query: "template/update-template.graphql",
-          variables: {
-            name: "Dev searched",
-            updated: {
-              questions: [
-                {
-                  number: 2,
-                  question: "Inserted Question",
-                  multiline: false,
-                  minAnswerLength: 10,
-                  updateAction: "DELETE"
-                }
-              ]
-            }
-          },
         }
       },
       {
@@ -326,23 +278,6 @@ const tests = [
         response: "template/update-replace.json",
         verify: {
           response: "template/verify/update-replace.json"
-        },
-        after: {
-          query: "template/update-template.graphql",
-          variables: {
-            name: "Dev searched",
-            updated: {
-              questions: [
-                {
-                  number: 2,
-                  question: "What programming languages should you know?",
-                  multiline: false,
-                  minAnswerLength: 1,
-                  updateAction: "REPLACE"
-                }
-              ]
-            }
-          },
         }
       },
       {
@@ -395,23 +330,6 @@ const tests = [
         response: "template/update-delete.json",
         verify: {
           response: "template/verify/update-delete.json"
-        },
-        after: {
-          query: "template/update-template.graphql",
-          variables: {
-            name: "Dev searched",
-            updated: {
-              questions: [
-                {
-                  number: 2,
-                  question: "What programming languages should you know?",
-                  multiline: false,
-                  minAnswerLength: 1,
-                  updateAction: "INSERT"
-                }
-              ]
-            }
-          },
         }
       },
       {
@@ -483,44 +401,6 @@ const tests = [
             updateAction: "REPLACE"
           }
         ]
-      }
-    },
-    after: {
-      query: "template/update-template.graphql",
-      variables: {
-        name: "All updated",
-        updated: {
-          name: "Dev searched",
-          questions: [
-            {
-              question: "delete",
-              number: 4,
-              multiline: false,
-              updateAction: "DELETE"
-            },
-            {
-              question: "Who are we?",
-              number: 0,
-              multiline: false,
-              minAnswerLength: 1,
-              updateAction: "REPLACE"
-            },
-            {
-              question: "Why should you join us?",
-              number: 1,
-              multiline: true,
-              minAnswerLength: 100,
-              updateAction: "REPLACE"
-            },
-            {
-              question: "What programming languages should you know?",
-              number: 2,
-              multiline: false,
-              minAnswerLength: 1,
-              updateAction: "REPLACE"
-            },
-          ]
-        }
       }
     }
   }

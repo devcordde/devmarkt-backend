@@ -64,9 +64,3 @@ type Mutation {
         status: ApplicationStatus!
     ): Boolean @Auth(role: "admin")
 }
-
-# common
-type Failure {
-    message: String!
-    errorCode: String!
-}
