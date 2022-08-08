@@ -1,8 +1,11 @@
 {
   "data": {
     "user": {
-      "errorCode": "NOT_FOUND",
-         "message": "A user with the id 'Database_Witch:1' wasn't found."
-      }
+      "errors": [
+        {
+          "code": "NOT_FOUND"
+        }
+      ]
     }
+  }
 }

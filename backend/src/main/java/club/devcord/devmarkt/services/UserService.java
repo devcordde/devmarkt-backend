@@ -20,9 +20,10 @@ import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
+import club.devcord.devmarkt.responses.Failure;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
-import club.devcord.devmarkt.responses.Users;
+import club.devcord.devmarkt.responses.failure.user.ErrorCode;
 import club.devcord.devmarkt.util.Admins;
 import jakarta.inject.Singleton;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class UserService {
   public Response<User> find(UserId userId) {
     return repo.findById(userId)
         .map(Success::response)
-        .orElseGet(() -> Users.notFound(userId));
+        .orElseGet(() -> new Failure<>(ErrorCode.NOT_FOUND));
   }
 
   public boolean delete(UserId userId) {
@@ -61,16 +62,20 @@ public class UserService {
 
   public Response<User> save(UserId userId, Role role) {
     if (repo.existsById(userId)) {
-      return Users.duplicated(userId);
+      return new Failure<>(ErrorCode.DUPLICATED);
     }
     var saved = repo.save(new User(-1, userId, role));
     return new Success<>(saved);
   }
 
   public Response<User> updateRole(UserId userId, Role role) {
+    if (Admins.isAdminUserId(userId)) {
+      return new Failure<>(ErrorCode.ADMIN_USER_CANT_BE_MODIFIED);
+    }
+
     var updated = repo.updateById(userId, role);
     return updated != 0
         ? new Success<>(new User(-1, userId, role))
-        : Users.notFound(userId);
+        : new Failure<>(ErrorCode.NOT_FOUND);
   }
 }

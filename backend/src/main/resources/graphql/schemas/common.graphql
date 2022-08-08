@@ -70,9 +70,3 @@ type Subscription {
     applicationDeleted: ApplicationId! @Auth(role: "admin")
     applicationProcessed: ApplicationProcessEvent!
 }
-
-# common
-type Failure {
-    message: String!
-    errorCode: String!
-}

@@ -13,7 +13,7 @@ micronaut:
               secret: ${devmarkt.auth.jwtsecret}
               jws-algorithm: HS256
     intercept-url-map:
-      - pattern: /*
+      - pattern: /**
         access:
           - isAnonymous()
 

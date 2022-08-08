@@ -1,0 +1,10 @@
+union FailureData = NumberTemplateErrorData | NumberApplicationErrorData | AnswerTooShortApplicationErrorData
+
+type Failure {
+    errors: [Error!]!
+}
+
+type Error {
+    code: String!
+    data: FailureData
+}

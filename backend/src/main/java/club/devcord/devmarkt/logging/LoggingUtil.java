@@ -19,6 +19,8 @@ package club.devcord.devmarkt.logging;
 import club.devcord.devmarkt.responses.Failure;
 import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.failure.Error;
+import java.util.Arrays;
 
 public class LoggingUtil {
 
@@ -26,9 +28,12 @@ public class LoggingUtil {
 
   }
 
-  public static String responseStatus(Response response) {
-    if (response instanceof Failure fail) {
-      return fail.errorCode();
+  public static <T> String responseStatus(Response<T> response) {
+    if (response instanceof Failure<T> fail) {
+      return Arrays.toString(fail.errors()
+          .stream()
+          .map(Error::code)
+          .toArray());
     } else if (response instanceof Success) {
       return "success";
     }

@@ -9,3 +9,7 @@ type Template {
     name: TemplateName!
     questions: [Question!]!
 }
+
+type NumberTemplateErrorData {
+    number: NonNegativeInt!
+}

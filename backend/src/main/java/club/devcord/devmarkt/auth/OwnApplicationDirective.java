@@ -18,7 +18,8 @@ package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.User;
-import club.devcord.devmarkt.responses.Applications;
+import club.devcord.devmarkt.responses.Failure;
+import club.devcord.devmarkt.responses.failure.application.ErrorCode;
 import club.devcord.devmarkt.services.ApplicationService;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
@@ -71,7 +72,7 @@ public class OwnApplicationDirective implements SchemaDirectiveWiring {
       return fieldBooleanReturn
           ? false
           : DataFetcherResult.newResult()
-          .data(Applications.notFound(value))
+          .data(new Failure<>(ErrorCode.NOT_FOUND))
           .build();
     };
 
