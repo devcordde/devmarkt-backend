@@ -48,6 +48,9 @@ public class ApplicationService {
   private final TemplateRepo templateRepo;
   private final AnswerRepo answerRepo;
 
+  private final Sinks.Many<ApplicationEvent<?>>  eventStream =
+      Sinks.many().multicast().directAllOrNothing();
+
   public ApplicationService(ApplicationRepo repo,
       TemplateRepo templateRepo, AnswerRepo answerRepo) {
     this.applicationRepo = repo;
@@ -210,7 +213,4 @@ public class ApplicationService {
   }
 
   public record ApplicationEvent<T>(T data, ApplicationEventType type) {}
-
-  private final Sinks.Many<ApplicationEvent<?>>  eventStream =
-      Sinks.many().multicast().onBackpressureBuffer();
 }
