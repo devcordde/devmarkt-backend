@@ -44,18 +44,6 @@ import reactor.core.publisher.Sinks;
 
 @Singleton
 public class ApplicationService {
-
-  public enum ApplicationEventType {
-    CREATED,
-    PROCESSED,
-    DELETED
-  }
-
-  public record ApplicationEvent(Object data, ApplicationEventType type) {}
-
-  private final Sinks.Many<ApplicationEvent>  eventStream =
-      Sinks.many().multicast().onBackpressureBuffer();
-
   private final ApplicationRepo applicationRepo;
   private final TemplateRepo templateRepo;
   private final AnswerRepo answerRepo;
@@ -67,7 +55,7 @@ public class ApplicationService {
     this.answerRepo = answerRepo;
   }
 
-  public Publisher<ApplicationEvent> eventStream() {
+  public Publisher<ApplicationEvent<?>> eventStream() {
     return eventStream.asFlux();
   }
 
@@ -92,7 +80,7 @@ public class ApplicationService {
   public boolean deleteApplication(int id) {
     var deleted = applicationRepo.deleteById(id);
     if (deleted != 0) {
-      eventStream.tryEmitNext(new ApplicationEvent(id, ApplicationEventType.DELETED));
+      eventStream.tryEmitNext(new ApplicationEvent<>(id, ApplicationEventType.DELETED));
       return true;
     }
     return false;
@@ -105,7 +93,7 @@ public class ApplicationService {
 
     var updated = applicationRepo.updateById(id, status);
     if (updated != 0) {
-      eventStream.tryEmitNext(new ApplicationEvent(new ApplicationProcessEvent(id, status), ApplicationEventType.PROCESSED));
+      eventStream.tryEmitNext(new ApplicationEvent<>(new ApplicationProcessEvent(id, status), ApplicationEventType.PROCESSED));
       return true;
     }
     return false;
@@ -133,12 +121,8 @@ public class ApplicationService {
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
         answers);
     var saved = applicationRepo.save(application);
-    eventStream.tryEmitNext(new ApplicationEvent(saved, ApplicationEventType.CREATED));
+    eventStream.tryEmitNext(new ApplicationEvent<>(saved, ApplicationEventType.CREATED));
     return new Success<>(saved);
-  }
-
-  private boolean containsNumber(Collection<Answer> answers, int number) {
-    return answers.stream().anyMatch(answer -> answer.number() == number);
   }
 
   private void validateAndPrepareAnswers(ArrayList<Answer> answers,
@@ -218,4 +202,15 @@ public class ApplicationService {
     }
     return new Success<>(updated.get());
   }
+
+  public enum ApplicationEventType {
+    CREATED,
+    PROCESSED,
+    DELETED
+  }
+
+  public record ApplicationEvent<T>(T data, ApplicationEventType type) {}
+
+  private final Sinks.Many<ApplicationEvent<?>>  eventStream =
+      Sinks.many().multicast().onBackpressureBuffer();
 }

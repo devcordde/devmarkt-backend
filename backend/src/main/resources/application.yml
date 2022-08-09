@@ -37,3 +37,5 @@ graphql:
   graphiql:
     enabled: true
     path: "/graphiql"
+  graphql-ws:
+    enabled: true
