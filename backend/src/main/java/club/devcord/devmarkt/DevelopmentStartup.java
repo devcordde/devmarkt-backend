@@ -16,14 +16,11 @@
 
 package club.devcord.devmarkt;
 
-import club.devcord.devmarkt.repositories.TemplateRepo;
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import org.slf4j.Logger;

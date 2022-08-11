@@ -39,10 +39,13 @@ public class CustomGraphQLWsController {
 
   private final GraphQLWsController controller;
   private final GraphQLJsonSerializer serializer;
+  private final SessionMetaData sessionMetaData;
 
-  public CustomGraphQLWsController(GraphQLWsController controller, GraphQLJsonSerializer serializer) {
+  public CustomGraphQLWsController(GraphQLWsController controller, GraphQLJsonSerializer serializer,
+      SessionMetaData sessionMetaData) {
     this.controller = controller;
     this.serializer = serializer;
+    this.sessionMetaData = sessionMetaData;
   }
 
   @OnOpen
@@ -53,11 +56,13 @@ public class CustomGraphQLWsController {
   @OnMessage
   public Publisher<GraphQLWsResponse> onMessage(String message, WebSocketSession session) {
     var type = serializer.deserialize(message, MessageType.class);
+    var request = session.get("httpRequest", HttpRequest.class).get();
     if (ClientType.GQL_CONNECTION_INIT.getType().equals(type.type())) {
-      var request = session.get("httpRequest", HttpRequest.class).get();
+      var auth = (String) type.payload().get("Authorization");
       request.mutate()
-          .header("Authorization", (String) type.payload().get("Authorization"));
+          .header("Authorization", auth);
     }
+    sessionMetaData.getHttpRequestWebSocketSessionMap().put(request, session);
     return controller.onMessage(message, session);
   }
 

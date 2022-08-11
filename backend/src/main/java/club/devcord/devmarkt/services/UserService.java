@@ -25,6 +25,7 @@ import club.devcord.devmarkt.responses.Response;
 import club.devcord.devmarkt.responses.Success;
 import club.devcord.devmarkt.responses.failure.user.ErrorCode;
 import club.devcord.devmarkt.util.Admins;
+import club.devcord.devmarkt.ws.ReflectiveUnsubscriber;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
@@ -32,9 +33,11 @@ import java.util.Optional;
 public class UserService {
 
   private final UserRepo repo;
+  private final ReflectiveUnsubscriber reflectiveUnsubscriber;
 
-  public UserService(UserRepo repo) {
+  public UserService(UserRepo repo, ReflectiveUnsubscriber reflectiveUnsubscriber) {
     this.repo = repo;
+    this.reflectiveUnsubscriber = reflectiveUnsubscriber;
   }
 
   public Optional<User> findDirect(UserId userId) {
@@ -51,6 +54,7 @@ public class UserService {
     if (Admins.isAdminUserId(userId)) {
       return false;
     }
+    reflectiveUnsubscriber.unsubscribeSubscriptions(userId);
     return repo.deleteOneById(userId) >= 1;
   }
 
@@ -72,7 +76,7 @@ public class UserService {
     if (Admins.isAdminUserId(userId)) {
       return new Failure<>(ErrorCode.ADMIN_USER_CANT_BE_MODIFIED);
     }
-
+    reflectiveUnsubscriber.unsubscribeSubscriptions(userId);
     var updated = repo.updateById(userId, role);
     return updated != 0
         ? new Success<>(new User(-1, userId, role))
