@@ -16,28 +16,42 @@
 
 package club.devcord.devmarkt.graphql;
 
+import club.devcord.devmarkt.logging.LogMsgGenerator;
 import club.devcord.devmarkt.responses.Failure;
 import club.devcord.devmarkt.responses.FailureException;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
+import graphql.schema.GraphQLObjectType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ErrorHandlingDataFetcher<T> implements DataFetcher<Object> {
+public class ProxyDataFetcher<T> implements DataFetcher<Object> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProxyDataFetcher.class);
 
   private final DataFetcher<T> originalDataFetcher;
-
-  public ErrorHandlingDataFetcher(DataFetcher<T> originalDataFetcher) {
+  public ProxyDataFetcher(DataFetcher<T> originalDataFetcher) {
     this.originalDataFetcher = originalDataFetcher;
   }
 
   @Override
   public Object get(DataFetchingEnvironment environment) throws Exception {
+    var schema = environment.getGraphQLSchema();
+    Object result;
     try {
-      return originalDataFetcher.get(environment);
+      result = originalDataFetcher.get(environment);
     } catch (FailureException exception) {
-      return DataFetcherResult.newResult()
+      result = DataFetcherResult.newResult()
           .data(new Failure(exception.errors()))
           .build();
     }
+    if (environment.getParentType() instanceof GraphQLObjectType type
+      && (type == schema.getSubscriptionType()
+      || (type == schema.getMutationType())
+      || (type == schema.getQueryType()))) {
+      LOGGER.info(LogMsgGenerator.generateMsg(environment, result));
+    }
+    return result;
   }
 }

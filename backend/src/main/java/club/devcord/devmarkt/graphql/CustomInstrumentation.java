@@ -27,6 +27,6 @@ public class CustomInstrumentation extends SimpleInstrumentation {
   @Override
   public DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher,
       InstrumentationFieldFetchParameters parameters) {
-    return new ErrorHandlingDataFetcher<>(dataFetcher);
+    return new ProxyDataFetcher<>(dataFetcher);
   }
 }
