@@ -53,7 +53,7 @@ public class RoleDirective implements SchemaDirectiveWiring {
       }
 
       if (user.role() == expectedRole || user.role() == Role.ADMIN) {
-        return originalDataFetcher.get(env);
+          return originalDataFetcher.get(env);
       }
       LOGGER.info("Rejecting forbidden request for user {}", user.id());
       return DataFetcherResult.newResult()

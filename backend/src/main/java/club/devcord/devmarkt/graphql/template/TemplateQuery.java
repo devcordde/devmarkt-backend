@@ -17,7 +17,6 @@
 package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.entities.template.Template;
-import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.TemplateService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -38,11 +37,8 @@ public class TemplateQuery implements GraphQLQueryResolver {
     this.service = service;
   }
 
-  public Object template(String name) {
-    var response = service.find(name);
-    LOGGER.info("Template fetching. Response: {}, Name: {}", LoggingUtil.responseStatus(response),
-        name);
-    return response.graphQlUnion();
+  public Template template(String name) {
+    return service.find(name);
   }
 
   public List<Template> templates(DataFetchingEnvironment environment) {

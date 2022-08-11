@@ -16,7 +16,7 @@
 
 package club.devcord.devmarkt.graphql.application;
 
-import club.devcord.devmarkt.logging.LoggingUtil;
+import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.services.ApplicationService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
@@ -34,10 +34,7 @@ public class ApplicationQuery implements GraphQLQueryResolver {
     this.service = service;
   }
 
-  public Object application(int id) {
-    var response = service.application(id);
-    LOGGER.info("Application fetched with id: {} Successful: {}", id,
-        LoggingUtil.responseStatus(response));
-    return response.graphQlUnion();
+  public Application application(int id) {
+    return  service.application(id);
   }
 }

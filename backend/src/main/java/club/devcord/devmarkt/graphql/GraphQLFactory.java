@@ -54,7 +54,8 @@ public class GraphQLFactory {
       ResourceResolver resourceResolver,
       BeanContext context,
       RoleDirective roleDirective,
-      OwnApplicationDirective ownApplicationDirective) {
+      OwnApplicationDirective ownApplicationDirective,
+      CustomInstrumentation customInstrumentation) {
     var builder = new SchemaParserBuilder()
         .scalars(JavaPrimitives.GraphQLLong, TemplateNameScalar.TEMPLATE_NAME,
             ExtendedScalars.NonNegativeInt, ExtendedScalars.PositiveInt, ExtendedScalars.DateTime,
@@ -72,6 +73,7 @@ public class GraphQLFactory {
         .makeExecutableSchema();
 
     return GraphQL.newGraphQL(schema)
+        .instrumentation(customInstrumentation)
         .build();
   }
 

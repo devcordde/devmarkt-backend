@@ -26,9 +26,7 @@ import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.repositories.AnswerRepo;
 import club.devcord.devmarkt.repositories.ApplicationRepo;
 import club.devcord.devmarkt.repositories.TemplateRepo;
-import club.devcord.devmarkt.responses.Failure;
-import club.devcord.devmarkt.responses.Response;
-import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.FailureException;
 import club.devcord.devmarkt.responses.failure.Error;
 import club.devcord.devmarkt.responses.failure.application.AnswerTooShortApplicationErrorData;
 import club.devcord.devmarkt.responses.failure.application.ErrorCode;
@@ -62,10 +60,9 @@ public class ApplicationService {
     return eventStream.asFlux();
   }
 
-  public Response<Application> application(int id) {
+  public Application application(int id) {
     return applicationRepo.findById(id)
-        .map(Success::response)
-        .orElseGet(() -> new Failure<>(ErrorCode.NOT_FOUND));
+        .orElseThrow(() -> new FailureException(ErrorCode.NOT_FOUND));
   }
 
   public boolean isOwnApplication(int applicationId, User user) {
@@ -102,15 +99,15 @@ public class ApplicationService {
     return false;
   }
 
-  public Response<Application> createApplication(String templateName, ArrayList<Answer> answers,
+  public Application createApplication(String templateName, ArrayList<Answer> answers,
       User user) {
     if (applicationRepo.existsUnprocessedByUser(user)) {
-      return new Failure<>(ErrorCode.HAS_UNPROCESSED_APPLICATION);
+      throw new FailureException(ErrorCode.HAS_UNPROCESSED_APPLICATION);
     }
 
     var templateOpt = templateRepo.findByName(templateName);
     if (templateOpt.isEmpty()) {
-      return new Failure<>(ErrorCode.TEMPLATE_NOT_FOUND);
+      throw new FailureException(ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
     var errors = new ArrayList<Error<Application>>();
@@ -118,14 +115,14 @@ public class ApplicationService {
     validateAndPrepareAnswers(answers, template, answer -> null, null, errors, true);
 
     if (!errors.isEmpty()) {
-      return new Failure<>(errors);
+      throw new FailureException(errors);
     }
 
     var application = new Application(-1, null, ApplicationStatus.UNPROCESSED, user, template,
         answers);
     var saved = applicationRepo.save(application);
     eventStream.tryEmitNext(new ApplicationEvent<>(saved, ApplicationEventType.CREATED));
-    return new Success<>(saved);
+    return saved;
   }
 
   private void validateAndPrepareAnswers(ArrayList<Answer> answers,
@@ -176,34 +173,34 @@ public class ApplicationService {
         question, application);
   }
 
-  public Response<Application> updateApplication(int id, ArrayList<Answer> newAnswers) {
+  public Application updateApplication(int id, ArrayList<Answer> newAnswers) {
     var infoOpt = applicationRepo.findById(
         id); // since relations aren't supported in dto projections yet, it's the easiest to fetch the whole application
     if (infoOpt.isEmpty()) {
-      return new Failure<>(ErrorCode.NOT_FOUND);
+      throw  new FailureException(ErrorCode.NOT_FOUND);
     }
     var applicationInfo = infoOpt.get();
 
     if (applicationInfo.status() == ApplicationStatus.ACCEPTED) {
-      return new Failure<>(ErrorCode.ALREADY_ACCEPTED);
+      throw  new FailureException(ErrorCode.ALREADY_ACCEPTED);
     }
 
     var template = templateRepo.findById(applicationInfo.template().id());
     if (template.isEmpty()) {
-      return new Failure<>(ErrorCode.TEMPLATE_NOT_FOUND);
+      throw  new FailureException(ErrorCode.TEMPLATE_NOT_FOUND);
     }
     var errors = new ArrayList<Error<Application>>();
     validateAndPrepareAnswers(newAnswers, template.get(),
         answer -> applicationInfo.answers().get(answer.number()).id(), applicationInfo, errors, false);
     if (!errors.isEmpty()) {
-      return new Failure<>(errors);
+      throw  new FailureException(errors);
     }
     answerRepo.updateAll(newAnswers);
     var updated = applicationRepo.findById(id);
     if (updated.isEmpty()) {
-      return new Failure<>(ErrorCode.NOT_FOUND);
+      throw  new FailureException(ErrorCode.NOT_FOUND);
     }
-    return new Success<>(updated.get());
+    return updated.get();
   }
 
   public enum ApplicationEventType {

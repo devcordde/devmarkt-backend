@@ -16,8 +16,8 @@
 
 package club.devcord.devmarkt.graphql.user;
 
+import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
-import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import jakarta.inject.Singleton;
@@ -35,11 +35,8 @@ public class UserQuery implements GraphQLQueryResolver {
     this.service = service;
   }
 
-  public Object user(UserId userId) {
-    var response = service.find(userId);
-    LOGGER.info("User fetch, Response: {}, UserId: {}", LoggingUtil.responseStatus(response),
-        userId);
-    return response.graphQlUnion();
+  public User user(UserId userId) {
+    return service.find(userId);
   }
 
 }

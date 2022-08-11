@@ -17,8 +17,8 @@
 package club.devcord.devmarkt.graphql.user;
 
 import club.devcord.devmarkt.auth.Role;
+import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
-import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.UserService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
@@ -36,24 +36,16 @@ public class UserMutation implements GraphQLMutationResolver {
     this.service = service;
   }
 
-  public Object createUser(UserId userId, Role role) {
-    var response = service.save(userId, role);
-    LOGGER.info("User creation. Response: {}, UserId: {}, Role: {}",
-        LoggingUtil.responseStatus(response), userId, role);
-    return response.graphQlUnion();
+  public User createUser(UserId userId, Role role) {
+    return service.save(userId, role);
   }
 
   public boolean deleteUser(UserId userId) {
-    var response = service.delete(userId);
-    LOGGER.info("User deletion, Successful: {}, UserId: {}", response, userId);
-    return response;
+    return service.delete(userId);
   }
 
-  public Object updateUserRole(UserId userId, Role role) {
-    var response = service.updateRole(userId, role);
-    LOGGER.info("User role update. Response: {}, UserId: {}, Role: {}",
-        LoggingUtil.responseStatus(response), userId, role);
-    return response.graphQlUnion();
+  public User updateUserRole(UserId userId, Role role) {
+    return service.updateRole(userId, role);
   }
 
 }

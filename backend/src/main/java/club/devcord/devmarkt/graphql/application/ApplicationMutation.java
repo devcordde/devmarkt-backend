@@ -17,9 +17,9 @@
 package club.devcord.devmarkt.graphql.application;
 
 import club.devcord.devmarkt.entities.application.Answer;
+import club.devcord.devmarkt.entities.application.Application;
 import club.devcord.devmarkt.entities.application.ApplicationStatus;
 import club.devcord.devmarkt.entities.auth.User;
-import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.ApplicationService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -39,33 +39,22 @@ public class ApplicationMutation implements GraphQLMutationResolver {
     this.service = service;
   }
 
-  public Object createApplication(String templateName, ArrayList<Answer> answers,
+  public Application createApplication(String templateName, ArrayList<Answer> answers,
       DataFetchingEnvironment environment) {
     var user = (User) environment.getGraphQlContext().get("user");
-    var response = service.createApplication(templateName, answers, user);
-    LOGGER.info("Application creation: User: {}, TemplateName: {}, Successful: {}",
-        user.id(), templateName, LoggingUtil.responseStatus(response));
-    return response.graphQlUnion();
+    return service.createApplication(templateName, answers, user);
   }
 
   public boolean deleteApplication(int id) {
-    var response = service.deleteApplication(id);
-    LOGGER.info("Application deletion. ID: {}, Successful: {}", id, response);
-    return response;
+    return service.deleteApplication(id);
   }
 
-  public Object updateApplication(int id, ArrayList<Answer> updatedAnswers) {
-    var response = service.updateApplication(id, updatedAnswers);
-    LOGGER.info("Application update. ID: {}, AnswerNumbers: {}, Response: {}", id,
-        updatedAnswers.stream().map(Answer::number).toArray(),
-        LoggingUtil.responseStatus(response));
-    return response.graphQlUnion();
+  public Application updateApplication(int id, ArrayList<Answer> updatedAnswers) {
+    return service.updateApplication(id, updatedAnswers);
   }
 
   public boolean processApplication(int id, ApplicationStatus status) {
-    var response = service.processApplication(id, status);
-    LOGGER.info("Application process. ID: {}, Successful: {}, Status: {}", id, response, status);
-    return response;
+    return service.processApplication(id, status);
   }
 
 }
