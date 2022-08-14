@@ -17,8 +17,8 @@
 package club.devcord.devmarkt.graphql.template;
 
 import club.devcord.devmarkt.entities.template.Question;
+import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.entities.template.TemplateUpdateInput;
-import club.devcord.devmarkt.logging.LoggingUtil;
 import club.devcord.devmarkt.services.TemplateService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import jakarta.inject.Singleton;
@@ -37,11 +37,8 @@ public class TemplateMutation implements GraphQLMutationResolver {
     this.service = service;
   }
 
-  public Object createTemplate(String name, List<Question> questions) {
-    var response = service.create(name, questions);
-    LOGGER.info("template creation. Response: {}, Name: {}", LoggingUtil.responseStatus(response),
-        name);
-    return response.graphQlUnion();
+  public Template createTemplate(String name, List<Question> questions) {
+    return service.create(name, questions);
   }
 
   public boolean deleteTemplate(String name) {
@@ -50,10 +47,7 @@ public class TemplateMutation implements GraphQLMutationResolver {
     return response;
   }
 
-  public Object updateTemplate(String templateName, TemplateUpdateInput updatedTemplate) {
-    var response = service.update(templateName, updatedTemplate);
-    LOGGER.info("Template update. Successful: {}, Updated: {}",
-        LoggingUtil.responseStatus(response), updatedTemplate);
-    return response.graphQlUnion();
+  public Template updateTemplate(String templateName, TemplateUpdateInput updatedTemplate) {
+    return service.update(templateName, updatedTemplate);
   }
 }

@@ -64,3 +64,9 @@ type Mutation {
         status: ApplicationStatus!
     ): Boolean @Auth(role: "admin")
 }
+
+type Subscription {
+    applicationCreated: Application! @Auth(role: "admin")
+    applicationDeleted: ApplicationId! @Auth(role: "user")
+    applicationProcessed: ApplicationProcessEvent! @Auth(role: "user")
+}

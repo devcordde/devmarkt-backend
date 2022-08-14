@@ -28,7 +28,6 @@ public class RoleQuery implements GraphQLQueryResolver {
   private static final Logger LOGGER = LoggerFactory.getLogger(RoleQuery.class);
 
   public Role[] roles() {
-    LOGGER.info("All roles fetched.");
     return Role.values();
   }
 }

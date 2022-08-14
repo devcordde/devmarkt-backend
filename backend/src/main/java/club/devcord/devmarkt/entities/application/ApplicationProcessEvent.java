@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses;
+package club.devcord.devmarkt.entities.application;
 
-public sealed interface Response<T> permits Failure, Success {
+import club.devcord.devmarkt.graphql.GraphQLType;
+import io.micronaut.core.annotation.Introspected;
 
-  default Object graphQlUnion() {
-    return this instanceof Success<T> success
-        ? success.value()
-        : this;
-  }
+@Introspected
+@GraphQLType("ApplicationProcessEvent")
+public record ApplicationProcessEvent(
+    Integer id,
+    ApplicationStatus status
+) {
 
 }

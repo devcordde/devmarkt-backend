@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.graphql.user;
+package club.devcord.devmarkt.ws;
 
-import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
-import club.devcord.devmarkt.services.UserService;
-import graphql.kickstart.tools.GraphQLQueryResolver;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.websocket.WebSocketSession;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public class UserQuery implements GraphQLQueryResolver {
+public class SessionMetaData {
+  private final Map<UserId, WebSocketSession> userSessions = new ConcurrentHashMap<>();
+  private final Map<HttpRequest<?>, WebSocketSession> httpRequestWebSocketSessionMap
+      = new ConcurrentHashMap<>();
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserQuery.class);
-
-  public final UserService service;
-
-  public UserQuery(UserService service) {
-    this.service = service;
+  public Map<UserId, WebSocketSession> getUserSessions() {
+    return userSessions;
   }
 
-  public User user(UserId userId) {
-    return service.find(userId);
+  public Map<HttpRequest<?>, WebSocketSession> getHttpRequestWebSocketSessionMap() {
+    return httpRequestWebSocketSessionMap;
   }
-
 }

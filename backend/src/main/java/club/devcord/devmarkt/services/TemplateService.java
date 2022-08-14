@@ -22,11 +22,9 @@ import club.devcord.devmarkt.entities.template.Template;
 import club.devcord.devmarkt.entities.template.TemplateUpdateInput;
 import club.devcord.devmarkt.entities.template.UpdateAction;
 import club.devcord.devmarkt.repositories.TemplateRepo;
-import club.devcord.devmarkt.responses.Failure;
-import club.devcord.devmarkt.responses.Response;
-import club.devcord.devmarkt.responses.Success;
-import club.devcord.devmarkt.responses.failure.template.NumberTemplateErrorData;
+import club.devcord.devmarkt.responses.FailureException;
 import club.devcord.devmarkt.responses.failure.template.ErrorCode;
+import club.devcord.devmarkt.responses.failure.template.NumberTemplateErrorData;
 import club.devcord.devmarkt.util.Collections;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
@@ -43,9 +41,9 @@ public class TemplateService {
     this.templateRepo = repo;
   }
 
-  public Response<Template> create(String name, List<Question> questions) {
+  public Template create(String name, List<Question> questions) {
     if (templateRepo.existsByName(name)) {
-      return new Failure<>(ErrorCode.DUPLICATED);
+      throw new FailureException(ErrorCode.DUPLICATED);
     }
     var ambiguousEntries = Collections.ambiguousEntries(questions, Question::number);
     if (!ambiguousEntries.isEmpty()) {
@@ -54,16 +52,14 @@ public class TemplateService {
           .map(NumberTemplateErrorData::new)
           .map(NumberTemplateErrorData::data)
           .toList();
-      return new Failure<>(ErrorCode.AMBIGUOUS_NUMBER, errors);
+      throw new FailureException(ErrorCode.AMBIGUOUS_NUMBER, errors);
     }
-    var savedTemplate = templateRepo.save(new Template(-1, name, true, questions));
-    return new Success<>(savedTemplate);
+    return templateRepo.save(new Template(-1, name, true, questions));
   }
 
-  public Response<Template> find(String name) {
+  public Template find(String name) {
     return templateRepo.findByName(name)
-        .map(Success::response)
-        .orElseGet(() -> new Failure<>(ErrorCode.NOT_FOUND));
+        .orElseThrow(() -> new FailureException(ErrorCode.NOT_FOUND));
   }
 
   public boolean delete(String name) {
@@ -73,10 +69,10 @@ public class TemplateService {
   /*
   Updates an existing template based on its current values.
    */
-  public Response<Template> update(String templateName, TemplateUpdateInput updated) {
+  public Template update(String templateName, TemplateUpdateInput updated) {
     var currentTemplateOpt = templateRepo.findByName(templateName);
     if (currentTemplateOpt.isEmpty()) {
-      return new Failure<>(ErrorCode.NOT_FOUND);
+      throw new FailureException(ErrorCode.NOT_FOUND);
     }
     var currentTemplate = currentTemplateOpt.get();
     var questions = new ArrayList<>(currentTemplate.questions());
@@ -105,8 +101,7 @@ public class TemplateService {
     }
     templateRepo.deleteByName(templateName);
     var name = updated.name() != null ? updated.name() : templateName;
-    var saved = templateRepo.save(new Template(-1, name, true, questions));
-    return new Success<>(saved);
+    return templateRepo.save(new Template(-1, name, true, questions));
   }
 
   private Question mutateQuestion(Question question, int number) {

@@ -18,7 +18,7 @@ package club.devcord.devmarkt.auth;
 
 import club.devcord.devmarkt.auth.error.UnauthorizedError;
 import club.devcord.devmarkt.entities.auth.User;
-import club.devcord.devmarkt.responses.Failure;
+import club.devcord.devmarkt.responses.FailureException;
 import club.devcord.devmarkt.responses.failure.application.ErrorCode;
 import club.devcord.devmarkt.services.ApplicationService;
 import graphql.execution.DataFetcherResult;
@@ -69,11 +69,10 @@ public class OwnApplicationDirective implements SchemaDirectiveWiring {
       }
       LOGGER.info("Rejecting request because user {} doesn't own application id: {}",
           user.id(), value);
-      return fieldBooleanReturn
-          ? false
-          : DataFetcherResult.newResult()
-          .data(new Failure<>(ErrorCode.NOT_FOUND))
-          .build();
+      if (fieldBooleanReturn) {
+        return false;
+      }
+      throw new FailureException(ErrorCode.NOT_FOUND);
     };
 
     environment.setFieldDataFetcher(authDataFetcher);

@@ -16,6 +16,7 @@
 
 package club.devcord.devmarkt.auth;
 
+import club.devcord.devmarkt.ws.SessionMetaData;
 import graphql.ExecutionInput;
 import io.micronaut.configuration.graphql.GraphQLExecutionInputCustomizer;
 import io.micronaut.http.HttpRequest;
@@ -28,9 +29,11 @@ import reactor.core.publisher.Mono;
 public class InvocationDataCustomizer implements GraphQLExecutionInputCustomizer {
 
   private final UserProvider provider;
+  private final SessionMetaData sessionMetaData;
 
-  public InvocationDataCustomizer(UserProvider provider) {
+  public InvocationDataCustomizer(UserProvider provider, SessionMetaData sessionMetaData) {
     this.provider = provider;
+    this.sessionMetaData = sessionMetaData;
   }
 
   @Override
@@ -38,7 +41,14 @@ public class InvocationDataCustomizer implements GraphQLExecutionInputCustomizer
       MutableHttpResponse<String> httpResponse) {
     httpRequest.getHeaders().getAuthorization()
         .flatMap(provider::validate)
-        .ifPresent(user -> executionInput.getGraphQLContext().put("user", user));
+        .ifPresent(user -> {
+          executionInput.getGraphQLContext().put("user", user);
+          var session = sessionMetaData.getHttpRequestWebSocketSessionMap().get(httpRequest);
+          if (session != null) {
+            sessionMetaData.getUserSessions().put(user.id(), session);
+          }
+        });
+    sessionMetaData.getHttpRequestWebSocketSessionMap().remove(httpRequest);
     return Mono.just(executionInput);
   }
 }

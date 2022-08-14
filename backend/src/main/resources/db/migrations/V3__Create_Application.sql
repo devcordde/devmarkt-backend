@@ -21,7 +21,7 @@ CREATE TABLE applications
     id           SERIAL PRIMARY KEY,
     process_time VARCHAR,
     status       application_status NOT NULL,
-    user_id      INT                NOT NULL REFERENCES users (id),
+    user_id      INT                NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     template_id  INT                NOT NULL REFERENCES templates (id)
 );
 

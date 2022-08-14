@@ -20,11 +20,10 @@ import club.devcord.devmarkt.auth.Role;
 import club.devcord.devmarkt.entities.auth.User;
 import club.devcord.devmarkt.entities.auth.UserId;
 import club.devcord.devmarkt.repositories.UserRepo;
-import club.devcord.devmarkt.responses.Failure;
-import club.devcord.devmarkt.responses.Response;
-import club.devcord.devmarkt.responses.Success;
+import club.devcord.devmarkt.responses.FailureException;
 import club.devcord.devmarkt.responses.failure.user.ErrorCode;
 import club.devcord.devmarkt.util.Admins;
+import club.devcord.devmarkt.ws.ReflectiveUnsubscriber;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 
@@ -32,25 +31,27 @@ import java.util.Optional;
 public class UserService {
 
   private final UserRepo repo;
+  private final ReflectiveUnsubscriber reflectiveUnsubscriber;
 
-  public UserService(UserRepo repo) {
+  public UserService(UserRepo repo, ReflectiveUnsubscriber reflectiveUnsubscriber) {
     this.repo = repo;
+    this.reflectiveUnsubscriber = reflectiveUnsubscriber;
   }
 
   public Optional<User> findDirect(UserId userId) {
     return repo.findById(userId);
   }
 
-  public Response<User> find(UserId userId) {
+  public User find(UserId userId) {
     return repo.findById(userId)
-        .map(Success::response)
-        .orElseGet(() -> new Failure<>(ErrorCode.NOT_FOUND));
+        .orElseThrow(() -> new FailureException(ErrorCode.NOT_FOUND));
   }
 
   public boolean delete(UserId userId) {
     if (Admins.isAdminUserId(userId)) {
       return false;
     }
+    reflectiveUnsubscriber.unsubscribeSubscriptions(userId);
     return repo.deleteOneById(userId) >= 1;
   }
 
@@ -60,22 +61,22 @@ public class UserService {
     return user;
   }
 
-  public Response<User> save(UserId userId, Role role) {
+  public User save(UserId userId, Role role) {
     if (repo.existsById(userId)) {
-      return new Failure<>(ErrorCode.DUPLICATED);
+      throw new FailureException(ErrorCode.DUPLICATED);
     }
-    var saved = repo.save(new User(-1, userId, role));
-    return new Success<>(saved);
+    return repo.save(new User(-1, userId, role));
   }
 
-  public Response<User> updateRole(UserId userId, Role role) {
+  public User updateRole(UserId userId, Role role) {
     if (Admins.isAdminUserId(userId)) {
-      return new Failure<>(ErrorCode.ADMIN_USER_CANT_BE_MODIFIED);
+      throw new FailureException(ErrorCode.ADMIN_USER_CANT_BE_MODIFIED);
     }
-
+    reflectiveUnsubscriber.unsubscribeSubscriptions(userId);
     var updated = repo.updateById(userId, role);
-    return updated != 0
-        ? new Success<>(new User(-1, userId, role))
-        : new Failure<>(ErrorCode.NOT_FOUND);
+    if (updated == 0) {
+      throw new FailureException(ErrorCode.NOT_FOUND);
+    }
+    return new User(-1, userId, role);
   }
 }

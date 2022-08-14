@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package club.devcord.devmarkt.responses;
+package club.devcord.devmarkt.graphql;
 
-public record Success<T>(
-    T value
-) implements Response<T> {
+import graphql.execution.instrumentation.SimpleInstrumentation;
+import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters;
+import graphql.schema.DataFetcher;
+import jakarta.inject.Singleton;
 
-  public static <T> Response<T> response(T value) {
-    return new Success<>(value);
+@Singleton
+public class CustomInstrumentation extends SimpleInstrumentation {
+
+  @Override
+  public DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher,
+      InstrumentationFieldFetchParameters parameters) {
+    return new ProxyDataFetcher<>(dataFetcher);
   }
-
 }
