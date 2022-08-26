@@ -27,6 +27,5 @@ public enum ErrorCode implements club.devcord.devmarkt.responses.failure.ErrorCo
   ANSWER_TOO_SHORT,
   ALREADY_ACCEPTED,
   QUESTION_UNANSWERED,
-
   TOO_LARGE
 }

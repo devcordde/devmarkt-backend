@@ -140,7 +140,6 @@ public class ApplicationService {
     if (size > 5800) { // leave 200 chars for extra text
       errors.add(new Error<>(ErrorCode.TOO_LARGE, new TooLargeErrorData(size)));
     }
-
   }
 
   private void validateAndPrepareAnswers(ArrayList<Answer> answers,
