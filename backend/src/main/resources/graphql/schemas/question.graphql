@@ -1,5 +1,5 @@
 input QuestionInput {
-    question: String! @NotBlank @Size(min: 1, max: 200)
+    question: String! @NotBlank @Size(min: 1, max: 256)
     number: NonNegativeInt!
     multiline: Boolean!
     minAnswerLength: Int! = 1 @Range(min: 1, max: 1024)

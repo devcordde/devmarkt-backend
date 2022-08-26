@@ -2,7 +2,7 @@ union TemplateResponse = Template | Failure
 
 input TemplateInput {
     name: TemplateName
-    questions: [QuestionInput!]!
+    questions: [QuestionInput!]! @ContainerSize(max: 25)
 }
 
 type Template {

@@ -1,6 +1,6 @@
 input AnswerInput {
     number: NonNegativeInt!
-    answer: String! @NotBlank
+    answer: String! @NotBlank @Size(max: 1024)
 }
 
 type Answer {
@@ -23,6 +23,10 @@ type AnswerTooShortApplicationErrorData {
     answerLength: NonNegativeInt!
     minimumLength: PositiveInt!
     number: NonNegativeInt!
+}
+
+type TooLargeErrorData {
+    size: Int
 }
 
 union ApplicationResponse = Application | Failure
