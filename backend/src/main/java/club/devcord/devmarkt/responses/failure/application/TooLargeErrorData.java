@@ -17,15 +17,12 @@
 package club.devcord.devmarkt.responses.failure.application;
 
 import club.devcord.devmarkt.entities.application.Application;
+import club.devcord.devmarkt.graphql.GraphQLType;
+import club.devcord.devmarkt.responses.failure.ErrorData;
 
-public enum ErrorCode implements club.devcord.devmarkt.responses.failure.ErrorCode<Application> {
-  NOT_FOUND,
-  HAS_UNPROCESSED_APPLICATION,
-  TEMPLATE_NOT_FOUND,
-  AMBIGUOUS_ANSWER_NUMBER,
-  NO_QUESTION,
-  ANSWER_TOO_SHORT,
-  ALREADY_ACCEPTED,
-  QUESTION_UNANSWERED,
-  TOO_LARGE
+@GraphQLType
+public record TooLargeErrorData(
+    int size
+) implements ErrorData<Application> {
+
 }

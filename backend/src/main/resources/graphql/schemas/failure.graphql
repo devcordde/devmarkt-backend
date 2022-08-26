@@ -1,4 +1,4 @@
-union FailureData = NumberTemplateErrorData | NumberApplicationErrorData | AnswerTooShortApplicationErrorData
+union FailureData = NumberTemplateErrorData | NumberApplicationErrorData | AnswerTooShortApplicationErrorData | TooLargeErrorData
 
 type Failure {
     errors: [Error!]!

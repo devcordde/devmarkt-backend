@@ -3,7 +3,7 @@ plugins {
     id("io.micronaut.application") version "3.5.1"
 }
 
-version = "1.0"
+version = "2.0"
 group = "club.devcord.devmarkt"
 
 repositories {
@@ -32,7 +32,7 @@ dependencies {
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.graphql:micronaut-graphql")
-    implementation("com.graphql-java-kickstart:graphql-java-tools:13.0.0")
+    implementation("com.graphql-java-kickstart:graphql-java-tools:12.1.0")
     implementation("com.graphql-java:graphql-java-extended-validation:18.1-hibernate-validator-6.2.0.Final")
     implementation("io.micronaut:micronaut-validation")
     runtimeOnly("org.postgresql:postgresql")

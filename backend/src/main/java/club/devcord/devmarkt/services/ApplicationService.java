@@ -31,6 +31,7 @@ import club.devcord.devmarkt.responses.failure.Error;
 import club.devcord.devmarkt.responses.failure.application.AnswerTooShortApplicationErrorData;
 import club.devcord.devmarkt.responses.failure.application.ErrorCode;
 import club.devcord.devmarkt.responses.failure.application.NumberApplicationErrorData;
+import club.devcord.devmarkt.responses.failure.application.TooLargeErrorData;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,8 +111,9 @@ public class ApplicationService {
       throw new FailureException(ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
-    var errors = new ArrayList<Error<Application>>();
     var template = templateOpt.get();
+    var errors = new ArrayList<Error<Application>>();
+    validateSize(template, answers, errors);
     validateAndPrepareAnswers(answers, template, answer -> null, null, errors, true);
 
     if (!errors.isEmpty()) {
@@ -123,6 +125,21 @@ public class ApplicationService {
     var saved = applicationRepo.save(application);
     eventStream.tryEmitNext(new ApplicationEvent<>(saved, ApplicationEventType.CREATED));
     return saved;
+  }
+
+  // according to the discord embed limits -> https://discordjs.guide/popular-topics/embeds.html#embed-limits
+  private void validateSize(Template template, List<Answer> answers, ArrayList<Error<Application>> errors) {
+    var size = template.name().length();
+    for (var question : template.questions()) {
+      size += question.question().length();
+    }
+    for (var answer : answers) {
+      size += answer.answer().length();
+    }
+
+    if (size > 5800) { // leave 200 chars for extra text
+      errors.add(new Error<>(ErrorCode.TOO_LARGE, new TooLargeErrorData(size)));
+    }
   }
 
   private void validateAndPrepareAnswers(ArrayList<Answer> answers,

@@ -69,7 +69,7 @@ const tests = [
         name: 'duplicated',
         query: 'template/create-template.graphql',
         response: 'template/create-duplicated.json',
-        variables: {name: 'Dev searched', questions: []},
+        variables: templateCreateVars("Dev searched"),
         verify: {
           query: "template/templates.graphql",
           response: "template/templates.json"
