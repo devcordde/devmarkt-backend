@@ -1,6 +1,6 @@
 input AnswerInput {
     number: NonNegativeInt!
-    answer: String! @NotBlank @Size(max: 1024)
+    answer: String! @NotBlank @Size(min: 1, max: 1024)
 }
 
 type Answer {

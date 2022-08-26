@@ -19,7 +19,7 @@ type Query {
 type Mutation {
     createTemplate(
         name: TemplateName!
-        questions: [QuestionInput!]! @ContainerSize(min: 0, max: 25)
+        questions: [QuestionInput!]! @ContainerSize(min: 1, max: 25)
     ): TemplateResponse @Auth(role: "admin")
 
     deleteTemplate(
