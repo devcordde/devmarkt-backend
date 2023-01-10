@@ -2,6 +2,6 @@
   "name": "devmarkt-backend",
   "version": "1.0.0",
   "devDependencies": {
-    "danger": "^11.0.2"
+    "danger": "^11.2.1"
   }
 }
