@@ -25,6 +25,7 @@ dependencies {
     annotationProcessor("io.micronaut:micronaut-inject-java")
     // When.MAYBE warning fix
     annotationProcessor("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("ch.qos.logback:logback-classic:1.4.8")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("io.micronaut.security:micronaut-security-jwt")
     implementation("io.micronaut.reactor:micronaut-reactor")
@@ -38,7 +39,6 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
 
-    implementation("ch.qos.logback:logback-classic")
 }
 
 
