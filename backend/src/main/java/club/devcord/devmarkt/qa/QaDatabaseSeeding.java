@@ -29,11 +29,13 @@ import club.devcord.devmarkt.repositories.TemplateRepo;
 import club.devcord.devmarkt.repositories.UserRepo;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
+import io.micronaut.data.jdbc.runtime.JdbcOperations;
 import io.micronaut.runtime.event.ApplicationStartupEvent;
 import io.micronaut.transaction.exceptions.TransactionSystemException;
-import io.micronaut.transaction.jdbc.DataSourceTransactionManager;
 import jakarta.inject.Singleton;
+import java.sql.PreparedStatement;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
   private final UserRepo userRepo;
   private final ApplicationRepo applicationRepo;
 
-  private final DataSourceTransactionManager dataSourceTransactionManager;
+  private final JdbcOperations jdbcOperations;
 
   private final Flyway flyway;
 
@@ -62,11 +64,11 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
 
   public QaDatabaseSeeding(TemplateRepo templateRepo,
       UserRepo userRepo, ApplicationRepo applicationRepo,
-      DataSourceTransactionManager dataSourceTransactionManager, Flyway flyway) {
+      JdbcOperations jdbcOperations, Flyway flyway) {
     this.templateRepo = templateRepo;
     this.userRepo = userRepo;
     this.applicationRepo = applicationRepo;
-    this.dataSourceTransactionManager = dataSourceTransactionManager;
+    this.jdbcOperations = jdbcOperations;
     this.flyway = flyway;
   }
 
@@ -75,11 +77,13 @@ public class QaDatabaseSeeding implements ApplicationEventListener<ApplicationSt
     seed();
   }
 
+  @Transactional
   public void reseedDatabase() {
     LOGGER.info("Reseeding database");
     try {
       flyway.clean();
       flyway.migrate();
+      jdbcOperations.prepareStatement("DEALLOCATE ALL", PreparedStatement::execute);
       seed();
     } catch (TransactionSystemException e) {
       LOGGER.info("TransactionSystemException occurred, might be have something to do with prepared statement caching."
