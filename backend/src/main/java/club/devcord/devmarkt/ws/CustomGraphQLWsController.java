@@ -18,10 +18,10 @@ package club.devcord.devmarkt.ws;
 
 import io.micronaut.configuration.graphql.GraphQLConfiguration;
 import io.micronaut.configuration.graphql.GraphQLJsonSerializer;
-import io.micronaut.configuration.graphql.ws.GraphQLWsConfiguration;
-import io.micronaut.configuration.graphql.ws.GraphQLWsController;
-import io.micronaut.configuration.graphql.ws.GraphQLWsRequest.ClientType;
-import io.micronaut.configuration.graphql.ws.GraphQLWsResponse;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsConfiguration;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsController;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsRequest.ClientType;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsResponse;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.websocket.CloseReason;
 import io.micronaut.websocket.WebSocketSession;
@@ -33,15 +33,15 @@ import io.micronaut.websocket.annotation.ServerWebSocket;
 import java.util.Map;
 import org.reactivestreams.Publisher;
 
-@ServerWebSocket(value = "${" + GraphQLConfiguration.PREFIX + "." + GraphQLWsConfiguration.PATH + ":"
-    + GraphQLWsConfiguration.DEFAULT_PATH + "}", subprotocols = "graphql-ws")
+@ServerWebSocket(value = "${" + GraphQLConfiguration.PREFIX + "." + GraphQLApolloWsConfiguration.PATH_CONFIG + ":"
+    + GraphQLApolloWsConfiguration.DEFAULT_PATH + "}", subprotocols = "graphql-ws")
 public class CustomGraphQLWsController {
 
-  private final GraphQLWsController controller;
+  private final GraphQLApolloWsController controller;
   private final GraphQLJsonSerializer serializer;
   private final SessionMetaData sessionMetaData;
 
-  public CustomGraphQLWsController(GraphQLWsController controller, GraphQLJsonSerializer serializer,
+  public CustomGraphQLWsController(GraphQLApolloWsController controller, GraphQLJsonSerializer serializer,
       SessionMetaData sessionMetaData) {
     this.controller = controller;
     this.serializer = serializer;
@@ -54,7 +54,7 @@ public class CustomGraphQLWsController {
   }
 
   @OnMessage
-  public Publisher<GraphQLWsResponse> onMessage(String message, WebSocketSession session) {
+  public Publisher<GraphQLApolloWsResponse> onMessage(String message, WebSocketSession session) {
     var type = serializer.deserialize(message, MessageType.class);
     var request = session.get("httpRequest", HttpRequest.class).get();
     if (ClientType.GQL_CONNECTION_INIT.getType().equals(type.type())) {
@@ -67,12 +67,12 @@ public class CustomGraphQLWsController {
   }
 
   @OnClose
-  public Publisher<GraphQLWsResponse> onClose(WebSocketSession session, CloseReason closeReason) {
+  public Publisher<GraphQLApolloWsResponse> onClose(WebSocketSession session, CloseReason closeReason) {
     return controller.onClose(session, closeReason);
   }
 
   @OnError
-  public Publisher<GraphQLWsResponse> onError(WebSocketSession session, Throwable t) {
+  public Publisher<GraphQLApolloWsResponse> onError(WebSocketSession session, Throwable t) {
     return controller.onError(session, t);
   }
 

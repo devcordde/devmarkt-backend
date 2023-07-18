@@ -17,8 +17,8 @@
 package club.devcord.devmarkt.ws;
 
 import club.devcord.devmarkt.entities.auth.UserId;
-import io.micronaut.configuration.graphql.ws.GraphQLWsRequest;
-import io.micronaut.configuration.graphql.ws.GraphQLWsResponse;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsRequest;
+import io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsResponse;
 import io.micronaut.context.BeanContext;
 import io.micronaut.websocket.WebSocketSession;
 import jakarta.inject.Singleton;
@@ -36,7 +36,7 @@ public class ReflectiveUnsubscriber{
   public ReflectiveUnsubscriber(BeanContext beanContext, SessionMetaData metaData) {
     this.metaData = metaData;
     try {
-      var stateClazz = Class.forName("io.micronaut.configuration.graphql.ws.GraphQLWsState");
+      var stateClazz = Class.forName("io.micronaut.configuration.graphql.ws.apollo.GraphQLApolloWsState");
       this.wsState = beanContext.getBean(stateClazz);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
@@ -53,13 +53,13 @@ public class ReflectiveUnsubscriber{
       var operationIdsField = activeOperations.getClass().getDeclaredField("activeOperations");
       operationIdsField.setAccessible(true);
       var operationIds = ((Map<String, ?>) operationIdsField.get(activeOperations)).keySet();
-      var method = wsState.getClass().getDeclaredMethod("stopOperation", GraphQLWsRequest.class,
+      var method = wsState.getClass().getDeclaredMethod("stopOperation", GraphQLApolloWsRequest.class,
           WebSocketSession.class);
       method.setAccessible(true);
       for (var id : operationIds) {
-        var request = new GraphQLWsRequest();
+        var request = new GraphQLApolloWsRequest();
         request.setId(id);
-        Flux.from((Publisher<GraphQLWsResponse>) method.invoke(wsState, request, session))
+        Flux.from((Publisher<GraphQLApolloWsResponse>) method.invoke(wsState, request, session))
             .subscribe(session::sendSync);
       }
     } catch (Throwable e) {

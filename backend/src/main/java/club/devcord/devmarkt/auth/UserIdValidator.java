@@ -20,6 +20,7 @@ import club.devcord.devmarkt.entities.auth.UserId;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import jakarta.inject.Singleton;
+import java.security.Principal;
 import java.util.regex.Pattern;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +36,10 @@ public class UserIdValidator {
   }
 
   public UserId validateUserIdFromToken(String token) {
-    return Mono.from(validator.validateToken(token, null))
+
+    Mono<Authentication> authenticationMono = Mono.<Authentication>from(validator.validateToken(token, null));
+
+    return authenticationMono
         .map(Authentication::getName)
         .mapNotNull(this::validateUserId)
         .block();
