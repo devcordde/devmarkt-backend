@@ -32,7 +32,9 @@ dependencies {
     implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.data:micronaut-data-jdbc")
-    implementation("io.micronaut.flyway:micronaut-flyway")
+    // https://github.com/flyway/flyway/issues/3651
+    // 6.0.0-M2 uses 9.16.1 which is before bug introduced in flyway
+    implementation("io.micronaut.flyway:micronaut-flyway:6.0.0-M2")
     implementation("io.micronaut.graphql:micronaut-graphql")
     implementation("com.graphql-java-kickstart:graphql-java-tools:13.0.3")
     implementation("com.graphql-java:graphql-java-extended-validation:20.0")
