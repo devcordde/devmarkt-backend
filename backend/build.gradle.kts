@@ -27,6 +27,7 @@ dependencies {
     // When.MAYBE warning fix
     annotationProcessor("com.google.code.findbugs:jsr305:3.0.2")
     implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("org.slf4j:slf4j-api:2.0.7")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("io.micronaut.security:micronaut-security-jwt")
     implementation("io.micronaut.reactor:micronaut-reactor")
