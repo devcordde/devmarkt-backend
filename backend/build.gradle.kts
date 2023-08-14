@@ -33,9 +33,8 @@ dependencies {
     implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.data:micronaut-data-jdbc")
-    // https://github.com/flyway/flyway/issues/3651
-    // 6.0.0-M2 uses 9.16.1 which is before bug introduced in flyway
     implementation("io.micronaut.flyway:micronaut-flyway")
+    // https://github.com/flyway/flyway/issues/3651
     implementation("org.flywaydb:flyway-core") {
         version {
             strictly("9.16.1")
