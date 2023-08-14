@@ -26,7 +26,7 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.annotation.Relation.Cascade;
 import io.micronaut.data.annotation.Relation.Kind;
-import io.micronaut.data.jdbc.annotation.ColumnTransformer;
+import io.micronaut.data.annotation.sql.ColumnTransformer;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -35,7 +35,7 @@ import io.micronaut.transaction.exceptions.TransactionSystemException;
 import jakarta.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.util.List;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

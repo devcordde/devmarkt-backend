@@ -23,12 +23,13 @@ import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Join.Type;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-@JdbcRepository
+@JdbcRepository(dialect = Dialect.POSTGRES)
 public interface TemplateRepo extends CrudRepository<Template, Integer> {
 
   boolean existsByName(String name);
@@ -36,7 +37,7 @@ public interface TemplateRepo extends CrudRepository<Template, Integer> {
   @Override
   @IgnoreWhere
   @Join(value = "questions", type = Type.LEFT_FETCH)
-  Optional<Template> findById(@javax.validation.constraints.NotNull Integer integer);
+  Optional<Template> findById(@jakarta.validation.constraints.NotNull Integer integer);
 
   @Executable
   @Join(value = "questions", type = Type.LEFT_FETCH)
