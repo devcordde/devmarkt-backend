@@ -42,7 +42,7 @@ dependencies {
     }
     implementation("io.micronaut.graphql:micronaut-graphql")
     implementation("com.graphql-java-kickstart:graphql-java-tools:13.0.3")
-    implementation("com.graphql-java:graphql-java-extended-validation:20.0")
+    implementation("com.graphql-java:graphql-java-extended-validation:21.0")
     implementation("io.micronaut.validation:micronaut-validation")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
