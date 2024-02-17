@@ -68,7 +68,7 @@ jobs:
         run: docker save registry.gitlab.com/taucher2003-group/devmarkt-backend:${{ github.sha }} > qa-image.tar
       - name: Upload stored Images as artifact
         if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: qa-image
           path: qa-image.tar
@@ -98,7 +98,7 @@ jobs:
           node-version: '16'
       - name: Download stored image as artifact
         if: github.event_name != 'push' && (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]')
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: qa-image
           path: qa-image.tar
