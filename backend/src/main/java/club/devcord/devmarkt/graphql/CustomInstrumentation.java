@@ -16,17 +16,19 @@
 
 package club.devcord.devmarkt.graphql;
 
-import graphql.execution.instrumentation.SimpleInstrumentation;
+import graphql.execution.instrumentation.Instrumentation;
+import graphql.execution.instrumentation.InstrumentationState;
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters;
 import graphql.schema.DataFetcher;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
-public class CustomInstrumentation extends SimpleInstrumentation {
+public class CustomInstrumentation implements Instrumentation {
 
   @Override
-  public DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher,
-      InstrumentationFieldFetchParameters parameters) {
+  public @NotNull DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher,
+      InstrumentationFieldFetchParameters parameters, InstrumentationState state) {
     return new ProxyDataFetcher<>(dataFetcher);
   }
 }
